@@ -1,0 +1,141 @@
+/* #footer {
+    background-color: rgba(110, 110, 110, 0.473);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 90px;
+} */
+
+.textIconBadge {
+    font-size: 0.9em;
+}
+
+.chart1 {
+    width: 700px !important;
+    height: 350px !important;
+    margin-top: 20px;
+    margin-left: 50px;
+}
+
+.chart2 {
+    width: 390px !important;
+    height: 390px !important;
+    margin-left: 150px;
+}
+
+.iconNext {
+    margin-top: 150px;
+    margin-left: 40px;
+    font-size: 2em;
+}
+
+
+
+.blockCard {
+    width: 100%;
+    height: 400px;
+}
+
+.items .item {
+    position: absolute;
+    margin-top: 150px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 270px;
+    overflow: hidden;
+    transition: all 300ms ease-in-out;
+    z-index: -1;
+    opacity: 0;
+}
+
+.item.active {
+    opacity: 1;
+    z-index: 99;
+    box-shadow: 0px 0px 105px -35px rgba(0, 0, 0, 0.75);
+}
+
+.item.prev {
+    z-index: 2;
+    opacity: 0.40;
+    transform: translate(-135%, -50%);
+}
+
+.item.p2 {
+    z-index: 2;
+    opacity: 0.25;
+    transform: translate(-240%, -50%);
+}
+
+.item.next {
+    z-index: 2;
+    opacity: 0.40;
+    transform: translate(35%, -50%);
+}
+
+.item.n2 {
+    z-index: 3;
+    opacity: 0.25;
+    transform: translate(100%, -50%);
+    margin-left: 100px;
+}
+
+.items .button-container {
+    position: absolute;
+    margin-top: 150px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 275px;
+    z-index: 100;
+}
+
+.button-container .button {
+    color: #fff;
+    font-size: 32px;
+    cursor: pointer;
+    position: relative;
+    opacity: 0.75;
+    transition: all 300ms ease-in-out;
+    /* margin-left: -220%;
+    margin-right: -220%; */
+    margin-left: -175%;
+    margin-right: -175%;
+}
+
+.button-container .button:hover {
+    opacity: 1;
+}
+
+.button-container .button:before {
+    content: "";
+    position: absolute;
+    margin-top: 22px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    background-color: gray;
+    border-radius: 50%;
+    z-index: -99;
+}
+
+.button-container .button:nth-child(1) {
+    float: left;
+}
+
+.button-container .button:nth-child(2) {
+    float: right;
+}
+
+@media (max-width: 1199.98px) {
+    .button-container .button {
+        color: #fff;
+        font-size: 32px;
+        cursor: pointer;
+        position: relative;
+        opacity: 0.75;
+        transition: all 300ms ease-in-out;
+        margin-left: -20%;
+        margin-right: -20%;
+    }
+}
