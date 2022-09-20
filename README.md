@@ -37,13 +37,13 @@
 Para clonar y ejecutar esta aplicación, necesitará [Git](https://git-scm.com) y [Node.js](https://nodejs.org/en/download/) (que viene con [npm](http://npmjs.com)) instalado en su computadora. Desde su línea de comando:
 
 ```bash
-# Clone this repository
+# Clonar repositorio
 $ git clone https://github.com/nicolaievpustelnik/VerdurasDev
 
-# Go into the repository
+# Entra en el repositorio
 $ cd VerdurasDev
 
-# Install dependencies
+# Instalar dependencias
 $ npm install
 
 # Ejecutar proyecto para producción 
