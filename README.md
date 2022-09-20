@@ -1,7 +1,7 @@
 
 <h1 align="center">
   <br>
-  <a href=""><img src="./src/public/img/verdurasDev.png" alt="" width="200"></a>
+  <a href=""><img src="./src/public/img/vd.png" alt="" width="200"></a>
   <br>
   VerdurasDev
   <br>
