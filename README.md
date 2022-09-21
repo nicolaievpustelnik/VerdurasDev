@@ -76,7 +76,7 @@ Este software utiliza los siguientes paquetes de código abierto:
 ---
 
 > GitHub [@nicolaievpustelnik](https://github.com/nicolaievpustelnik) &nbsp;&middot;&nbsp;
-> GitHub [@debylanda_06](debylanda_06@hotmail.com) &nbsp;&middot;&nbsp;
+> GitHub [@Deby93](https://github.com/Deby93) &nbsp;&middot;&nbsp;
 > GitHub [@DelmerRo](https://github.com/DelmerRo) &nbsp;&middot;&nbsp;
 > GitHub [@SantiagoVill](https://github.com/SantiagoVill) &nbsp;&middot;&nbsp;
 
