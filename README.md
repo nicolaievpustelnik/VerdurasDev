@@ -32,6 +32,9 @@
 * Plataforma
   - Listo para Windows, macOS y Linux.
 
+## UML
+<img src="./src/public/img/Diagrama.png">
+
 ## Cómo utilizar
 
 Para clonar y ejecutar esta aplicación, necesitará [Git](https://git-scm.com) y [Node.js](https://nodejs.org/en/download/) (que viene con [npm](http://npmjs.com)) instalado en su computadora. Desde su línea de comando:
