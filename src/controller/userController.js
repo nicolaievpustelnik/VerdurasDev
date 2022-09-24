@@ -7,4 +7,3 @@ const newAdmin = new Admin({ firstName: "Nicolaiev", lastName: "Brito", email: "
 console.log(newAdmin)
 console.log(newAdmin.getFullName())
 
-
