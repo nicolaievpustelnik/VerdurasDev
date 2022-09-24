@@ -14,6 +14,10 @@ class Admin extends User {
     getAll() {
         return `Admin[firstName:${this.firstName}, lastName:${this.lastName}, lastName:${this.email}, lastName:${this.password}, sucursal:${this.sucursal}]`;
     }
+
+    getFullName() {
+        return `${this.firstName} ${this.lastName}`;
+    }
 }
 
 userSchema.loadClass(Admin);
