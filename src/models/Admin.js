@@ -19,11 +19,11 @@ class Admin extends User {
     }
 
     deleteUser(local, idUser) {
-        return true;
-    }
+        if (!local) {
+            throw new Error('Local invalido');
+        }
 
-    ab(a, b) {
-        return a + b;
+        return true;
     }
 }
 
