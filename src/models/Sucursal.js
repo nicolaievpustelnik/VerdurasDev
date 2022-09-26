@@ -8,8 +8,8 @@ class Sucursal {
         this.idSuc = idLocal;
         this.nomSuc = nomSuc;
         this.ubicacion = ubicacion;
-        var user = [];
-        var product = [];
+        let user = [];
+        let product = [];
     }
 
 }

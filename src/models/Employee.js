@@ -14,6 +14,11 @@ class Employee extends User {
     getAll() {
         return `Employee[firstName:${this.firstName}, lastName:${this.lastName}, lastName:${this.email}, lastName:${this.password}, sucursal:${this.sucursal}]`;
     }
+
+    getFullName() {
+        return `${this.firstName} ${this.lastName}`;
+    }
+
 }
 
 userSchema.loadClass(Employee);
