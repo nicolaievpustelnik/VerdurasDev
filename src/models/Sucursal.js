@@ -9,7 +9,7 @@ class Sucursal {
         this.nomSuc = nomSuc;
         this.ubicacion = ubicacion;
         var user = [];
-        var product =[];
+        var product = [];
     }
 
 }
