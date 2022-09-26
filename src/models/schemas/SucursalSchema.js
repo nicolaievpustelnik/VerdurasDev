@@ -1,5 +1,6 @@
 const { Schema } = require('mongoose');
-const User = require('./User');
+
+const User = require('../User');
 
 const sucursalSchema = new Schema({
 

@@ -1,6 +1,8 @@
 const { model } = require('mongoose');
-const sucursalSchema = require('./SucursalSchema');
+
+const sucursalSchema = require('./schemas/SucursalSchema');
 const Product = require('../models/Product');
+
 class Sucursal {
     constructor(idSuc, nomSuc, ubicacion) {
         this.idSuc = idSuc;
