@@ -1,4 +1,5 @@
 const { model } = require('mongoose');
+const productSchema = require('./ProductSchema');
 
 class Product {
 
@@ -21,5 +22,5 @@ class Product {
 
 }
 
-//module.exports = Product;
-module.exports = Product
+productSchema.loadClass(Product);
+module.exports = model('Product', productSchema);
