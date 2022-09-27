@@ -1,6 +1,4 @@
 const { model } = require('mongoose');
-const productSchema = require('./ProductSchema');
-
 const productSchema = require('./schemas/ProductSchema');
 
 class Product {
