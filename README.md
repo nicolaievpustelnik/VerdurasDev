@@ -32,6 +32,7 @@
 * Plataforma
   - Listo para Windows, macOS y Linux.
 
+hola
 ## UML
 <img src="./src/public/img/Diagrama.png">
 
