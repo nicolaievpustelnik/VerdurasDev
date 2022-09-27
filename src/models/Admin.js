@@ -6,14 +6,14 @@ const userSchema = require('./schemas/UserSchema');
 
 
 class Admin extends User {
-  constructor(firstName, lastName, email, password, sucursal) {
-    super(firstName, lastName, email, password, sucursal);
-    this.sucursal = sucursal;
-  }
+    constructor(firstName, lastName, email, password, sucursal) {
+        super(firstName, lastName, email, password, sucursal);
+        this.sucursal = sucursal;
+    }
 
-  getAll() {
-    return `Admin[firstName:${this.firstName}, lastName:${this.lastName}, email:${this.email}, password:${this.password}, sucursal:${this.sucursal}]`;
-  }
+    getAll() {
+        return `Admin[id:${this.id}, firstName:${this.firstName}, lastName:${this.lastName}, email:${this.email}, password:${this.password}, sucursal:${this.sucursal}]`;
+    }
 
     getFullName() {
         return `${this.firstName} ${this.lastName}`;
@@ -24,7 +24,7 @@ class Admin extends User {
             throw new Error('Local invalido');
         }
 
-        if (idUser < 1) {
+        if (idUser < 1 || !idUser) {
             throw new Error('IdUser invalido');
         }
 

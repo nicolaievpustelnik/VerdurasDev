@@ -5,10 +5,10 @@ const productSchema = require('./schemas/ProductSchema');
 
 class ProductSucursal extends Product {
 
-    constructor(idProd,barCode, nomCat, marca, descripcion, stock,idSuc,salePrice) {
-        super(idProd,barCode, nomCat, marca, descripcion, stock)
+    constructor(idProd, barCode, nomCat, marca, descripcion, stock, idSuc, salePrice) {
+        super(idProd, barCode, nomCat, marca, descripcion, stock)
         this.idSuc = idSuc
-        this.salePrice= salePrice
+        this.salePrice = salePrice
     }
 
     getAll() {
