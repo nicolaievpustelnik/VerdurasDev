@@ -23,17 +23,17 @@ class Sucursal {
     getAll() {
         return `Sucursal[idSuc:${this.idSuc}, nomSuc:${this.nomSuc}, ubicacion:${this.ubicacion}, users:${this.users}, products:${this.products}]`;
     }
-    listOfProducts(){
+    listOfProducts() {
         return this.products
     }
-    listOfUsuarios(){
+    listOfUsuarios() {
         return this.users
     }
-  /*   addProduct(){
-        return new Product(1234567888888, 'Verduras', '2', '5', 'Tama', 'Papa', 120, 15000, 10000)
-    } */
-    saludar(){
-      return `Hola Mundo`  
+    /*   addProduct(){
+          return new Product(1234567888888, 'Verduras', '2', '5', 'Tama', 'Papa', 120, 15000, 10000)
+      } */
+    saludar() {
+        return `Hola Mundo`
     }
 }
 
