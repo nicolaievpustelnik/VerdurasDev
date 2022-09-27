@@ -26,20 +26,26 @@
 
 ![screenshot](./src/public/img/verdurasDev.png)
 
-## Características clave
+## 📚 Documentación
+Tambien puedes ver nuestra [Documentación](https://docs.google.com/document/d/1nuo1nmAqzf5fDeI3hfq163i4Th0Mtpv3YHeZlibAcoI/edit?usp=sharing) completa.
+
+## 🔑 Características clave
 
 * Front response 
 * Plataforma
   - Listo para Windows, macOS y Linux.
 
-hola
-## UML
+## 📄 UML
 <img src="./src/public/img/Diagrama.png">
 
-## Diagrama
+## 📈 Diagrama
 <img src="./src/public/img/DiagramaDeUso.png">
 
-## Cómo utilizar
+## 📱 Mockups
+<img src="./src/public/img/fondo1.png">
+<img src="./src/public/img/fondo2.png">
+
+## 💻 Cómo utilizar
 
 Para clonar y ejecutar esta aplicación, necesitará [Git](https://git-scm.com) y [Node.js](https://nodejs.org/en/download/) (que viene con [npm](http://npmjs.com)) instalado en su computadora. Desde su línea de comando:
 
@@ -63,21 +69,21 @@ $ npm run dev
 $ npm test 
 ```
 
-> **Nota**
+> 🗒️ **Nota**
 > Nota Si usa Linux Bash para Windows, [consulte esta guía](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) o use `node` desde el símbolo del sistema.
 
-## Correo electrónico
+## 📩 Correo electrónico
 
 Es decir, si te gustó usar esta aplicación o te ayudó de alguna manera, me gustaría que me envíes un correo electrónico a <verdurasdev@gmail.com> sobre cualquier cosa que quieras decir sobre este software. ¡Realmente lo apreciaría!
 
-## Créditos
+## 🙌 Créditos
 
 Este software utiliza los siguientes paquetes de código abierto:
 
 - [Node.js](https://nodejs.org/)
 - [Bootstrap](https://bootstrap.com)
 
-## Support
+## 🔧 Support
 <verdurasdev@gmail.com>
 
 ---
@@ -86,4 +92,3 @@ Este software utiliza los siguientes paquetes de código abierto:
 > GitHub [@Deby93](https://github.com/Deby93) &nbsp;&middot;&nbsp;
 > GitHub [@DelmerRo](https://github.com/DelmerRo) &nbsp;&middot;&nbsp;
 > GitHub [@SantiagoVill](https://github.com/SantiagoVill) &nbsp;&middot;&nbsp;
-
