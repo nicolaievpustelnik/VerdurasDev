@@ -4,6 +4,7 @@ const Product = require("./Product");
 const Usuario = require("./User");
 
 const sucursalSchema = require("./schemas/SucursalSchema");
+const ProductSucursal = require('./ProductSucursal');
 
 class Sucursal {
 
@@ -15,8 +16,8 @@ class Sucursal {
         this.products = [];
     }
 
-    setProduct(productAux) {
-        let p = new Product(productAux)
+    addProduct(productAux) {
+        let p = new ProductSucursal(productAux)
         this.products.push(p)
     }
 
