@@ -4,6 +4,8 @@ const Product = require("./Product");
 const Usuario = require("./User");
 
 const sucursalSchema = require("./schemas/SucursalSchema");
+const ProductSucursal = require('./ProductSucursal');
+const Employee = require('./Employee');
 
 class Sucursal {
 
@@ -15,11 +17,29 @@ class Sucursal {
         this.products = [];
     }
 
-    setProduct(productAux) {
-        let p = new Product(productAux)
+    addProduct(productAux) {
+        let p = new ProductSucursal(productAux)
         this.products.push(p)
     }
-
+    addUser(userAux) {
+        let e = new Employee(userAux)
+        this.users.push(e)
+    }
+    getAll() {
+        return `Sucursal[idSuc:${this.idSuc}, nomSuc:${this.nomSuc}, ubicacion:${this.ubicacion}, users:${this.users}, products:${this.products}]`;
+    }
+    listOfProducts() {
+        return this.products
+    }
+    listOfUsuarios() {
+        return this.users
+    }
+    /*   addProduct(){
+          return new Product(1234567888888, 'Verduras', '2', '5', 'Tama', 'Papa', 120, 15000, 10000)
+      } */
+    saludar() {
+        return `Hola Mundo`
+    }
 }
 
 sucursalSchema.loadClass(Sucursal);
