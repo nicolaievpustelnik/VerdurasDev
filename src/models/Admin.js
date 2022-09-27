@@ -23,6 +23,10 @@ class Admin extends User {
             throw new Error('Local invalido');
         }
 
+        if (idUser < 1) {
+            throw new Error('IdUser invalido');
+        }
+
         return true;
     }
 }

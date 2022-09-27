@@ -38,6 +38,10 @@
 ## Diagrama
 <img src="./src/public/img/DiagramaDeUso.png">
 
+## Mockups
+<img src="./src/public/img/fondo1.png">
+<img src="./src/public/img/fondo2.png">
+
 ## Cómo utilizar
 
 Para clonar y ejecutar esta aplicación, necesitará [Git](https://git-scm.com) y [Node.js](https://nodejs.org/en/download/) (que viene con [npm](http://npmjs.com)) instalado en su computadora. Desde su línea de comando:

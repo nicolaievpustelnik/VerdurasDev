@@ -43,6 +43,10 @@ describe("Admin", function () {
         it("Assert catch exception local", (function () {
             assert.throws(() => newAdmin.deleteUser(null, 1), Error, "Local invalido");
         }));
+
+        it("Assert catch exception idUser", (function () {
+            assert.throws(() => newAdmin.deleteUser(local, -1), Error, "IdUser invalido");
+        }));
     });
 
 });
