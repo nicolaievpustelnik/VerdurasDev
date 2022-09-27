@@ -11,7 +11,7 @@ class Admin extends User {
     }
 
     getAll() {
-        return `Admin[id:${this.id}, firstName:${this.firstName}, lastName:${this.lastName}, lastName:${this.email}, lastName:${this.password}, sucursal:${this.sucursal}]`;
+        return `Admin[id:${this.id}, firstName:${this.firstName}, lastName:${this.lastName}, email:${this.email}, password:${this.password}, sucursal:${this.sucursal}]`;
     }
 
     getFullName() {
@@ -23,7 +23,7 @@ class Admin extends User {
             throw new Error('Local invalido');
         }
 
-        if (idUser < 1) {
+        if (idUser < 1 || !idUser) {
             throw new Error('IdUser invalido');
         }
 

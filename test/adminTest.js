@@ -40,12 +40,16 @@ describe("Admin", function () {
             assert.typeOf(userDeleted, "boolean");
         }));
 
-        it("Assert catch exception local", (function () {
+        it("Assert catch exception null local", (function () {
             assert.throws(() => newAdmin.deleteUser(null, 1), Error, "Local invalido");
         }));
 
-        it("Assert catch exception idUser", (function () {
-            assert.throws(() => newAdmin.deleteUser(local, -1), Error, "IdUser invalido");
+        it("Assert catch exception invalid number idUser", (function () {
+            assert.throws(() => newAdmin.deleteUser(local, 0), Error, "Local invalido");
+        }));
+
+        it("Assert catch exception null idUser", (function () {
+            assert.throws(() => newAdmin.deleteUser(local, null), Error, "IdUser invalido");
         }));
     });
 
