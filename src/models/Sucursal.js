@@ -1,7 +1,12 @@
 const { model } = require('mongoose');
-const sucursalSchema = require('./SucursalSchema');
-const Product = require('../models/Product');
+
+const Product = require("./Product");
+const Usuario = require("./User");
+
+const sucursalSchema = require("./schemas/SucursalSchema");
+
 class Sucursal {
+
     constructor(idSuc, nomSuc, ubicacion) {
         this.idSuc = idSuc;
         this.nomSuc = nomSuc;
@@ -9,6 +14,12 @@ class Sucursal {
         this.users = [];
         this.products = [];
     }
+
+    setProduct(productAux) {
+        let p = new Product(productAux)
+        this.products.push(p)
+    }
+
     getAll() {
         return `Sucursal[idSuc:${this.idSuc}, nomSuc:${this.nomSuc}, ubicacion:${this.ubicacion}, users:${this.users}, products:${this.products}]`;
     }
@@ -24,18 +35,7 @@ class Sucursal {
     saludar(){
       return `Hola Mundo`  
     }
-/* agregarProducto(unProducto){
-products.push(unProducto)
-} */
 }
-
-
 
 sucursalSchema.loadClass(Sucursal);
 module.exports = model('Sucursal', sucursalSchema);
-/* module.exports = {
-    claseModelo: Sucursal,
-    fnAddProduct: addProduct,
-    fnlistaProductos: listarProductos,
-    fnlistaUsuarios: listarUsuarios,
-} */

@@ -1,6 +1,8 @@
 const { model } = require('mongoose');
 const productSchema = require('./ProductSchema');
 
+const productSchema = require('./schemas/ProductSchema');
+
 class Product {
 
     constructor(barCode, nomCat, idSuc, idSupplier, marca, description, stock, salePrice, purchasePrice) {
@@ -15,7 +17,6 @@ class Product {
         this.purchasePrice = purchasePrice
 
     }
-
     getAll() {
         return `Product[barCode:${this.barCode}, nomCat:${this.nomCat}, idSuc:${this.idSuc}, idSupplier:${this.idSupplier}, marca:${this.marca}, description:${this.description}, stock:${this.stock}, salePrice:${this.salePrice}, purchasePrice:${this.purchasePrice}]`;
     }
