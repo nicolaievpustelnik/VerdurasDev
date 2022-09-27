@@ -15,7 +15,7 @@ const newSucursal = new Sucursal({
 });
 console.log(newSucursal)
 console.log('------------------------------------------')
-console.log(newSucursal.getAll())
+//console.log(newSucursal.getAll())
 
 /* ------------------------------------------------------------------ */
 /* --------------------PRODUCTOS DE SUCURSAL------------------------ */
@@ -119,10 +119,10 @@ newSucursal.addUser(newEmployee1)
 newSucursal.addUser(newEmployee2)
 newSucursal.addUser(newEmployee3)
 
-console.log(newSucursal)
+//console.log(newSucursal)
 //console.log(newSucursal.listOfProducts())
 
 
 // console.log('------------------------------------------')
-// console.log(newSucursal.getAll())
+console.log(newSucursal.getAll())
 
