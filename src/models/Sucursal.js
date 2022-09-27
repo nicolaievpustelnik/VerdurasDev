@@ -5,6 +5,7 @@ const Usuario = require("./User");
 
 const sucursalSchema = require("./schemas/SucursalSchema");
 const ProductSucursal = require('./ProductSucursal');
+const Employee = require('./Employee');
 
 class Sucursal {
 
@@ -20,7 +21,10 @@ class Sucursal {
         let p = new ProductSucursal(productAux)
         this.products.push(p)
     }
-
+    addUser(userAux) {
+        let e = new Employee(userAux)
+        this.users.push(e)
+    }
     getAll() {
         return `Sucursal[idSuc:${this.idSuc}, nomSuc:${this.nomSuc}, ubicacion:${this.ubicacion}, users:${this.users}, products:${this.products}]`;
     }
