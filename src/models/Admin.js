@@ -1,13 +1,14 @@
+
 const { model } = require('mongoose');
 
 const User = require('./User');
 const userSchema = require('./schemas/UserSchema');
 
-class Admin extends User {
 
-    constructor(id, firstName, lastName, email, password, sucursal) {
-        super(id, firstName, lastName, email, password, sucursal)
-        this.sucursal = sucursal
+class Admin extends User {
+    constructor(firstName, lastName, email, password, sucursal) {
+        super(firstName, lastName, email, password, sucursal);
+        this.sucursal = sucursal;
     }
 
     getAll() {
@@ -32,4 +33,4 @@ class Admin extends User {
 }
 
 userSchema.loadClass(Admin);
-module.exports = model('Admin', userSchema);
+module.exports = model("Admin", userSchema);
