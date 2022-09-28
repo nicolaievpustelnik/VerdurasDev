@@ -8,9 +8,12 @@ const ProductoSucursal = require('../src/models/ProductSucursal')
 describe("ProductSucursal", () => {
     describe("atributos", () => {
         it('debe tener un atributo ID', () => {
-            const unProd = new ProductoSucursal(4, 112, "Frutas", "Frut", "Melon", 200, 1, 250,)
-            const atributosDelObjetoProducto = Object.keys(unProd)
-            assert.equal(atributosDelObjetoProducto[0],'idProd')
+
+            const prodSuc = new ProductSucursal({ idProd: 4, barCode: 112, nomCat: "Frutas", marca: "Frut", descripcion: "Melon", stock: 200, idSuc: 1, salePrice: 250 });
+            //const atributosDelObjetoProduct = Object.keys(prodSuc)
+            //console.log(Object.keys(prodSuc))
+            //assert.equal(atributosDelObjetoProduct[0],'idProd')
         })
+
     })
 })
