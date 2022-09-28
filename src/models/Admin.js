@@ -20,9 +20,10 @@ class Admin extends User {
     }
 
     deleteUser(local, idUser) {
-        if (!local) {
-            throw new Error('Local invalido');
-        }
+
+        // if (Object.keys(local).length === 0) {
+        //     throw new Error('Local invalido');
+        // }
 
         if (idUser < 1 || !idUser) {
             throw new Error('IdUser invalido');

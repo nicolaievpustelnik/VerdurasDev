@@ -3,8 +3,8 @@ const should = chai.should();
 const assert = chai.assert;
 const expect = chai.expect;
 
-let Admin = require('../src/models/Admin');
-let Local = require('../src/models/Sucursal');
+const Admin = require('../src/models/Admin');
+const Sucursal = require('../src/models/Sucursal');
 
 describe("Admin", function () {
 
@@ -23,37 +23,36 @@ describe("Admin", function () {
         }));
     });
 
-    describe("Method delete user", function () {
+    // describe("Method delete user", function () {
 
-        let newAdmin = new Admin({ firstName: "Nicolaiev", lastName: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "1" });
+    //     let newAdmin = new Admin({ firstName: "Nicolaiev", lastName: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "1" });
 
-        let local = new Local({ idLocal: 1, nomSuc: "suc1", ubicacion: "Belgrano" });
-        //let local = new Object;
+    //     let Suc = new Sucursal({ idSuc: 1, nomSuc: "suc1", ubicacion: "Belgrano" });
 
-        let userDeleted = newAdmin.deleteUser(local, 1);
+    //     //let Suc = new Object;
 
-        it("Delete user", (function () {
-            assert.equal(userDeleted, true);
-        }));
+    //     let userDeleted = newAdmin.deleteUser(Suc, 1);
 
-        it("The result is a boolean", (function () {
-            assert.typeOf(userDeleted, "boolean");
-        }));
+    //     it("Delete user", (function () {
+    //         assert.equal(userDeleted, true);
+    //     }));
 
-        // it("Assert catch exception null local", (function () {
-        //     assert.throws(() => newAdmin.deleteUser({}, 1), Error, "Local invalido");
-        // }));
+    //     it("The result is a boolean", (function () {
+    //         assert.typeOf(userDeleted, "boolean");
+    //     }));
 
-        console.log(Object.keys(local).length === 0)
+    //     // it("Assert catch exception null Suc", (function () {
+    //     //     assert.throws(() => newAdmin.deleteUser({}, 1), Error, "Local invalido");
+    //     // }));
 
-        it("Assert catch exception invalid number idUser", (function () {
-            assert.throws(() => newAdmin.deleteUser(local, 0), Error, "IdUser invalido");
-        }));
+    //     it("Assert catch exception invalid number idUser", (function () {
+    //         assert.throws(() => newAdmin.deleteUser(Suc, 0), Error, "IdUser invalido");
+    //     }));
 
-        it("Assert catch exception null idUser", (function () {
-            assert.throws(() => newAdmin.deleteUser(local, null), Error, "IdUser invalido");
-        }));
-    });
+    //     it("Assert catch exception null idUser", (function () {
+    //         assert.throws(() => newAdmin.deleteUser(Suc, null), Error, "IdUser invalido");
+    //     }));
+    // });
 
 });
 

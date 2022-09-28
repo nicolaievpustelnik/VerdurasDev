@@ -26,7 +26,7 @@ const productSchema = new Schema({
         require: true
     },
     idSuc: {
-        type: String,
+        type: Number,
         require: true
     },
     salePrice: {
