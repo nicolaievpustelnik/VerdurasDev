@@ -1,9 +1,7 @@
 class Product {
 
     constructor(idProd, barCode, nomCat, marca, description, stock) {
-        if (new.target === Product) {
-            throw new Error('this is an abstract class');
-        }
+
         this.idProd = idProd;
         this.barCode = barCode;
         this.nomCat = nomCat;
@@ -11,11 +9,14 @@ class Product {
         this.description = description;
         this.stock = stock;
     }
-    hayStock() {
-        this.stock > 0
-    }
-    stockNegativo() {
-        this.stock < 0
+    validateStatusStock(stock) {
+        if (stock == 0) {
+            return 0;
+        } else if (stock >= 1) {
+            return 1;
+        } else {
+            return 2;
+        }
     }
 }
 
