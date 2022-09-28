@@ -16,11 +16,11 @@ const sucursalSchema = new Schema({
     },
     users: {
         type: [],
-        require: true
+        require: false
     },
     products: {
         type: [],
-        require: true
+        require: false
     }
 
 }, {
