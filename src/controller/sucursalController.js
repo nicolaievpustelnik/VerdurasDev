@@ -1,7 +1,9 @@
 const Sucursal = require('../models/Sucursal');
 const Product = require('../models/Product');
+
 const ProductSucursal = require('../models/ProductSucursal');
 const ProductProvider = require('../models/ProductProvider');
+
 const Employee = require('../models/Employee');
 
 
@@ -49,6 +51,7 @@ let prodsSuc = new ProductSucursal({
    idSuc: 2,
    salePrice: 300,
 })
+
 newSucursal.addProduct(prodsSuc)
 
 /* ------------------------------------------------------------------ */
