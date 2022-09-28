@@ -1,4 +1,5 @@
 const { model } = require("mongoose");
+const reportSchema = require("./schemas/ReportSchema");
 
 class Report {
   constructor(Notification, idProduct, idProvider, idUser) {
@@ -9,7 +10,7 @@ class Report {
   }
 
   getAll() {
-    return `Report[Notification:${this.Notification}, idProduct:${this.idProduct}, lastName:${this.email}, lastName:${this.password}, sucursal:${this.sucursal}]`;
+    return `Report[Notification:${this.Notification}, idProduct:${this.idProduct}, idProvider: ${this.idProvider}, idUser: ${this.idUser}]`;
   }
 }
 
