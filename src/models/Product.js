@@ -10,13 +10,17 @@ class Product {
         this.stock = stock;
     }
     validateStatusStock(stock) {
-        if (stock == 0) {
+        if (stock === 0) {
             return 0;
-        } else if (stock >= 1) {
+        } else if (stock > 0) {
             return 1;
         } else {
             return 2;
         }
+    }
+
+    getStock(){
+        return  this.stock
     }
 }
 
