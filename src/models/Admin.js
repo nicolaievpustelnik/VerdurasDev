@@ -21,12 +21,25 @@ class Admin extends User {
 
     deleteUser(local, idUser) {
 
-        // if (Object.keys(local).length === 0) {
-        //     throw new Error('Local invalido');
-        // }
+        if (!local || Object.keys(local).length === 0) {
+            throw new Error('Local invalido');
+        }
 
         if (idUser < 1 || !idUser) {
             throw new Error('IdUser invalido');
+        }
+
+        return true;
+    }
+
+    createUser(local, user) {
+
+        if (!local || Object.keys(local).length === 0) {
+            throw new Error('Local invalido');
+        }
+
+        if (!user || Object.keys(user).length === 0) {
+            throw new Error('User invalido');
         }
 
         return true;
