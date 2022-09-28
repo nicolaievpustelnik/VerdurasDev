@@ -70,16 +70,47 @@ describe("Product", () => {
             assert.equal(atributosDelObjetoProduct[5], 'stock')
         })
     })
-}) 
+})
 
 
-describe("Product", function() {
-    describe("Stock", function() {
-    it("Stock no tiene que ser negativo ", function() {
-    result   = prodSu.validateStatusStock(1)
-    console.log(result)
-   expect([0,1]).to.include(result) 
+describe("Product", function () {
+    describe("Stock", function () {
+        it("Stock no tiene que ser negativo ", function () {
+            result = prodSu.validateStatusStock(1)
+            console.log(result)
+            expect([0, 1]).to.include(result)
+        })
+    })
+})
+
+describe("#constructor()", () => {
+    describe("con datos válidos", () => {
+        it("Crea Producto de Sucursal", () => {
+            expect(prodSuc).to.have.property('idProd').with.equal(3)
+            expect(prodSuc).to.have.property('barCode').with.equal(111)
+            expect(prodSuc).to.have.property('nomCat').with.equal("Frutas",)
+            expect(prodSuc).to.have.property('marca').with.equal("Ecuador")
+            expect(prodSuc).to.have.property('description').with.equal("Banana")
+            expect(prodSuc).to.have.property('stock').with.equal(100)
+            expect(prodSuc).to.have.property('idSuc').with.equal(2)
+            expect(prodSuc).to.have.property('salePrice').with.equal(155 )
+        })
+    })
+
+    describe("con datos inválidos", () => {
+        it("impide la creación", () => {
+            const unProducto = () => {
+                const productErroneo = new ProductSucursal("2039")
+            }
+            expect(unProducto).to.throw(Error)
+        })
+    })
+
+    describe("#getStock()", () => {
+        it('debe tener un metodo que valide el Stock', () => {
+            expect(prodSuc.validateStatusStock).to.be.a('function')
+        })
+    })
+
     
-    }); 
-    });
-   });
+})
