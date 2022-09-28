@@ -21,6 +21,10 @@ const reportSchema = new Schema(
       type: Number,
       require: true,
     },
+    date: {
+      type: Number,
+      require: true,
+    },
   },
   {
     timestamps: true,
