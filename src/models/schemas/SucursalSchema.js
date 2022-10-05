@@ -2,11 +2,11 @@ const { Schema } = require('mongoose');
 
 const sucursalSchema = new Schema({
 
-    idSuc: {
+    idSucursal: {
         type: Number,
         require: true
     },
-    nomSuc: {
+    nombreSucursal: {
         type: String,
         require: true
     },
@@ -14,11 +14,11 @@ const sucursalSchema = new Schema({
         type: String,
         require: true,
     },
-    users: {
+    usuarios: {
         type: [],
         require: false
     },
-    products: {
+    productos: {
         type: [],
         require: false
     }
