@@ -5,10 +5,10 @@ const expect = chai.expect;
 
 const Cliente = require('../src/models/Cliente');
 
-describe("Cliente",function(){
-    describe("Method id cliente", function(){
-        let newCliente= new Cliente({idCliente:123})  
-        
+describe("Cliente", function () {
+    describe("Method id cliente", function () {
+        let newCliente = new Cliente({ idCliente: 123 })
+
         let id = newCliente.getId();
 
         it("Get id", (function () {

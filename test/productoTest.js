@@ -2,22 +2,29 @@ const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect
 
-let Product = require('../src/models/Product.js');
-let ProductSucursal = require('../src/models/ProductSucursal.js')
-const prodSuc = new ProductSucursal({ idProd: 3, barCode: 111, nomCat: "Frutas", marca: "Ecuador", description: "Banana", stock: 100, idSuc: 2, salePrice: 155 })
+let Producto = require('../src/models/Producto.js');
+let ProductoSucursal = require('../src/models/ProductoSucursal.js');
+
+const prodSuc = new ProductoSucursal({ idProducto: 3, codigoBarra: 111, nombreCategoria: "Frutas", marca: "Ecuador", descripcion: "Banana", stock: 100, idSucursal: 2, precioVenta: 155 })
 
 describe("ProductoDeSucursal", () => {
     describe("Registros", () => {
+
         it('debe tener cargado un registro en ID', () => {
-            assert.equal(prodSuc.idProd, 3)
+            assert.equal(prodSuc.idProducto, 3)
         })
 
-        it('debe tener cargado un registro en BARCODE', () => {
-            assert.equal(prodSuc.barCode, 111)
+        it("debe tener cargado un registro en ID number", (function () {
+            assert.typeOf(prodSuc.idProducto, "number");
+        }));
+
+
+        it('debe tener cargado un registro en codigoBarra', () => {
+            assert.equal(prodSuc.codigoBarra, 111)
         })
 
         it('debe tener cargado un registro en NOMBRE_DE_CATEGORIA', () => {
-            assert.equal(prodSuc.nomCat, 'Frutas')
+            assert.equal(prodSuc.nombreCategoria, 'Frutas')
         })
 
         it('debe tener cargado un registro en MARCA', () => {
@@ -25,7 +32,7 @@ describe("ProductoDeSucursal", () => {
         })
 
         it('debe tener cargado un registro en DESCRIPCION', () => {
-            assert.equal(prodSuc.description, 'Banana')
+            assert.equal(prodSuc.descripcion, 'Banana')
         })
 
         it('debe tener cargado un registro en STOCK', () => {
@@ -33,29 +40,29 @@ describe("ProductoDeSucursal", () => {
         })
 
         it('debe tener cargado un registro en ID_SUC', () => {
-            assert.equal(prodSuc.idSuc, 2)
+            assert.equal(prodSuc.idSucursal, 2)
         })
 
         it('debe tener cargado un registro en PRECIO_DE_LISTA', () => {
-            assert.equal(prodSuc.salePrice, 155)
+            assert.equal(prodSuc.precioVenta, 155)
         })
     })
 })
 
-const prodSu = new Product(3, 111, "Frutas", "Ecuador", "Banana", 100, 2, 155)
+const prodSu = new Producto(3, 111, "Frutas", "Ecuador", "Banana", 100, 2, 155)
 const atributosDelObjetoProduct = Object.keys(prodSu)
-describe("Product", () => {
+describe("Producto", () => {
     describe("atributos", () => {
         it('debe tener un atributo ID', () => {
-            assert.equal(atributosDelObjetoProduct[0], 'idProd')
+            assert.equal(atributosDelObjetoProduct[0], 'idProducto')
         })
 
-        it('debe tener un atributo BARCODE', () => {
-            assert.equal(atributosDelObjetoProduct[1], 'barCode')
+        it('debe tener un atributo codigoBarra', () => {
+            assert.equal(atributosDelObjetoProduct[1], 'codigoBarra')
         })
 
         it('debe tener un atributo NOMBRE_CATEGORIA', () => {
-            assert.equal(atributosDelObjetoProduct[2], 'nomCat')
+            assert.equal(atributosDelObjetoProduct[2], 'nombreCategoria')
         })
 
         it('debe tener un atributo MARCA', () => {
@@ -73,11 +80,10 @@ describe("Product", () => {
 })
 
 
-describe("Product", function () {
+describe("Producto", function () {
     describe("Stock", function () {
         it("Stock no tiene que ser negativo ", function () {
             result = prodSu.validateStatusStock(1)
-            console.log(result)
             expect([0, 1]).to.include(result)
         })
     })
@@ -86,21 +92,21 @@ describe("Product", function () {
 describe("#constructor()", () => {
     describe("con datos válidos", () => {
         it("Crea Producto de Sucursal", () => {
-            expect(prodSuc).to.have.property('idProd').with.equal(3)
-            expect(prodSuc).to.have.property('barCode').with.equal(111)
-            expect(prodSuc).to.have.property('nomCat').with.equal("Frutas",)
+            expect(prodSuc).to.have.property('idProducto').with.equal(3)
+            expect(prodSuc).to.have.property('codigoBarra').with.equal(111)
+            expect(prodSuc).to.have.property('nombreCategoria').with.equal("Frutas",)
             expect(prodSuc).to.have.property('marca').with.equal("Ecuador")
-            expect(prodSuc).to.have.property('description').with.equal("Banana")
+            expect(prodSuc).to.have.property('descripcion').with.equal("Banana")
             expect(prodSuc).to.have.property('stock').with.equal(100)
-            expect(prodSuc).to.have.property('idSuc').with.equal(2)
-            expect(prodSuc).to.have.property('salePrice').with.equal(155 )
+            expect(prodSuc).to.have.property('idSucursal').with.equal(2)
+            expect(prodSuc).to.have.property('precioVenta').with.equal(155)
         })
     })
 
     describe("con datos inválidos", () => {
         it("impide la creación", () => {
             const unProducto = () => {
-                const productErroneo = new ProductSucursal("2039")
+                const productErroneo = new ProductoSucursal("2039")
             }
             expect(unProducto).to.throw(Error)
         })
@@ -112,5 +118,5 @@ describe("#constructor()", () => {
         })
     })
 
-    
+
 })

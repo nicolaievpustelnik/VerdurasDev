@@ -22,9 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 // Glabal variables
 
 // Routes
-app.get('/', (req, res) => {
-    res.render('index')
-});
+app.use(require('./routers/index.routes'))
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')));

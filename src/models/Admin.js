@@ -1,50 +1,51 @@
 
 const { model } = require('mongoose');
 
-const User = require('./User');
-const userSchema = require('./schemas/UserSchema');
+const Usuario = require('./Usuario');
+const usuarioSchema = require('./schemas/UsuarioSchema');
 
 
-class Admin extends User {
-    constructor(firstName, lastName, email, password, sucursal) {
-        super(firstName, lastName, email, password, sucursal);
+class Admin extends Usuario {
+
+    constructor(nombre, apellido, email, password, sucursal) {
+        super(nombre, apellido, email, password, sucursal);
         this.sucursal = sucursal;
     }
 
     getAll() {
-        return `Admin[id:${this.id}, firstName:${this.firstName}, lastName:${this.lastName}, email:${this.email}, password:${this.password}, sucursal:${this.sucursal}]`;
+        return `Admin[id:${this.id}, nombre:${this.nombre}, apellido:${this.apellido}, email:${this.email}, password:${this.password}, sucursal:${this.sucursal}]`;
     }
 
-    getFullName() {
-        return `${this.firstName} ${this.lastName}`;
+    getNombreCompleto() {
+        return `${this.nombre} ${this.apellido}`;
     }
 
-    deleteUser(local, idUser) {
+    borrarUsuario(local, idUsuario) {
 
         if (!local || Object.keys(local).length === 0) {
             throw new Error('Local invalido');
         }
 
-        if (idUser < 1 || !idUser) {
-            throw new Error('IdUser invalido');
+        if (idUsuario < 1 || !idUsuario) {
+            throw new Error('IdUsuario invalido');
         }
 
         return true;
     }
 
-    createUser(local, user) {
+    crearUsuario(local, usuario) {
 
         if (!local || Object.keys(local).length === 0) {
             throw new Error('Local invalido');
         }
 
-        if (!user || Object.keys(user).length === 0) {
-            throw new Error('User invalido');
+        if (!usuario || Object.keys(usuario).length === 0) {
+            throw new Error('Usuario invalido');
         }
 
         return true;
     }
 }
 
-userSchema.loadClass(Admin);
-module.exports = model("Admin", userSchema);
+usuarioSchema.loadClass(Admin);
+module.exports = model("Admin", usuarioSchema);

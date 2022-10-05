@@ -1,31 +1,35 @@
-const {model} = require ('mongoose');
+const { model } = require('mongoose');
 
-const cliente = require("./Cliente")
-const ticket = require ("./Ticket")
-const proveedor = require ("./Proveedor")
+const Ticket = require("./Ticket");
+const Cliente = require("./Cliente");
+const Proveedor = require("./Proveedor");
 
-const movimientosSchema = require("./schemas/movimientosSchema");
+const movimientoSchema = require("./schemas/MovimientoSchema");
 
-class Movimiento{
-    constructor(idMovimiento,monto,fecha){
-        this.idMovimiento= idMovimiento;
-        this.monto=monto;
-        this.fecha=fecha;
-        this.proveedor={};
-        this.cliente={};
-        this.ticket={};
+class Movimiento {
+
+    constructor(idMovimiento, monto, fecha) {
+        this.idMovimiento = idMovimiento;
+        this.monto = monto;
+        this.fecha = fecha;
+        this.proveedor = {};
+        this.cliente = {};
+        this.ticket = {};
     }
+
     setProveedor(provedorAux) {
-        this.proveedor= new Proveedor(provedorAux)
-            
+        this.proveedor = new Proveedor(provedorAux);
+
     }
+
     setCliente(clienteAux) {
-        this.cliente = new Cliente(clienteAux)
+        this.cliente = new Cliente(clienteAux);
     }
-    setProduct(ticketAux) {
-        this.ticket = new ticket(ticketAux)
+
+    setProducto(ticketAux) {
+        this.ticket = new Ticket(ticketAux);
     }
 }
 
-movimientosSchema.loadClass(Movimiento);
-module.exports=model('Movimiento',movimientosSchema);
+movimientoSchema.loadClass(Movimiento);
+module.exports = model('Movimiento', movimientoSchema);

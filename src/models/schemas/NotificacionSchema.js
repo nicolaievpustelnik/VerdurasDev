@@ -1,8 +1,8 @@
 const { Schema } = require("mongoose");
 
-const notificationSchema = new Schema(
+const notificacionSchema = new Schema(
   {
-    message: {
+    mensaje: {
       type: String,
       require: true,
     },
@@ -11,4 +11,4 @@ const notificationSchema = new Schema(
     timestamps: true,
   }
 );
-module.exports = notificationSchema;
+module.exports = notificacionSchema;
