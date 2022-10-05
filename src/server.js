@@ -2,10 +2,10 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const path = require('path');
 
-// Initializations
+// Inicializacion
 const app = express();
 
-// Settings
+// Configuraciones
 app.set('port', process.env.PORT || 4000);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', handlebars.engine({
@@ -19,12 +19,12 @@ app.set('view engine', '.hbs');
 // Middlewares
 app.use(express.urlencoded({ extended: false }));
 
-// Glabal variables
+// Variables globales
 
-// Routes
+// Rutas
 app.use(require('./routers/index.routes'))
 
-// Static files
+// Archivos static
 app.use(express.static(path.join(__dirname, 'public')));
 
 module.exports = app;
