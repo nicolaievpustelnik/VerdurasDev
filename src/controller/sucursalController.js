@@ -15,8 +15,7 @@ const newSucursal = new Sucursal({
    products: []
 
 });
-console.log(newSucursal)
-console.log('------------------------------------------')
+
 //console.log(newSucursal.getAll())
 
 /* ------------------------------------------------------------------ */
@@ -113,10 +112,5 @@ const newEmployees = new Employee({
 
 newSucursal.addUser(newEmployees)
 
-//console.log(newSucursal)
-//console.log(newSucursal.listOfProducts())
-
-
-// console.log('------------------------------------------')
 console.log(newSucursal.getAll())
 
