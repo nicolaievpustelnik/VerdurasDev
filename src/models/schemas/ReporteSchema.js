@@ -1,27 +1,27 @@
 const { Schema } = require("mongoose");
 
-const reportSchema = new Schema(
+const reporteSchema = new Schema(
   {
     Notification: {
       type: {},
       require: true,
     },
 
-    idProduct: {
+    idProducto: {
       type: Number,
       require: true,
     },
 
-    idProvider: {
+    idProveedor: {
       type: Number,
       require: true,
     },
 
-    idUser: {
+    idUsuario: {
       type: Number,
       require: true,
     },
-    date: {
+    fecha: {
       type: Number,
       require: true,
     },
@@ -30,4 +30,4 @@ const reportSchema = new Schema(
     timestamps: true,
   }
 );
-module.exports = reportSchema;
+module.exports = reporteSchema;

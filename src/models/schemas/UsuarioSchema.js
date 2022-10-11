@@ -1,15 +1,15 @@
 const { Schema } = require('mongoose');
 const bcryptjs = require('bcryptjs');
 
-const userSchema = new Schema({
+const usuarioSchema = new Schema({
 
-    firstName: {
+    nombre: {
         type: String,
         require: true
     },
-    lastName: {
+    apellido: {
         type: String,
-        require: true,
+        require: true
     },
     email: {
         type: String,
@@ -22,19 +22,19 @@ const userSchema = new Schema({
     sucursal: {
         type: String,
         require: true
-    }
+    },
 
 }, {
     timestamps: true
 })
 
-userSchema.methods.encryptPassword = async password => {
+usuarioSchema.methods.encryptPassword = async password => {
     const salt = await bcryptjs.genSalt(10);
     return await bcryptjs.hash(password, salt);
 };
 
-userSchema.methods.matchPassword = async function (password) {
+usuarioSchema.methods.matchPassword = async function (password) {
     return await bcryptjs.compare(password, this.password);
 };
 
-module.exports = userSchema;
+module.exports = usuarioSchema;

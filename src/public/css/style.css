@@ -11,8 +11,8 @@
 }
 
 .mySectionChart {
-    width: 80%;
-    margin: auto;
+  width: 80%;
+  margin: auto;
 }
 
 .chart1 {
@@ -23,9 +23,43 @@
 }
 
 .chart2 {
-    width: 350px !important;
-    height: 350px !important;
+  width: 350px !important;
+  height: 350px !important;
+  margin-left: 150px;
+}
+
+@media (max-width: 1399.98px) {
+  .chart1 {
+    width: 400px !important;
+    height: 250px !important;
+    margin-top: 20px;
+    margin-left: 50px;
+  }
+
+  .chart2 {
+    width: 300px !important;
+    height: 300px !important;
     margin-left: 150px;
+  }
+
+}
+
+@media (max-width: 1199.98px) {
+  .chart1 {
+    width: 400px !important;
+    height: 250px !important;
+    margin-top: 20px;
+    margin-left: 50px;
+  }
+
+  .chart2 {
+    width: 220px !important;
+    height: 200px !important;
+    margin-left: 150px;
+    padding-right: 20px;
+  }
+
+
 }
 
 .iconNext {
@@ -40,8 +74,8 @@
 }
 
 .footerBlock {
-    width: 500px;
-    margin: auto;
+  width: 500px;
+  margin: auto;
 }
 
 .items .item {

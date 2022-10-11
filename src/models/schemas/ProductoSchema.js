@@ -1,15 +1,15 @@
 const { Schema } = require('mongoose');
 
-const productSchema = new Schema({
-    idProd: {
+const productoSchema = new Schema({
+    idProducto: {
         type: Number,
         require: true
     },
-    barCode: {
+    codigoBarra: {
         type: Number,
         require: true
     },
-    nomCat: {
+    nombreCategoria: {
         type: String,
         require: true
     },
@@ -17,7 +17,7 @@ const productSchema = new Schema({
         type: String,
         require: true
     },
-    description: {
+    descripcion: {
         type: String,
         require: true
     },
@@ -25,16 +25,25 @@ const productSchema = new Schema({
         type: Number,
         require: true
     },
-    idSuc: {
+    idSucursal: {
         type: Number,
-        require: true
+        require: false
     },
-    salePrice: {
+    idProveedor: {
         type: Number,
-        require: true
+        require: false
+    },
+    precioVenta: {
+        type: Number,
+        require: false
+    },
+    precioCompra: {
+        type: Number,
+        require: false
     }
+
 }, {
     timestamps: true
 })
 
-module.exports = productSchema;
+module.exports = productoSchema;
