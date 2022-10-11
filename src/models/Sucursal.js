@@ -34,9 +34,6 @@ class Sucursal {
     listOfUsuarios() {
         return this.users
     }
-    /*   addProduct(){
-          return new Product(1234567888888, 'Verduras', '2', '5', 'Tama', 'Papa', 120, 15000, 10000)
-      } */
     saludar() {
         return `Hola Mundo`
     }
