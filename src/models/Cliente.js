@@ -1,15 +1,18 @@
-const{model}= require('mongoose');
+const { model } = require('mongoose');
 
-const clienteSchema= require("./schemas/clienteSchema");
+const clienteSchema = require("./schemas/ClienteSchema");
 
-class Cliente{
-    constructor(idCliente){
-        this.idCliente=idCliente;
+class Cliente {
+
+    constructor(idCliente) {
+        this.idCliente = idCliente;
     }
-    getAll(){
-        return `Cliente[idCliente:${this.idCliente}]`
+
+    getAll() {
+        return `Cliente[idCliente:${this.idCliente}]`;
     }
-    getId(){
+
+    getId() {
         return this.idCliente;
     }
 }

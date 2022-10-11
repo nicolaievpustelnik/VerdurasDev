@@ -1,41 +1,44 @@
 const { model } = require('mongoose');
 
-const Product = require("./Product");
-const Usuario = require("./User");
+const Empleado = require('./Empleado');
+const ProductoSucursal = require('./ProductoSucursal');
 
 const sucursalSchema = require("./schemas/SucursalSchema");
-const ProductSucursal = require('./ProductSucursal');
-const Employee = require('./Employee');
 
 class Sucursal {
 
-    constructor(idSuc, nomSuc, ubicacion) {
-        this.idSuc = idSuc;
-        this.nomSuc = nomSuc;
+    constructor(idSucursal, nombreSucursal, ubicacion) {
+        this.idSucursal = idSucursal;
+        this.nombreSucursal = nombreSucursal;
         this.ubicacion = ubicacion;
-        this.users = [];
-        this.products = [];
+        this.usuarios = [];
+        this.productos = [];
     }
 
-    addProduct(productAux) {
-        let p = new ProductSucursal(productAux)
-        this.products.push(p)
+    agregarProducto(productAux) {
+        let p = new ProductoSucursal(productAux)
+        this.productos.push(p)
     }
-    addUser(userAux) {
-        let e = new Employee(userAux)
-        this.users.push(e)
+
+    agregarUsuario(userAux) {
+        let e = new Empleado(userAux)
+        this.usuarios.push(e)
     }
+
     getAll() {
-        return `Sucursal[idSuc:${this.idSuc}, nomSuc:${this.nomSuc}, ubicacion:${this.ubicacion}, users:${this.users}, products:${this.products}]`;
+        return `Sucursal[idSucursal:${this.idSucursal}, nombreSucursal:${this.nombreSucursal}, ubicacion:${this.ubicacion}, usuarios:${this.usuarios}, productos:${this.productos}]`;
     }
-    listOfProducts() {
-        return this.products
-    }
-    listOfUsuarios() {
-        return this.users
+
+    getProductos() {
+        return this.productos
     }
     saludar() {
         return `Hola Mundo`
+
+
+    getUsuarios() {
+        return this.usuarios
+
     }
 }
 

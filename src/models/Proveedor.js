@@ -1,27 +1,30 @@
-const{model} = require('mongoose');
+const { model } = require('mongoose');
 
-const productProvider= require("./ProductProvider");
-const { loadClass } = require('./schemas/movimientosSchema');
+const ProductoProveedor = require("./ProductoProveedor")
 
-const proveedorSchema= require("./schemas/proveedorSchema")
+const proveedorSchema = require("./schemas/ProveedorSchema")
 
-class Proveedor{
-    constructor(idProvedor,nombreProvedor){
-        this.idProvedor=idProvedor;
-        this.nombreProvedor=nombreProvedor;
-        this.productProvider=[];
+class Proveedor {
+
+    constructor(idProveedor, nombreProveedor) {
+        this.idProveedor = idProveedor;
+        this.nombreProveedor = nombreProveedor;
+        this.productosProveedor = [];
     }
-    setProduct(productAux) {
-        let p = new productProvider(productAux)
-        this.productProvider.push(p)
+
+    setProducto(productAux) {
+        let p = new ProductoProveedor(productAux)
+        this.productosProveedor.push(p)
     }
-    getAll(){
-        return `Proveedor[idProveedor:${this.idProvedor}, nombreProveedor:${this.nombreProvedor}, productProvider:${this.productProvider}]`
+
+    getAll() {
+        return `Proveedor[idProveedor:${this.idProveedor}, nombreProveedor:${this.nombreProveedor}, productosProveedor:${this.productosProveedor}]`
     }
-    listOfProducts(){
-        return this.productProvider
+
+    getProductos() {
+        return this.productosProveedor
     }
 
 }
-proveedorSchema,loadClass(Proveedor);
-module.exports= model('Proveedor',proveedorSchema);
+proveedorSchema, loadClass(Proveedor);
+module.exports = model('Proveedor', proveedorSchema);
