@@ -32,9 +32,13 @@ class Sucursal {
     getProductos() {
         return this.productos
     }
+    saludar() {
+        return `Hola Mundo`
+
 
     getUsuarios() {
         return this.usuarios
+
     }
 }
 
