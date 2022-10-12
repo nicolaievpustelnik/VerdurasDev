@@ -10,15 +10,15 @@ const prodSuc = new ProductoSucursal({ idProducto: 3, codigoBarra: 111, nombreCa
 describe("ProductoDeSucursal", () => {
     describe("tipo de Datos", () => {
         it('Debe ser Number el ID', () => {
-            assert.typeOf(prodSuc.idProd, "Number");
+            assert.typeOf(prodSuc.idProducto, "Number");
         })
 
-        it('Debe ser Number  BARCODE', () => {
-            assert.typeOf(prodSuc.barCode, "Number")
+        it('Debe ser Number  codigoBarra', () => {
+            assert.typeOf(prodSuc.codigoBarra, "Number")
         })
 
         it('debe ser String NOMBRE_DE_CATEGORIA', () => {
-            assert.typeOf(prodSuc.nomCat, 'String')
+            assert.typeOf(prodSuc.nombreCategoria, 'String')
         })
 
         it('debe ser String  MARCA', () => {
@@ -26,7 +26,7 @@ describe("ProductoDeSucursal", () => {
         })
 
         it('debe ser String  DESCRIPCION', () => {
-            assert.typeOf(prodSuc.description, 'String')
+            assert.typeOf(prodSuc.descripcion, 'String')
         })
 
         it('debe ser Number STOCK', () => {
@@ -34,15 +34,15 @@ describe("ProductoDeSucursal", () => {
         })
 
         it('debe ser Number ID_SUC', () => {
-            assert.typeOf(prodSuc.idSuc, 'Number')
+            assert.typeOf(prodSuc.idSucursal, 'Number')
         })
 
         it('debe ser Number PRECIO_DE_LISTA', () => {
-            assert.typeOf(prodSuc.salePrice, 'Number')
+            assert.typeOf(prodSuc.precioVenta, 'Number')
         })
     })
 
-    const prodSu = new Product(3, 111, "Frutas", "Ecuador", "Banana", 100, 2, 155)
+    const prodSu = new Producto(3, 111, "Frutas", "Ecuador", "Banana", 100, 2, 155)
     const atributosDelObjetoProduct = Object.keys(prodSu)
     describe("atributos", () => {
         it('debe tener un atributo ID', () => {
@@ -62,7 +62,7 @@ describe("ProductoDeSucursal", () => {
         })
 
         it('debe tener un atributo DESCRIPCION', () => {
-            assert.equal(atributosDelObjetoProduct[4], 'description')
+            assert.equal(atributosDelObjetoProduct[4], 'descripcion')
         })
 
         it('debe tener un atributo STOCK', () => {
@@ -81,21 +81,21 @@ describe("ProductoDeSucursal", () => {
     describe("#constructor()", () => {
         describe("con datos válidos", () => {
             it("Crea Producto de Sucursal", () => {
-                expect(prodSuc).to.have.property('idProd').with.equal(3)
-                expect(prodSuc).to.have.property('barCode').with.equal(111)
-                expect(prodSuc).to.have.property('nomCat').with.equal("Frutas",)
+                expect(prodSuc).to.have.property('idProducto').with.equal(3)
+                expect(prodSuc).to.have.property('codigoBarra').with.equal(111)
+                expect(prodSuc).to.have.property('nombreCategoria').with.equal("Frutas",)
                 expect(prodSuc).to.have.property('marca').with.equal("Ecuador")
-                expect(prodSuc).to.have.property('description').with.equal("Banana")
+                expect(prodSuc).to.have.property('descripcion').with.equal("Banana")
                 expect(prodSuc).to.have.property('stock').with.equal(100)
-                expect(prodSuc).to.have.property('idSuc').with.equal(2)
-                expect(prodSuc).to.have.property('salePrice').with.equal(155)
+                expect(prodSuc).to.have.property('idSucursal').with.equal(2)
+                expect(prodSuc).to.have.property('precioVenta').with.equal(155)
             })
         })
 
         describe("con datos inválidos", () => {
             it("impide la creación", () => {
                 const unProducto = () => {
-                    const productErroneo = new ProductSucursal("2039")
+                    const productErroneo = new ProductoSucursal("2039")
                 }
                 expect(unProducto).to.throw(Error)
             })
