@@ -1,9 +1,11 @@
 const { model } = require('mongoose');
 
-const Empleado = require('./Empleado');
-const ProductoSucursal = require('./ProductoSucursal');
+const Producto = require("./Producto");
+const Usuario = require("./Usuario");
 
 const sucursalSchema = require("./schemas/SucursalSchema");
+const ProductoSucursal = require('./ProductoSucursal');
+const Empleado = require('./Empleado');
 
 class Sucursal {
 
@@ -19,22 +21,21 @@ class Sucursal {
         let p = new ProductoSucursal(productAux)
         this.productos.push(p)
     }
-
     agregarUsuario(userAux) {
         let e = new Empleado(userAux)
         this.usuarios.push(e)
     }
-
     getAll() {
         return `Sucursal[idSucursal:${this.idSucursal}, nombreSucursal:${this.nombreSucursal}, ubicacion:${this.ubicacion}, usuarios:${this.usuarios}, productos:${this.productos}]`;
     }
-
-    getProductos() {
+    listaDeProductosEnSucursal() {
         return this.productos
     }
-
-    getUsuarios() {
+    listaDeUsuarios() {
         return this.usuarios
+    }
+    saludar() {
+        return `Hola Mundo`
     }
 }
 

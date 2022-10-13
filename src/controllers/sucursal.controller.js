@@ -11,8 +11,8 @@ const newSucursal = new Sucursal({
    productos: []
 
 });
-console.log(newSucursal)
-console.log('------------------------------------------')
+
+//console.log(newSucursal.getAll())
 
 
 /* ----------------------------------------------------------------- */
@@ -23,7 +23,7 @@ let prodsSuc = new ProductoSucursal({
    codigoBarra: 111,
    nombreCategoria: "Frutas",
    marca: "Ecuador",
-   description: "Banana",
+   descripcion: "Banana",
    stock: 100,
    idSucursal: 2,
    precioVenta: 155,
@@ -33,7 +33,7 @@ let prodsSuc = new ProductoSucursal({
    codigoBarra: 112,
    nombreCategoria: "Frutas",
    marca: "Frut",
-   description: "Melon",
+   descripcion: "Melon",
    stock: 200,
    idSucursal: 1,
    precioVenta: 250,
@@ -42,7 +42,7 @@ let prodsSuc = new ProductoSucursal({
    codigoBarra: 113,
    nombreCategoria: "Verdura",
    marca: "Landa",
-   description: "Zanahoria",
+   descripcion: "Zanahoria",
    stock: 500,
    idSucursal: 2,
    precioVenta: 300,
@@ -51,43 +51,9 @@ let prodsSuc = new ProductoSucursal({
 newSucursal.agregarProducto(prodsSuc)
 
 /* ------------------------------------------------------------------ */
-/* --------------------PRODUCTOS DE PROVEEDOR------------------------ */
-/* ------------------------------------------------------------------ */
-let prodsProv = new ProductoProveedor({
-   idProducto: 11,
-   codigoBarra: 221,
-   nombreCategoria: "Frutas",
-   marca: "Prov1",
-   description: "Banana",
-   stock: 1500,
-   idProveedor: 1,
-   precioCompra: 30,
-}, {
-   idProducto: 12,
-   codigoBarra: 222,
-   nombreCategoria: "Frutas",
-   marca: "Prov2",
-   description: "Mandarina",
-   stock: 1000,
-   idProveedor: 3,
-   precioCompra: 50,
-}, {
-   idProducto: 13,
-   codigoBarra: 223,
-   nombreCategoria: "Verduras",
-   marca: "Prov3",
-   description: "Apio",
-   stock: 2000,
-   idProveedor: 2,
-   precioCompra: 80,
-});
-
-newSucursal.agregarProducto(prodsProv)
-
-/* ------------------------------------------------------------------ */
 /* --------------------LISTA DE EMPLEADOS------------------------ */
 /* ------------------------------------------------------------------ */
-const newEmpleados = new Empleado({
+const nuevoEmpleado = new Empleado({
    nombre: "Nicolaiev",
    apellido: "Brito",
    email: "nicolaievbrito@gmail.com",
@@ -107,6 +73,6 @@ const newEmpleados = new Empleado({
    sucursal: "1"
 });
 
-newSucursal.agregarUsuario(newEmpleados)
+newSucursal.agregarEmpleado(nuevoEmpleado)
 
 console.log(newSucursal.getAll())
