@@ -1,7 +1,6 @@
 const Sucursal = require('../models/Sucursal');
 const Empleado = require('../models/Empleado');
 const ProductoSucursal = require('../models/ProductoSucursal');
-const ProductoProveedor = require('../models/ProductoProveedor');
 
 const newSucursal = new Sucursal({
    idSucursal: 1,
