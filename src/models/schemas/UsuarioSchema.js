@@ -23,6 +23,10 @@ const usuarioSchema = new Schema({
         type: String,
         require: true
     },
+    rol: {
+        type: String,
+        require: false
+    }
 
 }, {
     timestamps: true

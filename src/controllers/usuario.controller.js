@@ -1,7 +1,29 @@
-const Admin = require('../models/Admin');
+const usuariosControllers = {};
 
-// Codigo de prueba: Ejecutar en la terminal $node src/controllers/user.controller.js
+// Nuevo usuario
+usuariosControllers.renderizarFormUsuario = (req, res) => {
+    res.render('usuario/nuevoUsuario');
+}
+usuariosControllers.crearUsuario = (req, res) => {
+    res.send('Usuario agregado');
+}
 
-const newAdmin = new Admin({ nombre: "Nicolaiev", apellido: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "1" });
-console.log(newAdmin)
-console.log(newAdmin.getNombreCompleto())
+// Ver todos los usuarios
+usuariosControllers.renderizarUsuarios = (req, res) => {
+    res.send('Usuario agregado');
+}
+
+// Actualizar usuario
+usuariosControllers.renderizadoActualizarFormUsuario = (req, res) => {
+    res.send('Usuario agregado');
+}
+usuariosControllers.actualizarUsuario = (req, res) => {
+    res.send('Usuario agregado');
+}
+
+// Eliminar usuario
+usuariosControllers.eliminarUsuario = (req, res) => {
+    res.send('Usuario agregado');
+}
+
+module.exports = usuariosControllers;

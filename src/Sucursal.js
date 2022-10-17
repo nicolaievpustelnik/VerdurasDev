@@ -1,11 +1,8 @@
 const { model } = require('mongoose');
 
-const Producto = require("./Producto");
-const Usuario = require("./Usuario");
-
-const sucursalSchema = require("./schemas/SucursalSchema");
-const ProductoSucursal = require('./ProductoSucursal');
-const Empleado = require('./Empleado');
+const sucursalSchema = require("./models/schemas/SucursalSchema");
+const ProductoSucursal = require('./models/ProductoSucursal');
+const Empleado = require('./models/Empleado');
 
 class Sucursal {
 
@@ -33,9 +30,6 @@ class Sucursal {
     }
     listaDeUsuarios() {
         return this.usuarios
-    }
-    saludar() {
-        return `Hola Mundo`
     }
 }
 
