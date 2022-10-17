@@ -1,10 +1,12 @@
 const { Router } = require('express');
 const router = Router();
 
-const { renderIndex, renderIniciarSesion } = require('../controllers/index.controller');
+const { renderIndex, renderIniciarSesion, renderStock } = require('../controllers/index.controller');
 
 router.get('/', renderIndex);
 
 router.get('/iniciarSesion', renderIniciarSesion);
+
+router.get('/stock', renderStock);
 
 module.exports = router;

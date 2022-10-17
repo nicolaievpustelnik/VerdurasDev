@@ -2,10 +2,10 @@ const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect
 
-let Sucursal = require('../src/models/Sucursal.js');
-let ProductoSucursal = require('../src/models/ProductoSucursal.js')
-let ProductoProveedor = require('../src/models/ProductoProveedor.js')
-let Empleado = require('../src/models/Empleado.js');
+const Sucursal = require('../src/Sucursal.js');
+const ProductoSucursal = require('../src/models/ProductoSucursal.js')
+const Empleado = require('../src/models/Empleado.js');
+const Rol = require('../src/models/Rol.js');
 
 const unaSucursal = new Sucursal({
     idSucursal: 1,
@@ -14,6 +14,7 @@ const unaSucursal = new Sucursal({
     usuarios: [],
     productos: []
 })
+
 describe("Sucursal", () => {
     describe('Arrays', () => {
         it('Debe tener un listado de PRODUCTOS', () => {
@@ -46,7 +47,8 @@ describe("Sucursal", () => {
                 lastName: "Brito",
                 email: "nicolaievbrito@gmail.com",
                 password: "12345",
-                sucursal: "2"
+                sucursal: "2",
+                rol: Rol.ORGANIZADOR.name
             })
             unaSucursal.agregarUsuario(unEmpleado)
             expect(unaSucursal.listaDeUsuarios().length).to.equal(1)
