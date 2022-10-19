@@ -25,7 +25,14 @@ describe("Sucursal", () => {
     })
 
     describe('#methods', () => {
-        it('Debe tener metodo AGREGAR PRODUCTOS SUCURSAL', () => {
+        it('Debe tener metodo para poder VALIDAR si tiene el rol de recepcionista', () => {
+            const unEmpleado = new Empleado({firstName: "Nicolaiev",lastName: "Brito",email: "nicolaievbrito@gmail.com",password: "12345",sucursal: "2"
+            })
+            })
+            unaSucursal.validarRol(unEmpleado.)
+            expect(unaSucursal.listaDeProductosEnSucursal().length).to.equal(1)
+        })
+        it('Debe tener metodo para poder RECEPCIONAR', () => {
             let prodSuc = new ProductoSucursal({
                 idProducto: 3,
                 codigoBarra: 111,
@@ -36,7 +43,7 @@ describe("Sucursal", () => {
                 idSucursal: 2,
                 precioVenta: 155,
             })
-            unaSucursal.agregarProducto(prodSuc)
+            unaSucursal.recepcionarProducto(prodSuc)
             expect(unaSucursal.listaDeProductosEnSucursal().length).to.equal(1)
         })
 
@@ -52,5 +59,4 @@ describe("Sucursal", () => {
             expect(unaSucursal.listaDeUsuarios().length).to.equal(1)
         })
     })
-})
 

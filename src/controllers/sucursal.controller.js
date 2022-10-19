@@ -52,7 +52,7 @@ newSucursal.agregarProducto(prodsSuc)
 /* ------------------------------------------------------------------ */
 /* --------------------LISTA DE EMPLEADOS------------------------ */
 /* ------------------------------------------------------------------ */
-const nuevoEmpleado = new Empleado({
+const empleados = new Empleado({
    nombre: "Nicolaiev",
    apellido: "Brito",
    email: "nicolaievbrito@gmail.com",
@@ -72,6 +72,6 @@ const nuevoEmpleado = new Empleado({
    sucursal: "1"
 });
 
-newSucursal.agregarEmpleado(nuevoEmpleado)
+newSucursal.agregarEmpleado(empleados)
 
 console.log(newSucursal.getAll())
