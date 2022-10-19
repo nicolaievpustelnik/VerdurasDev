@@ -1,6 +1,7 @@
-const Sucursal = require('../models/Sucursal');
+const Sucursal = require('../Sucursal');
 const Empleado = require('../models/Empleado');
 const ProductoSucursal = require('../models/ProductoSucursal');
+const Rol = require('../models/Rol');
 
 const newSucursal = new Sucursal({
    idSucursal: 1,
@@ -26,7 +27,10 @@ let prodsSuc = new ProductoSucursal({
    stock: 100,
    idSucursal: 2,
    precioVenta: 155,
-}, {
+});
+newSucursal.agregarProducto(prodsSuc);
+
+prodsSuc = new ProductoSucursal({
 
    idProducto: 4,
    codigoBarra: 112,
@@ -36,7 +40,10 @@ let prodsSuc = new ProductoSucursal({
    stock: 200,
    idSucursal: 1,
    precioVenta: 250,
-}, {
+});
+newSucursal.agregarProducto(prodsSuc);
+
+prodsSuc = new ProductoSucursal({
    idProducto: 5,
    codigoBarra: 113,
    nombreCategoria: "Verdura",
@@ -46,32 +53,39 @@ let prodsSuc = new ProductoSucursal({
    idSucursal: 2,
    precioVenta: 300,
 })
-
 newSucursal.agregarProducto(prodsSuc)
 
 /* ------------------------------------------------------------------ */
 /* --------------------LISTA DE EMPLEADOS------------------------ */
 /* ------------------------------------------------------------------ */
-const empleados = new Empleado({
+let nuevoEmpleado = new Empleado({
    nombre: "Nicolaiev",
    apellido: "Brito",
    email: "nicolaievbrito@gmail.com",
    password: "12345",
-   sucursal: "2"
-}, {
+   sucursal: "2",
+   rol: Rol.CAJERO.name
+});
+newSucursal.agregarUsuario(nuevoEmpleado)
+
+nuevoEmpleado = new Empleado({
    nombre: "Jorge",
    apellido: "Perez",
    email: "jorgo@gmail.com",
    password: "123456",
-   sucursal: "1"
-}, {
+   sucursal: "1",
+   rol: Rol.ORGANIZADOR.name
+});
+newSucursal.agregarUsuario(nuevoEmpleado)
+
+nuevoEmpleado = new Empleado({
    nombre: "Emiliano",
    apellido: "Brito",
    email: "emi@gmail.com",
    password: "12345678",
-   sucursal: "1"
+   sucursal: "1",
+   rol: Rol.REPOSITOR.name
 });
-
-newSucursal.agregarEmpleado(empleados)
+newSucursal.agregarUsuario(nuevoEmpleado)
 
 console.log(newSucursal.getAll())

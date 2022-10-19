@@ -6,7 +6,8 @@ const expect = chai.expect;
 
 const Admin = require('../src/models/Admin');
 const Empleado = require('../src/models/Empleado');
-const Sucursal = require('../src/models/Sucursal');
+const Sucursal = require('../src/Sucursal');
+const Rol = require('../src/models/Rol.js');
 
 describe("Admin", function () {
 
@@ -61,7 +62,7 @@ describe("Admin", function () {
 
         let Suc = new Sucursal({ idSucursal: 1, nombreSucursal: "suc1", ubicacion: "Belgrano" });
         let newAdmin = new Admin({ nombre: "Nicolaiev2", apellido: "Brito2", email: "nicolaievbrito2@gmail.com", password: "54321", sucursal: "2" });
-        let newEmpleado = new Empleado({ nombre: "Nicolaiev2", apellido: "Brito2", email: "nicolaievbrito2@gmail.com", password: "54321", sucursal: "2" });
+        let newEmpleado = new Empleado({ nombre: "Nicolaiev2", apellido: "Brito2", email: "nicolaievbrito2@gmail.com", password: "54321", sucursal: "2", rol: Rol.ORGANIZADOR.name });
 
         let createAdmin = newAdmin.crearUsuario(Suc, newAdmin);
         let createEmpleado = newAdmin.crearUsuario(Suc, newEmpleado);
