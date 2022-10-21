@@ -23,8 +23,12 @@ const usuarioSchema = new Schema({
         type: String,
         require: true
     },
-    rol: {
+    tipoUsuario: {
         type: String,
+        require: true
+    },
+    rol: {
+        type: [],
         require: false
     }
 
