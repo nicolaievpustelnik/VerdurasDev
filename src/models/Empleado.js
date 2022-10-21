@@ -19,7 +19,10 @@ class Empleado extends Usuario {
         return `${this.nombre} ${this.apellido}`;
     }
 
-}
+    getRol(){
+        return this.rol
+    }
 
+}
 userSchema.loadClass(Empleado);
 module.exports = model('Empleado', userSchema);
