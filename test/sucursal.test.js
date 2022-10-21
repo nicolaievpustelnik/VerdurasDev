@@ -22,8 +22,8 @@ describe("Sucursal", () => {
         })
         it('listado de EMPLEADOS', () => {
             expect(unaSucursal.listaDeUsuarios()).to.be.an('array')
-        })
-    })
+        });
+    });
 
     describe('#methods', () => {
         it('usuarioLogueado()', () => {

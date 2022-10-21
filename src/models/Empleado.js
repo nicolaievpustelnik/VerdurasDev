@@ -5,10 +5,11 @@ const userSchema = require('./schemas/UsuarioSchema');
 
 class Empleado extends Usuario {
 
-    constructor(nombre, apellido, email, password, sucursal, rol) {
-        super(nombre, apellido, email, password, sucursal, rol);
+    constructor(nombre, apellido, email, password, sucursal, tipoUsuario, rol) {
+        super(nombre, apellido, email, password);
         this.sucursal = sucursal;
-        this.rol = rol;
+        this.tipoUsuario = tipoUsuario;
+        this.rol.push(rol);
     }
 
     getAll() {
@@ -18,11 +19,15 @@ class Empleado extends Usuario {
     getNombreCompleto() {
         return `${this.nombre} ${this.apellido}`;
     }
+<<<<<<< HEAD
 
     getRol(){
         return this.rol
     }
+=======
+}
+>>>>>>> 38c680f019ec7c4ad2b519ac76850a1fb65f41bf
 
 }
 userSchema.loadClass(Empleado);
-module.exports = model('Empleado', userSchema);
+module.exports = model('Usuario', userSchema);

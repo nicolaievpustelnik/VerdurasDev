@@ -61,3 +61,5 @@ const gotoNum = number => {
     slides[b].classList.add("p2");
     slides[prev].classList.add("prev");
 }
+
+

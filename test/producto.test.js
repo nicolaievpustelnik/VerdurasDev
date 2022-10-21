@@ -103,7 +103,7 @@ describe("ProductoDeSucursal", () => {
         })
 
         describe("Stock", function () {
-            it("Debe ser inicializado mayor a 0", function () {
+            it("inicializado mayor a 0", function () {
                 result = prodSu.validateStatusStock(1)
                 expect([0, 1]).to.include(result)
             })
