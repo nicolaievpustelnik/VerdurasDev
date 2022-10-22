@@ -17,95 +17,107 @@ const unaSucursal = new Sucursal({
 
 describe("Sucursal", () => {
 
-    describe('Arrays', () => {
+    describe('Productos en sucursal', () => {
 
-        it('Debe tener un listado de PRODUCTOS', () => {
-            expect(unaSucursal.listaDeProductosEnSucursal()).to.be.an('array')
-        })
+        it('listaDeProductosEnSucursal():Array', () => {
+
+            let producto = new ProductoSucursal({
+                idProducto: 3,
+                codigoBarra: 111,
+                nombreCategoria: "Frutas",
+                marca: "Ecuador",
+                descripcion: "Banana",
+                stock: 100,
+                idSucursal: 2,
+                precioVenta: 155,
+            });
+            unaSucursal.agregarProducto(producto);
+
+            let productos = unaSucursal.listaDeProductosEnSucursal();
+
+            expect(productos.length > 0).to.equal(true);
+            expect(productos).to.be.an('array')
+        });
     });
 
-    it('Debe tener un listado de EMPLEADOS', () => {
-        expect(unaSucursal.listaDeUsuarios()).to.be.an('array')
-    });
-});
+    describe('Lista de usuarios', () => {
 
-describe('#methods', () => {
+        it('listaDeUsuarios:Array', () => {
 
-    it('Debe tener metodo para poder VALIDAR si tiene el rol de recepcionista', () => {
-        const unEmpleado = new Empleado({
-            firstName: "Nicolaiev", lastName: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "2"
-        })
-    })
-    unaSucursal.validarRol(unEmpleado.rol)
-    expect(unaSucursal.listaDeProductosEnSucursal().length).to.equal(1)
-})
+            let unEmpleado = new Empleado({
+                firstName: "Nicolaiev",
+                lastName: "Brito",
+                email: "nicolaievbrito@gmail.com",
+                password: "12345",
+                sucursal: "2",
+                tipoUsuario: "Empleado",
+                rol: [Rol.CAJERO, Rol.ORGANIZADOR]
+            });
+            unaSucursal.agregarUsuario(unEmpleado);
 
-it('Debe tener metodo para poder RECEPCIONAR', () => {
-    let prodSuc = new ProductoSucursal({
-        idProducto: 3,
-        codigoBarra: 111,
-        nombreCategoria: "Frutas",
-        marca: "Ecuador",
-        descripcion: "Banana",
-        stock: 100,
-        idSucursal: 2,
-        precioVenta: 155,
-    })
-    unaSucursal.recepcionarProducto(prodSuc)
-    expect(unaSucursal.listaDeProductosEnSucursal().length).to.equal(1)
-})
+            let usuarios = unaSucursal.listaDeUsuarios();
 
-it('Debe tener metodo AGREGAR EMPLEADO', () => {
-    let unEmpleado = new Empleado({
-        firstName: "Nicolaiev",
-        lastName: "Brito",
-        email: "nicolaievbrito@gmail.com",
-        password: "12345",
-        sucursal: "2",
-        tipoUsuario: "Empleado",
-        rol: [Rol.CAJERO, Rol.ORGANIZADOR]
+            expect(usuarios.length > 0).to.equal(true);
+            expect(usuarios).to.be.an('array')
+        });
     });
 
-    let validarRol = unaSucursal.validarRol(unEmpleado.rol);
-    let productosEnSucursal = unaSucursal.listaDeProductosEnSucursal();
+    describe('Validar rol existente', () => {
 
-    assert.equal(validarRol, true);
-    assert.typeOf(productosEnSucursal, "array");
+        it('validarRol:boolean', () => {
+            let unEmpleado = new Empleado({
+                firstName: "Nicolaiev", lastName: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "2", tipoUsuario: "Empleado",
+                rol: [Rol.CAJERO, Rol.ORGANIZADOR]
+            })
 
-    expect(unEmpleado).to.be.an.instanceof(Empleado);
-    expect(unaSucursal.listaDeProductosEnSucursal()).to.be.an('array');
-    expect(productosEnSucursal.length > 0).to.equal(true);
-})
+            let rolesValidos = unaSucursal.validarRol(unEmpleado.rol);
 
-it('Debe tener metodo para poder RECEPCIONAR', () => {
-    let prodSuc = new ProductoSucursal({
-        idProducto: 3,
-        codigoBarra: 111,
-        nombreCategoria: "Frutas",
-        marca: "Ecuador",
-        descripcion: "Banana",
-        stock: 100,
-        idSucursal: 2,
-        precioVenta: 155,
+            expect(rolesValidos).to.equal(true);
+        });
     });
 
-    unaSucursal.agregarProducto(prodSuc);
+    describe('Alta de empleado', () => {
 
-    expect(prodSuc).to.be.an.instanceof(ProductoSucursal);
-    expect(unaSucursal.listaDeProductosEnSucursal().length).to.equal(1);
-});
+        it('agregarUsuario():boolean', () => {
+            let unEmpleado = new Empleado({
+                firstName: "Nicolaiev",
+                lastName: "Brito",
+                email: "nicolaievbrito@gmail.com",
+                password: "12345",
+                sucursal: "2",
+                tipoUsuario: "Empleado",
+                rol: [Rol.CAJERO, Rol.ORGANIZADOR]
+            });
 
-it('Debe tener metodo AGREGAR EMPLEADO', () => {
-    let unEmpleado = new Empleado({
-        firstName: "Nicolaiev",
-        lastName: "Brito",
-        email: "nicolaievbrito@gmail.com",
-        password: "12345",
-        sucursal: "2",
-        rol: Rol.ORGANIZADOR.name
+            let validarRol = unaSucursal.validarRol(unEmpleado.rol);
+            let empleadoIngresado = unaSucursal.agregarUsuario(unEmpleado);
+
+            assert.equal(validarRol, true);
+            assert.equal(empleadoIngresado, true);
+            expect(unEmpleado).to.be.an.instanceof(Empleado);
+        });
     });
 
-    unaSucursal.agregarUsuario(unEmpleado);
+    describe('Recibir producto stock', () => {
 
-    expect(unaSucursal.listaDeUsuarios().length).to.equal(1);
+        it('recibirProductoStock:boolean', () => {
+            let prodSuc = new ProductoSucursal({
+                idProducto: 3,
+                codigoBarra: 111,
+                nombreCategoria: "Frutas",
+                marca: "Ecuador",
+                descripcion: "Banana",
+                stock: 100,
+                idSucursal: 2,
+                precioVenta: 155,
+            });
+
+            let productoRecibido = unaSucursal.recibirProductoStock(prodSuc);
+            let productoEnSucursal = unaSucursal.listaDeProductosEnSucursal().length;
+
+            assert.equal(productoRecibido, true);
+            expect(prodSuc).to.be.an.instanceof(ProductoSucursal);
+            expect(productoEnSucursal).to.equal(1);
+        });
+    });
 });
