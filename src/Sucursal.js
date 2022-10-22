@@ -16,38 +16,58 @@ class Sucursal {
     }
 
     recepcionarProducto(idProveedor, idProducto, cant) {
-        let unEmpleado = this.obtenerUsuarioLogueado()
+
+        let unEmpleado = this.obtenerUsuarioLogueado();
+
         if (unEmpleado != null) {
-            if (unEmpleado.getRol() == Rol.RECEPCIONISTA || unEmpleado.getRol() == Rol.ORGANIZADOR) {
-                let unProveedor = this.obtenerProveedor(idProveedor)
-                if (unProveedor != null) {
-                    let unProductoSucursal = this.buscarProductoEnSucursal(idProducto)
-                    if (unProductoSucursal != null) {
-                        if (this.cantidadEsValida(cant)) {
-                            unProductoSucursal.actualizarStock(cant)
-                            this.movimientos.push(new Movimiento(this.calcularMonto(cant, this.obtenerPrecioCompra(idProd)),
-                                this.generarIdMovimiento(), this.generarFechaYhoraActual(), idProveedor))
+
+            for (let i = 0; i < unEmpleado.getRoles().length; i++) {
+
+                let rol = unEmpleado.getRoles()[i].name
+
+                if (rol == Rol.RECEPCIONISTA.name || rol == Rol.ORGANIZADOR.name) {
+
+
+                    if (this.obtenerProveedor(idProveedor)) {
+
+                        if (this.buscarProductoEnSucursal(idProducto)) {
+
+                            if (this.cantidadEsValida(cant)) {
+                                unProductoSucursal.actualizarStock(cant)
+                                this.movimientos.push(new Movimiento(this.calcularMonto(cant, this.obtenerPrecioCompra(idProd)),
+                                    this.generarIdMovimiento(), this.generarFechaYhoraActual(), idProveedor))
+                            } else {
+                                this.dispararAlerta(unEmpleado, "Intento de ingresar cantidad fuera de parametros")
+                            }
+
                         } else {
-                            this.dispararAlerta(unEmpleado, "Intento de ingresar cantidad fuera de parametros")
+                            console.log("Producto no esta en surtido, agregue producto antes de recepcionar!")
                         }
+
                     } else {
-                        console.log("Producto no esta en surtido, agregue producto antes de recepcionar!")
+                        console.log("Proveedor no autorizado para entrega")
+                        this.dispararAlerta(unEmpleado, "Intenta dar ingreso de mercaderia no autorizada")
                     }
+
+                    break
                 } else {
-                    console.log("Proveedor no autorizado para entrega")
-                    this.dispararAlerta(unEmpleado, "Intenta dar ingreso de mercaderia no autorizada")
+                    console.log("No cumple con el rol correspondiente!")
+                    this.dispararAlerta(unEmpleado, "Intenta ejecutar una tarea no autorizada")
                 }
-            } else {
-                console.log("No cumple con el rol correspondiente!")
-                this.dispararAlerta(unEmpleado, "Intenta ejecutar una tarea no autorizada")
+
             }
+
         } else {
             console.log("Empleado no Existe!")
         }
     }
 
     obtenerStockProducto(idProducto) {
-        return 0
+        return 0;
+    }
+
+    obtenerUsuarioLogueado() {
+        return null;
     }
 
     buscarProductoEnSucursal(idProdSuc) {
@@ -63,14 +83,26 @@ class Sucursal {
         this.productos.push(p)
     }
 
-    agregarUsuario(userAux) {
-        let e = new Empleado(userAux)
-        this.usuarios.push(e)
+    agregarUsuario(user) {
+
+        let auxUser = null;
+
+        if (user instanceof Empleado) {
+            auxUser = new Empleado(user);
+
+        } else if (user instanceof Admin) {
+            auxUser = new Admin(user);
+        }
+
+        if (this.usuarios.push(auxUser) && auxUser != null) {
+            return true;
+        }
+
+        return false;
     }
 
-    recibirProductoStock(userAux) {
-        let e = new Empleado(userAux)
-        this.usuarios.push(e)
+    recibirProductoStock(producto) {
+        return true;
     }
 
     getAll() {
