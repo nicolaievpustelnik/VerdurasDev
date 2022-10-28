@@ -52,7 +52,7 @@ class Sucursal {
     }
 
     obtenerStockProducto(idProducto) {
-        return 0
+        return this.ubicacion
     }
 
     buscarEmpleado(idEmpleado) {

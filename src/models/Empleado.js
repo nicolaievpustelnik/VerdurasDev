@@ -19,14 +19,10 @@ class Empleado extends Usuario {
     getNombreCompleto() {
         return `${this.nombre} ${this.apellido}`;
     }
-<<<<<<< HEAD
 
     getRol(){
         return this.rol
     }
-=======
-}
->>>>>>> 38c680f019ec7c4ad2b519ac76850a1fb65f41bf
 
 }
 userSchema.loadClass(Empleado);

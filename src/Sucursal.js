@@ -14,6 +14,9 @@ class Sucursal {
         this.usuarios = [];
         this.productos = [];
     }
+    getUbicacion(){
+        return this.ubicacion
+    }
 
     agregarProducto(productAux) {
         let p = new ProductoSucursal(productAux)
@@ -65,7 +68,7 @@ class Sucursal {
 
         return existeRoles
     }
+    
 }
-
 sucursalSchema.loadClass(Sucursal);
 module.exports = model('Sucursal', sucursalSchema);

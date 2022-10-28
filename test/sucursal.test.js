@@ -54,8 +54,8 @@ describe("Sucursal", () => {
 
         it('agregarEmpleado()', () => {
             const unEmpleado = new Empleado({
-                firstName: "Nicolaiev",
-                lastName: "Brito",
+                nombre: "Nicolaiev",
+                apellido: "Brito",
                 email: "nicolaievbrito@gmail.com",
                 password: "12345",
                 sucursal: "2",
@@ -64,5 +64,6 @@ describe("Sucursal", () => {
             unaSucursal.agregarUsuario(unEmpleado)
             expect(unaSucursal.listaDeUsuarios().length).to.equal(1)
         })
+        
 })
 })
