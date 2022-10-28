@@ -16,54 +16,108 @@ const unaSucursal = new Sucursal({
 })
 
 describe("Sucursal", () => {
-    describe('Arrays[]', () => {
-        it('listado de PRODUCTOS', () => {
-            expect(unaSucursal.listaDeProductosEnSucursal()).to.be.an('array')
-        })
-        it('listado de EMPLEADOS', () => {
-            expect(unaSucursal.listaDeUsuarios()).to.be.an('array')
+
+    describe('Productos en sucursal', () => {
+
+        it('listaDeProductosEnSucursal():Array', () => {
+
+            let producto = new ProductoSucursal({
+                idProducto: 3,
+                codigoBarra: 111,
+                nombreCategoria: "Frutas",
+                marca: "Ecuador",
+                descripcion: "Banana",
+                stock: 100,
+                idSucursal: 2,
+                precioVenta: 155,
+            });
+            unaSucursal.agregarProducto(producto);
+
+            let productos = unaSucursal.listaDeProductosEnSucursal();
+
+            expect(productos.length > 0).to.equal(true);
+            expect(productos).to.be.an('array')
         });
     });
 
-    describe('#methods', () => {
-        it('usuarioLogueado()', () => {
-          //sucursal debe mostrar Usuario logueado
-        })
-    
-        it('agregarProducto()', () => {
-        let prodSuc = new ProductoSucursal({
-            idProducto: 3,
-            codigoBarra: 111, 
-            nombreCategoria: "Frutas",
-            marca: "Ecuador",
-            descripcion: "Banana",
-            stock: 100,
-            idSucursal: 2,
-            precioVenta: 155,
-        })
-        unaSucursal.agregarProducto(prodSuc)
-        expect(unaSucursal.listaDeProductosEnSucursal().length).to.equal(1)
-    })
+    describe('Lista de usuarios', () => {
 
-        it('recepcionarProducto()', () => {
-            //let stock= unaSucursal.obtenerStockProducto(2)
-            //unaSucursal.recepcionarProducto(2, 1, 10)
-          expect(2).not.to.equal(3);
-        })
+        it('listaDeUsuarios:Array', () => {
 
-
-        it('agregarEmpleado()', () => {
-            const unEmpleado = new Empleado({
-                nombre: "Nicolaiev",
-                apellido: "Brito",
+            let unEmpleado = new Empleado({
+                firstName: "Nicolaiev",
+                lastName: "Brito",
                 email: "nicolaievbrito@gmail.com",
                 password: "12345",
                 sucursal: "2",
-                rol: Rol.ORGANIZADOR
+                tipoUsuario: "Empleado",
+                rol: [Rol.CAJERO, Rol.ORGANIZADOR]
+            });
+            unaSucursal.agregarUsuario(unEmpleado);
+
+            let usuarios = unaSucursal.listaDeUsuarios();
+
+            expect(usuarios.length > 0).to.equal(true);
+            expect(usuarios).to.be.an('array')
+        });
+    });
+
+    describe('Validar rol existente', () => {
+
+        it('validarRol:boolean', () => {
+            let unEmpleado = new Empleado({
+                firstName: "Nicolaiev", lastName: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "2", tipoUsuario: "Empleado",
+                rol: [Rol.CAJERO, Rol.ORGANIZADOR]
             })
-            unaSucursal.agregarUsuario(unEmpleado)
-            expect(unaSucursal.listaDeUsuarios().length).to.equal(1)
-        })
-        
-})
-})
+
+            let rolesValidos = unaSucursal.validarRol(unEmpleado.rol);
+
+            expect(rolesValidos).to.equal(true);
+        });
+    });
+
+    describe('Alta de empleado', () => {
+
+        it('agregarUsuario():boolean', () => {
+            let unEmpleado = new Empleado({
+                firstName: "Nicolaiev",
+                lastName: "Brito",
+                email: "nicolaievbrito@gmail.com",
+                password: "12345",
+                sucursal: "2",
+                tipoUsuario: "Empleado",
+                rol: [Rol.CAJERO, Rol.ORGANIZADOR]
+            });
+
+            let validarRol = unaSucursal.validarRol(unEmpleado.rol);
+            let empleadoIngresado = unaSucursal.agregarUsuario(unEmpleado);
+
+            assert.equal(validarRol, true);
+            assert.equal(empleadoIngresado, true);
+            expect(unEmpleado).to.be.an.instanceof(Empleado);
+        });
+    });
+
+    describe('Recibir producto stock', () => {
+
+        it('recibirProductoStock:boolean', () => {
+            let prodSuc = new ProductoSucursal({
+                idProducto: 3,
+                codigoBarra: 111,
+                nombreCategoria: "Frutas",
+                marca: "Ecuador",
+                descripcion: "Banana",
+                stock: 100,
+                idSucursal: 2,
+                precioVenta: 155,
+            });
+
+            let productoRecibido = unaSucursal.recibirProductoStock(prodSuc);
+            let productoEnSucursal = unaSucursal.listaDeProductosEnSucursal().length;
+
+            assert.equal(productoRecibido, true);
+            expect(prodSuc).to.be.an.instanceof(ProductoSucursal);
+            expect(productoEnSucursal).to.equal(1);
+        });
+    });
+});
