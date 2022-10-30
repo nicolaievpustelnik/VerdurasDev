@@ -4,15 +4,20 @@ const notificationSchema = require('./schemas/notificationSchema');
 
 
 class Notification {
-  constructor(message) {
-    this=message;
+  constructor(employee, errorMessage) {
+    this=employee;
+    this=errorMessage;
+    this.Date.today();
   }
 
 
     printMessage() {
-    console.log(this.message)
+    console.log(this.errorMessage);
     }
-}
-
-notificationSchema.loadClass(Notification);
+    getAll(){
+        return `Notification[Employee:${this.employee}, errorMessage:${this.errorMessage},Date:${Date.today()}`;}
+    }      
+ notificationSchema.loadClass(Notification);
 module.exports = model("Notification", notificationSchema);
+  
+
