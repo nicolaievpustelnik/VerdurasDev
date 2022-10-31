@@ -8,6 +8,7 @@ const Usuario = require('../models/Usuario');
 usuariosControllers.renderizarFormUsuario = (req, res) => {
     res.render('usuario/nuevoUsuario');
 }
+
 usuariosControllers.crearUsuario = async (req, res) => {
     try {
 
