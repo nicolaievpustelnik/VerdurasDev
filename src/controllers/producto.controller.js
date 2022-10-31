@@ -1,16 +1,36 @@
 const ProductoSucursal = require('../models/ProductoSucursal');
 
-// Codigo de prueba: Ejecutar en la terminal $node src/controllers/producto.controller.js
+// Nuevo Prodcuto
+usuariosControllers.renderizarFormUsuario = (req, res) => {
+    res.render('usuario/nuevoUsuario');
+}
 
-const newProductSuc1 = new ProductoSucursal({
-    idProducto: 1,
-    codigoBarra: 10,
-    nombreCategoria: "Verduras",
-    marca: "Tamara",
-    description: "Frutilla",
-    stock: 100,
-    idSucursal: 2,
-    precioVenta: 155,
-});
-console.log(newProductSuc1)
-console.log(newProductSuc1.getAll())
+usuariosControllers.crearUsuario = async (req, res) => {
+    try {
+
+        const { nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
+
+        let newUser = null;
+
+        switch (tipoUsuario) {
+            case 'Admin':
+                newUser = new Admin({ nombre, apellido, email, password, sucursal, tipoUsuario });
+                break;
+
+            case 'Empleado':
+                newUser = new Empleado({ nombre, apellido, email, password, sucursal, tipoUsuario, rol });
+                break;
+
+            default:
+                break;
+        }
+
+        await newUser.save();
+
+        res.send('Usuario agregado');
+
+    } catch (e) {
+
+        console.log(e)
+    }
+}
