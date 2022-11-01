@@ -2,6 +2,11 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const path = require('path');
 const morgan = require('morgan');
+var session = require('express-session')
+
+const Sucursal = require('./Sucursal');
+
+const { SUC_ID, SUC_NOMBRE, SUC_DIRECCION } = process.env;
 
 // Inicializacion
 const app = express();
@@ -26,6 +31,10 @@ app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 
 // Variables globales
+app.use((req, res, next) => {
+    res.locals.sucursal = new Sucursal({ idSucursal: SUC_ID, nombreSucursal: SUC_NOMBRE, ubicacion: SUC_DIRECCION });
+    next();
+});
 
 // Rutas
 app.use(require('./routers/index.routes'));
