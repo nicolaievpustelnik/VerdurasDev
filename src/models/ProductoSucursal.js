@@ -14,6 +14,18 @@ class ProductoSucursal extends Producto {
     getAll() {
         return `ProductoSucursal[idProducto:${this.idProducto},codigoBarra:${this.codigoBarra}, nombreCategoria:${this.nombreCategoria}, marca:${this.marca}, description:${this.description}, stock:${this.stock}, idSucursal:${this.idSucursal}, precioVenta:${this.precioVenta}]`;
     }
+
+    getPrecioVenta(){
+        return this.precioVenta;
+     }
+
+    actualizarStock(cant){
+        this.stock += cant;
+    }
+
+    getPrecio(){
+        this.precioVenta;
+    }
 }
 
 productoSchema.loadClass(ProductoSucursal);

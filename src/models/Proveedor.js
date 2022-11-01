@@ -1,8 +1,8 @@
 const { model } = require('mongoose');
 
-const ProductoProveedor = require("./ProductoProveedor")
+const ProductoProveedor = require("../models/ProductoProveedor")
 
-const proveedorSchema = require("./schemas/ProveedorSchema")
+const proveedorSchema = require("../models/schemas/ProveedorSchema")
 
 class Proveedor {
 
@@ -24,6 +24,10 @@ class Proveedor {
     getProductos() {
         return this.productosProveedor
     }
+
+    /* getPrecioCompra(scanner){
+        return this.productosProveedor.find(p => p.scanner == scanner);
+     } */
 
 }
 proveedorSchema, loadClass(Proveedor);

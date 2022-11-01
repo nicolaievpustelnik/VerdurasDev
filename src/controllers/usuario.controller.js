@@ -12,17 +12,17 @@ usuariosControllers.renderizarFormUsuario = (req, res) => {
 usuariosControllers.crearUsuario = async (req, res) => {
     try {
 
-        const { nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
+        const { Legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
 
         let newUser = null;
 
         switch (tipoUsuario) {
             case 'Admin':
-                newUser = new Admin({ nombre, apellido, email, password, sucursal, tipoUsuario });
+                newUser = new Admin({Legajo, nombre, apellido, email, password, sucursal, tipoUsuario });
                 break;
 
             case 'Empleado':
-                newUser = new Empleado({ nombre, apellido, email, password, sucursal, tipoUsuario, rol });
+                newUser = new Empleado({ Legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol });
                 break;
 
             default:

@@ -4,6 +4,9 @@ const sucursalSchema = require("./models/schemas/SucursalSchema");
 const ProductoSucursal = require('./models/ProductoSucursal');
 const Empleado = require('./models/Empleado');
 const Rol = require('./models/Rol');
+const Cliente = require('./models/Cliente');
+//const Movimiento = require('./models/Movimiento');
+//const Incidente = require('./models/Incidente'); 
 
 class Sucursal {
 
@@ -11,101 +14,137 @@ class Sucursal {
         this.idSucursal = idSucursal;
         this.nombreSucursal = nombreSucursal;
         this.ubicacion = ubicacion;
-        this.usuarios = [];
-        this.productos = [];
+        this.productosDeSucursal = [];
+        this.proveedoresAutorizados = [];
+        this.movimientos = [];
+        this.empleadosDeSucursal = [];
+        this.incidentesSospechosos = [];
     }
     getUbicacion(){
         return this.ubicacion
     }
-
-    recepcionarProducto(idProveedor, idProducto, cant) {
-
-        let unEmpleado = this.obtenerUsuarioLogueado();
-
-        if (unEmpleado != null) {
-
-            for (let i = 0; i < unEmpleado.getRoles().length; i++) {
-
-                let rol = unEmpleado.getRoles()[i].name
-
-                if (rol == Rol.RECEPCIONISTA.name || rol == Rol.ORGANIZADOR.name) {
-
-
-                    if (this.obtenerProveedor(idProveedor)) {
-
-                        if (this.buscarProductoEnSucursal(idProducto)) {
-
-                            if (this.cantidadEsValida(cant)) {
+    recepcionarProducto(idProveedor, scanner, cant) {
+        let seRecepciono = false;
+        try {
+            var unEmpleado = this.obtenerUsuarioLogueado()
+            if (unEmpleado) {
+                if (unEmpleado.verificarSiTieneRol('Recepcionista')) {
+                    let unProveedor = this.obtenerProveedor(idProveedor)
+                    if (unProveedor) {
+                        let unProductoSucursal = this.buscarProductoEnSucursal(scanner)
+                        if (unProductoSucursal) {
+                            if (this.validarIngreso(cant)) {
                                 unProductoSucursal.actualizarStock(cant)
-                                this.movimientos.push(new Movimiento(this.calcularMonto(cant, this.obtenerPrecioCompra(idProd)),
-                                    this.generarIdMovimiento(), this.generarFechaYhoraActual(), idProveedor))
-                            } else {
-                                this.dispararAlerta(unEmpleado, "Intento de ingresar cantidad fuera de parametros")
+                                this.generarMovimiento(cant, unProductoSucursal, unProveedor);
+                                seRecepciono = true;
                             }
-
-                        } else {
-                            console.log("Producto no esta en surtido, agregue producto antes de recepcionar!")
                         }
+                    }
+                }
+            }
+        } catch (err) {
+            this.dispararAlerta(unEmpleado, err.message);
+        }
+        return seRecepciono;
+    }
 
-                    } else {
-                        console.log("Proveedor no autorizado para entrega")
-                        this.dispararAlerta(unEmpleado, "Intenta dar ingreso de mercaderia no autorizada")
+   dispararAlerta(unEmpleado, error) {
+        console.log(`Empleado  ${unEmpleado.nombreApellido}, '--> ' ${error}`)
+        this.incidentesSospechosos.push(new Incidente(unEmpleado, error));
+    }
+
+    getDisponible() {
+        this.disponible = true;
+    }
+
+    egresarProducto(dni, scanner, cant) {
+        try {
+            var unEmpleado = this.obtenerUsuarioLogueado()
+            if (unEmpleado) {
+                if (unEmpleado.verificarSiTieneRol('Cajero')) {
+                    let unCliente = new Cliente(dni);
+                    let unProductoSucursal = this.buscarProductoEnSucursal(scanner)
+                    if (this.hayStock(unProductoSucursal, cant)) {
+                        if (this.validarEgreso(cant)) {
+                            unProductoSucursal.actualizarStock(-cant)
+                            this.generarMovimiento(cant, unProductoSucursal, unCliente);
+                        }
                     }
 
-                    break
-                } else {
-                    console.log("No cumple con el rol correspondiente!")
-                    this.dispararAlerta(unEmpleado, "Intenta ejecutar una tarea no autorizada")
                 }
-
             }
-
-        } else {
-            console.log("Empleado no Existe!")
+        } catch (err) {
+            this.dispararAlerta(unEmpleado, err.message);
         }
+    }
+
+    generarMovimiento(cant, unProducto, unEnte) {
+        return this.movimientos.push(new Movimiento(this.calcularMonto(cant, unEnte, unProducto)),
+            this.generarFechaYhoraActual(), unEnte)
+    }
+
+    generarFechaYhoraActual() {
+        return new Date().toLocaleString();
+    }
+
+    calcularMonto(cant, unEnte, unProducto) {
+        let unMonto = 0
+        if (unEnte instanceof Cliente) {
+            unMonto = cant * unProducto.getPrecio();
+        } else {
+            unMonto = cant * unEnte.getPrecioCompra(unProducto.getScanner());
+        }
+        return unMonto
+    }
+
+    obtenerProveedor(idProveedor) {
+        let unProveedor = this.proveedoresAutorizados.find(p => p.idProveedor == idProveedor);
+        if (!unProveedor) throw new Error('Intenta ingresar mercaderia a proveedor no autorizado');
+        return unProveedor;
     }
 
     obtenerStockProducto(idProducto) {
-        return 0;
+        return this.ProductoDeSucursal.find(p => p.idProducto == idProducto).getStock();
     }
 
-    obtenerUsuarioLogueado() {
-        return null;
+    buscarEmpleado(legajo) {
+        return this.empleadosDeSucursal.find(u => u.legajo == legajo);
     }
 
-    buscarProductoEnSucursal(idProdSuc) {
-        return productosSucursal.find(ps => ps.idProducto == idProdSuc);
+    asignarRol(legajo, unRol) {
+        let unEmpleado = this.buscarEmpleado(legajo)
+        unEmpleado.agregarRol(unRol)
     }
 
-    buscarEmpleado(idEmpleado) {
-        return this.empleados.find(u => u.idEmpleado == idEmpleado);
+    buscarProductoEnSucursal(scanner) {
+        return this.productosDeSucursal.find(ps => ps.codigoBarra === scanner);
     }
 
-    agregarProducto(productAux) {
-        let p = new ProductoSucursal(productAux)
-        this.productos.push(p)
-    }
-
-    agregarUsuario(user) {
-
-        let auxUser = null;
-
-        if (user instanceof Empleado) {
-            auxUser = new Empleado(user);
-
-        } else if (user instanceof Admin) {
-            auxUser = new Admin(user);
+    agregarProducto(unProducto) {
+        let sePudo = false;
+        if (this.buscarProductoEnSucursal(unProducto.getScanner())) {
+            throw new Error('El Producto ya se encuentra agregado!');
+        } else {
+            this.productosDeSucursal.push(unProducto);
+            sePudo = true;
         }
-
-        if (this.usuarios.push(auxUser) && auxUser != null) {
-            return true;
-        }
-
-        return false;
+        return sePudo;
     }
 
-    recibirProductoStock(producto) {
-        return true;
+    agregarProveedor(unProveedor) {
+        this.proveedoresAutorizados.push(unProveedor);
+    }
+
+    agregarUsuario(unUsuario) {
+        let sePudo = false;
+        if (this.buscarEmpleado(unUsuario.getLegajo())) {
+            throw new Error('El legajo ya se encuentra asignado a otro empleado!');
+        } else {
+            this.empleadosDeSucursal.push(unUsuario)
+            sePudo = true;
+        }
+        return sePudo;
+
     }
 
     getAll() {
@@ -113,40 +152,46 @@ class Sucursal {
     }
 
     listaDeProductosEnSucursal() {
-        return this.productos
+        return this.productosDeSucursal
     }
 
     listaDeUsuarios() {
-        return this.usuarios
+        return this.empleadosDeSucursal
     }
 
-    validarRol(rol) {
-
-        let existeRoles = false;
-
-        for (let i = 0; i < rol.length; i++) {
-
-            let rolNombre = rol[i].name;
-
-            switch (rolNombre) {
-                case Rol.CAJERO.name:
-                    existeRoles = true;
-                    break;
-
-                case Rol.ORGANIZADOR.name:
-                    existeRoles = true;
-                    break;
-
-                case Rol.REPOSITOR.name:
-                    existeRoles = true;
-                    break;
-
-                default:
-                    break;
-            }
+    validarIngreso(cant) {
+        const CANT_MIN = 1;
+        const CANT_MAX = 1000;
+        let pudo = true;
+        if (cant < CANT_MIN || cant > CANT_MAX) {
+            throw new Error('Intenta ingresar mercaderia fuera de parametros')
         }
+        return pudo;
+    }
 
-        return existeRoles
+    validarEgreso(cant) {
+        const CANT_MIN = 1;
+        const CANT_MAX = 50;
+        let pudo = true;
+        if (cant < CANT_MIN || cant > CANT_MAX) {
+            throw new Error('Intenta egresar mercaderia fuera de parametros')
+        }
+        return pudo;
+    }
+
+    hayStock(unProductoDeSucursal, cant) {
+        let pudo = true;
+        if (unProductoDeSucursal.getStock() < cant) {
+            throw new Error('No hay stock suficiente!')
+        }
+        return pudo;
+    }
+
+    obtenerUsuarioLogueado() {
+        let unEmpleado = this.buscarEmpleado(123456);
+        //Metodo para obtener usuario Logueado
+        if (!unEmpleado) throw new Error('Empleado no Existe!')
+        return unEmpleado;
     }
     
 }
