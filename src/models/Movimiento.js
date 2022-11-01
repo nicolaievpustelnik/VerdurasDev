@@ -17,16 +17,23 @@ class Movimiento {
         this.ticket = {};
     }
 
-    setProveedor(provedorAux) {
-        this.proveedor = new Proveedor(provedorAux);
+    ingresarProveedor(provedorAux) {
 
+        pudoAgregarProovedor = false;
+
+        if (provedorAux) {
+            this.proveedor = new Proveedor(provedorAux);
+            pudoAgregarProovedor = true;
+        }
+
+        return pudoAgregarProovedor;
     }
 
-    setCliente(clienteAux) {
+    ingresarCliente(clienteAux) {
         this.cliente = new Cliente(clienteAux);
     }
 
-    setProducto(ticketAux) {
+    ingresarProducto(ticketAux) {
         this.ticket = new Ticket(ticketAux);
     }
 }
