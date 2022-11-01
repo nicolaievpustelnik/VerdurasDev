@@ -1,15 +1,14 @@
-const usuariosControllers = {};
-
 const Empleado = require('../models/Empleado');
 const Admin = require('../models/Admin');
-const Usuario = require('../models/Usuario');
+
+const usuariosControllers = {};
 
 // Nuevo usuario
 usuariosControllers.renderizarFormUsuario = (req, res) => {
     res.render('usuario/nuevoUsuario');
 }
 
-usuariosControllers.crearUsuario = async (req, res) => {
+usuariosControllers.crearUsuario = (req, res) => {
     try {
 
         const { Legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
@@ -29,9 +28,7 @@ usuariosControllers.crearUsuario = async (req, res) => {
                 break;
         }
 
-        await newUser.save();
-
-        res.send('Usuario agregado');
+        res.locals.sucursal.agregarUsuario(newUser);
 
     } catch (e) {
 
