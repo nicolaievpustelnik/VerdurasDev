@@ -7,6 +7,11 @@ class Usuario {
         this.email = email
         this.password = password
     }
+
+    getLegajo() {
+        return this.legajo;
+    }
+
 }
 
 module.exports = Usuario;

@@ -14,14 +14,27 @@ const sucursalSchema = new Schema({
         type: String,
         require: true,
     },
-    usuarios: {
+    productosDeSucursal: {
         type: [],
         require: false
     },
-    productos: {
+    proveedoresAutorizados: {
+        type: [],
+        require: false
+    },
+    movimientos: {
+        type: [],
+        require: false
+    },
+    empleadosDeSucursal: {
+        type: [],
+        require: false
+    },
+    incidentesSospechosos: {
         type: [],
         require: false
     }
+
 
 }, {
     timestamps: true
