@@ -83,22 +83,12 @@ class Sucursal {
         this.productos.push(p)
     }
 
-    agregarUsuario(user) {
+    async agregarUsuario(res, user) {
 
-        let auxUser = null;
-
-        if (user instanceof Empleado) {
-            auxUser = new Empleado(user);
-
-        } else if (user instanceof Admin) {
-            auxUser = new Admin(user);
+        if (user != null) {
+            await user.save();
+            res.send('Usuario agregado');
         }
-
-        if (this.usuarios.push(auxUser) && auxUser != null) {
-            return true;
-        }
-
-        return false;
     }
 
     recibirProductoStock(producto) {
