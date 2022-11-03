@@ -12,9 +12,15 @@ class Proveedor {
         this.productosProveedor = [];
     }
 
-    setProducto(productAux) {
-        let p = new ProductoProveedor(productAux)
-        this.productosProveedor.push(p)
+    agregarProductoAProveedor(productAux) {
+        this.productosProveedor.push(productAux)
+    }
+
+    getPrecioCompra(scanner) {
+        let prodProv = this.productosProveedor.find(p => p.codigoBarra === scanner);
+        let monto = prodProv.precioCompra;
+        return monto;
+
     }
 
     getAll() {
@@ -30,5 +36,5 @@ class Proveedor {
      } */
 
 }
-proveedorSchema, loadClass(Proveedor);
+proveedorSchema.loadClass(Proveedor);
 module.exports = model('Proveedor', proveedorSchema);

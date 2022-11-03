@@ -1,22 +1,26 @@
 const { model } = require('mongoose');
 
-const Ticket = require("./Ticket");
-const Cliente = require("./Cliente");
-const Proveedor = require("./Proveedor");
-
 const movimientoSchema = require("./schemas/MovimientoSchema");
 
 class Movimiento {
 
-    constructor(idMovimiento, monto, fecha) {
-        this.idMovimiento = idMovimiento;
+    constructor(cant,descripcionProducto,nombreProveedor,monto) {
+        this.cant = cant;
+        this.descripcionProducto = descripcionProducto;
+        this.nombreProveedor = nombreProveedor;
         this.monto = monto;
-        this.fecha = fecha;
-        this.proveedor = {};
-        this.cliente = {};
-        this.ticket = {};
+        this.fecha = new Date().toLocaleString();
     }
 
+    getAll(){
+        return `Movimiento[monto:${this.monto}, Proveedor:${this.unEnte},Producto:${this.unProducto},Producto:${this.fecha}`;
+    }
+
+    mostrar(){
+        return `[${this.fecha} Se recibio ${this.cant} kg de ${this.descripcionProducto} del Proveedor ${this.nombreProveedor} por un monto de ${this.monto} ]` 
+    }
+
+/* 
     ingresarProveedor(provedorAux) {
 
         pudoAgregarProovedor = false;
@@ -35,7 +39,7 @@ class Movimiento {
 
     ingresarProducto(ticketAux) {
         this.ticket = new Ticket(ticketAux);
-    }
+    } */
 }
 
 movimientoSchema.loadClass(Movimiento);

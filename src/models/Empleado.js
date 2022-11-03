@@ -1,58 +1,36 @@
 const { model } = require('mongoose');
 
 const Usuario = require('./Usuario');
-const Rol = require('./Rol');
-const userSchema = require('./schemas/UsuarioSchema');
+const usuarioSchema = require('./schemas/UsuarioSchema');
+const rolEnum = require('./Rol');
+const Admin = require('./Admin');
 
 class Empleado extends Usuario {
-    //CONSTRUCTOR DELMER
-    constructor(id, legajo, nombre, apellido, email, password, sucursal, tipoUsuario) {
-        super(id, legajo, nombre, apellido, email, password);
-        this.sucursal = sucursal;
-        this.tipoUsuario = tipoUsuario;
-        this.roles = [];
-    }
-    //CONSTRUCTOR NICO
-    /* constructor(nombre, apellido, email, password, sucursal, tipoUsuario, roles) {
+    
+    constructor(nombre, apellido, email, password, sucursal, tipoUsuario, rol) {
         super(nombre, apellido, email, password);
         this.sucursal = sucursal;
         this.tipoUsuario = tipoUsuario;
-        this.roles.push(roles);
-    } */
+        this.rol = rol;
+    }
 
     getAll() {
-        return `Empleado[nombre:${this.nombre}, apellido:${this.apellido}, email:${this.email}, password:${this.password}, sucursal:${this.sucursal}]`;
+        return `Empleado[nombre:${this.nombre}, apellido:${this.apellido}, email:${this.email}, password:${this.password}, sucursal:${this.sucursal}, rol:${this.rol}]`;
     }
 
-    getNombreCompleto() {
-        return `${this.nombre} ${this.apellido}`;
+    getRol() {
+        return this.rol
     }
 
-    getRoles() {
-        return this.roles
-    }
-
-     agregarRol(unRol) {
-         if (this.existeRol(unRol.nomRol)) {
-             throw new Error('Rol ya existe!')
-         }
-          return  this.roles.push(unRol); 
-     }
-
-    //Verifica si tiene rol.
-     existeRol(nombre) {
-         return !!this.roles.find(r => r.nomRol === nombre);
-     }
-
-    //Delego la responsabilidad a Empleado que me diga si tiene el rol.
-    /* verificarSiTieneRol(nom) {
-        let tieneRol = this.roles.find(r => r.nomRol == nom);
-        if (!tieneRol && (!(Usuario instanceof Admin))) {
+    verificarSiTieneRol(rol) {
+        let siTiene = false;
+        if (!(this.rol === rol || this.rol === rolEnum.ORGANIZADOR.name || Usuario instanceof Admin)) {
             throw new Error('Intenta ejecutar una tarea no autorizada');
         }
-        return !!tieneRol;
-    } */
+        siTiene = true;
+        return siTiene;
+    }
 
 }
-userSchema.loadClass(Empleado);
-module.exports = model('Usuario', userSchema);
+usuarioSchema.loadClass(Empleado);
+module.exports = model('Empleado', usuarioSchema);

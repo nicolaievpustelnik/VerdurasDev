@@ -1,14 +1,13 @@
-const movimientoControllers = {}
-
 const Movimiento = require('../models/Movimiento');
 
+const movimientoControllers = {}
 
 movimientoControllers.crearMovimiento = async (req, res) => {
     try {
 
-        const { idMovimiento, monto, fecha } = req.body;
+        const { cant,descripcionProducto,nombreProveedor,monto } = req.body;
 
-        let nuevoMovimiento = new Movimiento({ idMovimiento, monto, fecha });
+        let nuevoMovimiento = new Movimiento({ cant,descripcionProducto,nombreProveedor,monto });
 
         await nuevoMovimiento.save();
 

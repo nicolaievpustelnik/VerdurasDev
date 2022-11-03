@@ -5,14 +5,18 @@ const productoSchema = require('./schemas/ProductoSchema');
 
 class ProductoProveedor extends Producto {
 
-    constructor(idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idProveedor, precioCompra) {
-        super(idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock);
+    constructor( codigoBarra, nombreCategoria, marca, descripcion, stock, precioCompra) {
+        super(codigoBarra, nombreCategoria, marca, descripcion, stock);
         this.idProveedor = idProveedor;
         this.precioCompra = precioCompra;
     }
 
     getAll() {
-        return `ProductoProveedor[idProducto:${this.idProducto},codigoBarra:${this.codigoBarra}, nombreCategoria:${this.nombreCategoria}, marca:${this.marca}, description:${this.description}, stock:${this.stock}, idProveedor:${this.idProveedor}, precioCompra:${this.precioCompra}]`;
+        return `ProductoProveedor[codigoBarra:${this.codigoBarra}, nombreCategoria:${this.nombreCategoria}, marca:${this.marca}, description:${this.description}, stock:${this.stock}, precioCompra:${this.precioCompra}]`;
+    }
+
+    getPrecioCompra(){
+        return this.precioCompra;
     }
 }
 

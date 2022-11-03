@@ -32,8 +32,8 @@ const usuarioSchema = new Schema({
         require: true
     },
     rol: {
-        type: [],
-        require: false
+        type: String,
+        require: true
     }
 
 }, {
