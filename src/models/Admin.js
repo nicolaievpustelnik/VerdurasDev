@@ -49,4 +49,4 @@ class Admin extends Usuario {
 }
 
 usuarioSchema.loadClass(Admin);
-module.exports = model("Usuario", usuarioSchema);
+module.exports = model("Admin", usuarioSchema);

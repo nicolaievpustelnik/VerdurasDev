@@ -9,6 +9,9 @@ class Producto {
         this.stock = stock;
     }
 
+    getDescripcion(){
+        return this.codigoBarra + " " + this.descripcion;
+    }
     validateStatusStock(stock) {
         if (stock === 0) {
             return 0;

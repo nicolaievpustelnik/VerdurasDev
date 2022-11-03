@@ -1,27 +1,26 @@
 const { Schema } = require('mongoose');
 
 const movimientoSchema = new Schema({
-
-    idMovimiento: {
+    cant: {
         type: Number,
         require: true
     },
-    ticket: {
-        type: {},
+
+    descripcionProducto: {
+        type: String,
         require: true
     },
-    cliente: {
-        type: {},
-        require: false
+
+    nombreProveedor: {
+        type: String,
+        require: true
     },
-    proveedor: {
-        type: {},
-        require: false
-    },
+
     monto: {
         type: Number,
         require: true
     },
+
     fecha: {
         type: String,
         require: true
