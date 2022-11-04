@@ -137,6 +137,8 @@ describe("Sucursal", () => {
             });
             unaSucursal.agregarUsuario(unEmpleado1);
             let seEgreso = unaSucursal.egresarProducto(94807936, 111, 5);
+
+
             assert.equal(seEgreso, true);
         });
     });

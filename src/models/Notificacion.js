@@ -1,6 +1,6 @@
 const { model } = require('mongoose');
 
-const notificacionSchema = require('./schemas/notificacionSchema');
+const notificacionSchema = require('../models/schemas/NotificacionSchema');
 
 class Notificacion {
   constructor(nombreCompletoEmpleado, mensaje,fecha) {

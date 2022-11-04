@@ -30,8 +30,8 @@ class Sucursal {
                     if (unProductoSucursal != null) {
                         if (this.cantidadEsValida(cant)) {
                             unProductoSucursal.actualizarStock(cant)
-                            this.movimientos.push(new Movimiento(this.calcularMonto(cant, this.obtenerPrecioCompra(idProd)), 
-                            this.generarIdMovimiento(), this.generarFechaYhoraActual(), idProveedor))
+                            this.movimientos.push(new Movimiento(this.calcularMonto(cant, this.obtenerPrecioCompra(idProd)),
+                                this.generarIdMovimiento(), this.generarFechaYhoraActual(), idProveedor))
                         } else {
                             this.dispararAlerta(unEmpleado, "Intento de ingresar cantidad fuera de parametros")
                         }
@@ -83,7 +83,7 @@ class Sucursal {
         return this.usuarios
     }
     obtenerUsuarioLogueado() {
-     return new  Empleado({nombre: "Nicolaiev", apellido: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "2", Rol: Rol.RECEPCIONISTA})
+        return new Empleado({ nombre: "Nicolaiev", apellido: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "2", Rol: Rol.RECEPCIONISTA })
     }
 }
 
