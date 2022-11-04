@@ -6,6 +6,10 @@ const clienteSchema= new Schema({
         type:Number,
         require:true
     },
+    nombreCliente:{
+        type:String,
+        require:true
+    },
 },
 {
     timestamps: true

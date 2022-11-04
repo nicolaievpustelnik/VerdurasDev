@@ -1,7 +1,7 @@
 const Reporte = require("../models/Reporte");
 const Notificacion = require("../models/Notificacion");
 
-let newNoti = new Notificacion({nombreCompletoEmpleado:"nombreCompletoEmpleado", mensaje: "mensaje" });
+let newNoti = new Notificacion({nombreCompletoEmpleado:"nombreCompletoEmpleado", mensaje: "mensaje", fecha: "fecha" });
 
 console.log(newNoti)
 

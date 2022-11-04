@@ -7,6 +7,7 @@ const ProductoSucursal = require('../src/models/ProductoSucursal.js')
 const Empleado = require('../src/models/Empleado.js');
 const rolEnum = require('../src/models/Rol.js');
 const Proveedor = require('../src/models/Proveedor.js');
+const Movimiento = require('../src/models/Movimiento.js');
 const ProductoProveedor = require('../src/models/ProductoProveedor.js');
 
 const unaSucursal = new Sucursal({
@@ -27,7 +28,7 @@ describe("Sucursal", () => {
                 password: "12345",
                 sucursal: "2",
                 tipoUsuario: "Empleado",
-                rol: rolEnum.RECEPCIONISTA.name
+                rol: rolEnum.ORGANIZADOR.name
             });
             let empleadoIngresado = unaSucursal.agregarUsuario(unEmpleado);
             assert.equal(empleadoIngresado, true);
@@ -100,8 +101,8 @@ describe("Sucursal", () => {
         });
     });
 
-    describe('Actualizar stock', () => {
-        it('#recepcionarProducto(idProveedor, scanner, cant):booelan', () => {
+    describe('Alta Movimiento', () => {
+        it('#generarMovimiento(cant, unProducto, unEnte): Movimiento', () => {
             let unProducto = new ProductoProveedor({
                 codigoBarra: 111,
                 nombreCategoria: "Frutas",
@@ -110,21 +111,20 @@ describe("Sucursal", () => {
                 stock: 1000,
                 precioCompra: 100,
             });
-            let unProveedor = unaSucursal.obtenerProveedor(1);
-            unProveedor.agregarProductoAProveedor(unProducto);
+            let unEnte = unaSucursal.obtenerProveedor(1);
+            unEnte.agregarProductoAProveedor(unProducto);
+            let compra = unaSucursal.generarMovimiento(5, unProducto, unEnte);
+            expect(compra).to.be.an.instanceof(Movimiento);
+        });
+    });
+
+    describe('Actualizar stock', () => {
+        it('#recepcionarProducto(idProveedor, scanner, cant):booelan', () => {
             let seRecepciono = unaSucursal.recepcionarProducto(1, 111, 50);
-            
-            //no guarda Incidente, pendiente a solucionar
-            console.log(unaSucursal.incidentesSospechosos)
-
-            //Solucionar Problema en el metodo generar movimiento no puede crear un objeto Movimiento
-            //por lo tanto no se guarda los movimientos realizados
-            console.log(unaSucursal.movimientos)
-
-            // assert.equal(seRecepciono, true);
+            assert.equal(seRecepciono, true);
         });
 
-        it('#egresoProducto(dni, scanner, cant):booelan', () => {
+        it('#egresoProducto(dni, scanner, cant):boolean', () => {
             let unEmpleado1 = new Empleado({
                 legajo: 654321,
                 nombre: "Carmen",
@@ -133,13 +133,11 @@ describe("Sucursal", () => {
                 password: "12545",
                 sucursal: "2",
                 tipoUsuario: "Empleado",
-                rol: rolEnum.CAJERO.name
+                rol: rolEnum.ORGANIZADOR.name
             });
             unaSucursal.agregarUsuario(unEmpleado1);
             let seEgreso = unaSucursal.egresarProducto(94807936, 111, 5);
-       
-
-             assert.equal(seEgreso, true);
+            assert.equal(seEgreso, true);
         });
     });
 
@@ -159,4 +157,23 @@ describe("Sucursal", () => {
         });
     });
 
+    describe('Movimientos en sucursal', () => {
+        it('compras:Array', () => {
+            let compras = unaSucursal.compras;
+            expect(compras.length > 0).to.equal(true);
+            expect(compras).to.be.an('array');
+            compras.forEach(element => {
+                console.log(element.mostrar())
+            });
+        });
+
+        it('ventas:Array', () => {
+            let ventas = unaSucursal.ventas;
+            expect(ventas.length > 0).to.equal(true);
+            expect(ventas).to.be.an('array');
+            ventas.forEach(element => {
+                console.log(element.mostrar())
+            });
+        });
+    });
 });
