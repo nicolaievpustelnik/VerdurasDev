@@ -2,12 +2,12 @@ const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect
 
-const Sucursal = require('../src/Sucursal.js');
-const ProductoSucursal = require('../src/models/ProductoSucursal.js')
-const Empleado = require('../src/models/Empleado.js');
-const rolEnum = require('../src/models/Rol.js');
-const Proveedor = require('../src/models/Proveedor.js');
-const ProductoProveedor = require('../src/models/ProductoProveedor.js');
+const Sucursal = require('../src/Sucursal');
+const ProductoSucursal = require('../src/models/ProductoSucursal')
+const Empleado = require('../src/models/Empleado');
+const rolEnum = require('../src/models/Rol');
+const Proveedor = require('../src/models/Proveedor');
+const ProductoProveedor = require('../src/models/ProductoProveedor');
 
 const unaSucursal = new Sucursal({
     idSucursal: 1,
@@ -103,27 +103,34 @@ describe("Sucursal", () => {
     describe('Actualizar stock', () => {
         it('#recepcionarProducto(idProveedor, scanner, cant):booelan', () => {
             let unProducto = new ProductoProveedor({
-                codigoBarra: 111,
+                codigoBarra: 112,
                 nombreCategoria: "Frutas",
                 marca: "Ecuador",
                 descripcion: "Banana",
                 stock: 1000,
                 precioCompra: 100,
             });
+            let unProductoSuc = new ProductoSucursal({
+                idProducto: 2,
+                codigoBarra: 112,
+                nombreCategoria: 'frutas',
+                marca: 'Del campo',
+                descripcion: 'Banana',
+                stock: 100,
+                idSucursal: 1,
+                precioVenta: 500
+            });
+
+            let prov = new Proveedor({ idProveedor: 1, nombreProveedor: "Provedor test" });
+            unaSucursal.agregarProveedor(prov);
+
             let unProveedor = unaSucursal.obtenerProveedor(1);
             unProveedor.agregarProductoAProveedor(unProducto);
-            let seRecepciono = unaSucursal.recepcionarProducto(1, 111, 50);
+            unaSucursal.agregarProducto(unProductoSuc);
 
-            recepcionarProducto(idProveedor, idProducto, cant)
+            let seRecepciono = unaSucursal.recepcionarProducto(1, 112, 50);
 
-            //no guarda Incidente, pendiente a solucionar
-            console.log(unaSucursal.incidentesSospechosos)
-
-            //Solucionar Problema en el metodo generar movimiento no puede crear un objeto Movimiento
-            //por lo tanto no se guarda los movimientos realizados
-            console.log(unaSucursal.movimientos)
-
-            // assert.equal(seRecepciono, true);
+            assert.equal(seRecepciono, true);
         });
 
         it('#egresoProducto(dni, scanner, cant):booelan', () => {

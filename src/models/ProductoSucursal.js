@@ -15,15 +15,15 @@ class ProductoSucursal extends Producto {
         return `ProductoSucursal[idProducto:${this.idProducto},codigoBarra:${this.codigoBarra}, nombreCategoria:${this.nombreCategoria}, marca:${this.marca}, description:${this.description}, stock:${this.stock}, idSucursal:${this.idSucursal}, precioVenta:${this.precioVenta}]`;
     }
 
-    getPrecioVenta(){
+    getPrecioVenta() {
         return this.precioVenta;
-     }
+    }
 
-    actualizarStock(cant){
+    actualizarStock(cant) {
         this.stock += cant;
     }
 
-    getPrecio(){
+    getPrecio() {
         this.precioVenta;
     }
 }

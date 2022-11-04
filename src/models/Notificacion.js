@@ -1,6 +1,6 @@
 const { model } = require('mongoose');
 
-const notificacionSchema = require('../models/schemas/NotificacionSchema');
+const notificacionSchema = require('./schemas/NotificacionSchema');
 
 class Notificacion {
   constructor(nombreCompletoEmpleado, mensaje) {
@@ -9,7 +9,7 @@ class Notificacion {
     this.fecha = this.Date.today();
   }
   getAll() {
-    return `Notificacion[Empleado:${this.empledo}, mensaje:${this.mensaje},Date:${this.fecha}`;
+    return `Notificacion[Empleado:${this.nombreCompletoEmpleado}, mensaje:${this.mensaje}, Date:${this.fecha}`;
   }
 }
 notificacionSchema.loadClass(Notificacion);

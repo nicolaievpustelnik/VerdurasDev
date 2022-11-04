@@ -40,5 +40,4 @@ const sucursalSchema = new Schema({
     timestamps: true
 })
 
-
 module.exports = sucursalSchema;

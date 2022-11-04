@@ -6,7 +6,7 @@ const rolEnum = require('./Rol');
 const Admin = require('./Admin');
 
 class Empleado extends Usuario {
-    
+
     constructor(nombre, apellido, email, password, sucursal, tipoUsuario, rol) {
         super(nombre, apellido, email, password);
         this.sucursal = sucursal;
@@ -23,13 +23,18 @@ class Empleado extends Usuario {
     }
 
     verificarSiTieneRol(rol) {
-        let siTiene = false;
-        if (!(this.rol === rol || this.rol === rolEnum.ORGANIZADOR.name || Usuario instanceof Admin)) {
-            throw new Error('Intenta ejecutar una tarea no autorizada');
+
+        let rolValido = false;
+
+        if (rol == rolEnum.RECEPCIONISTA.name || Usuario instanceof Admin) {
+            rolValido = true;
+        } else {
+            //throw new Error('Intenta ejecutar una tarea no autorizada');
         }
-        siTiene = true;
-        return siTiene;
+
+        return rolValido;
     }
+
 
 }
 usuarioSchema.loadClass(Empleado);

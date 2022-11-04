@@ -2,7 +2,7 @@ const { model } = require('mongoose');
 
 const ProductoProveedor = require("../models/ProductoProveedor")
 
-const proveedorSchema = require("../models/schemas/ProveedorSchema")
+const proveedorSchema = require("./schemas/ProveedorSchema")
 
 class Proveedor {
 

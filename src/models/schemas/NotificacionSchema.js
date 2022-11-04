@@ -10,6 +10,10 @@ const notificacionSchema = new Schema(
       type: String,
       require: true,
     },
+    fecha: {
+      type: String,
+      require: true,
+    }
   },
   {
     timestamps: true,

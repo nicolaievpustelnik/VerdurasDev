@@ -2,6 +2,7 @@ const { model } = require('mongoose');
 
 const sucursalSchema = require("./models/schemas/SucursalSchema");
 const rolEnum = require('./models/Rol');
+const Empleado = require('./models/Empleado');
 const Cliente = require('./models/Cliente');
 const Movimiento = require('./models/Movimiento');
 const Notificacion = require('./models/Notificacion');
@@ -23,37 +24,49 @@ class Sucursal {
         return this.ubicacion
     }
 
-    recepcionarProducto(idProveedor, scanner, cant) {
+    recepcionarProducto(idProveedor, codigoBarra, cant, precioCompra) {
+
         let seRecepciono = false;
-        try {
-            var unEmpleado = this.obtenerUsuarioLogueado();
-            if (unEmpleado) {
-                if (unEmpleado.verificarSiTieneRol(rolEnum.RECEPCIONISTA.name)) {
-                    let unProveedor = this.obtenerProveedor(idProveedor)
-                    if (unProveedor) {
-                        let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner)
-                        if (unProductoSucursal) {
-                            if (this.validarIngreso(cant)) {
-                                unProductoSucursal.actualizarStock(cant)
-                                seRecepciono = true;
-                                //Pendiente a resolver, no guarda Movimiento
-                                //this.generarMovimiento(cant, unProductoSucursal, unProveedor); 
-                            }
+
+        let unEmpleado = this.obtenerUsuarioLogueado();
+
+        //try {
+        if (unEmpleado) {
+
+            if (unEmpleado.verificarSiTieneRol(unEmpleado.rol)) {
+
+                let prov = this.obtenerProveedor(idProveedor);
+                if (prov) {
+
+                    let unProductoSucursal = this.buscarUnProductoEnSucursal(codigoBarra)
+                    if (unProductoSucursal) {
+
+                        if (this.validarIngreso(cant)) {
+                            unProductoSucursal.actualizarStock(cant)
+                            seRecepciono = true;
+                            this.generarMovimiento(cant, unProductoSucursal, prov, precioCompra);
                         }
                     }
                 }
-            }
-        } catch (err) {
 
-            //no Guarda la alerta,
-            this.dispararAlerta(unEmpleado.getNombreCompleto(), err.message);
+            } else {
+                this.dispararAlerta(unEmpleado.getNombreCompleto(), "rol de usuario invalido");
+            }
         }
+
         return seRecepciono;
+
+        // } catch (err) {
+
+        //     throw new Error('Empleado invalido');
+        // }
+
+
     }
 
     dispararAlerta(nombreCompletoEmpleado, error) {
-        console.log(`Empleado  ${nombreCompletoEmpleado}, '--> ' ${error}`)
-        this.incidentesSospechosos.push(new Notificacion(nombreCompletoEmpleado, error));
+        console.log('Empleado --> ' + nombreCompletoEmpleado + ': ' + error);
+        this.incidentesSospechosos.push(new Notificacion({ nombreCompletoEmpleado: nombreCompletoEmpleado, mensaje: error }));
     }
 
     getDisponible() {
@@ -63,9 +76,9 @@ class Sucursal {
     egresarProducto(dni, scanner, cant) {
         let seEgreso = false;
         try {
-            var unEmpleado = this.obtenerUsuarioLogueado();
+            let unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
-                if (unEmpleado.verificarSiTieneRol(rolEnum.CAJERO.name)) {
+                if (unEmpleado.verificarSiTieneRol(unEmpleado.rol)) {
                     //let unCliente = new Cliente(dni); --->No puede crear cliente
                     let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner)
                     if (this.hayStock(unProductoSucursal, cant)) {
@@ -84,20 +97,19 @@ class Sucursal {
         return seEgreso
     }
 
-    generarMovimiento(cant, unProducto, unEnte) {
-        let monto = this.calcularMonto(cant, unEnte, unProducto);
-        let unMovimiento = new Movimiento(cant, unProducto.descripcion, unEnte.nombreProveedor, monto);
+    generarMovimiento(cant, unProducto, prov) {
+        let monto = this.calcularMonto(cant, prov, unProducto);
+        let unMovimiento = new Movimiento({ cant: cant, descripcionProducto: unProducto.descripcionProducto, nombreProveedor: prov.nombreProveedor, monto: monto });
         this.movimientos.push(unMovimiento);
     }
 
-    calcularMonto(cant, unEnte, unProducto) {
+    calcularMonto(cant, prov, unProducto) {
         var unMonto = 0
-        if (unEnte instanceof Cliente) {
+        if (prov instanceof Cliente) {
             unMonto = cant * unProducto.getPrecio();
         } else {
 
-            unMonto = cant * unEnte.getPrecioCompra(unProducto.codigoBarra);
-            console.log(unMonto)
+            unMonto = cant * prov.getPrecioCompra(unProducto.codigoBarra);
         }
         return unMonto
     }
@@ -190,10 +202,12 @@ class Sucursal {
     obtenerUsuarioLogueado() {
         let unEmpleado = this.buscarEmpleado(654321);
 
-        //let unAdmin = new Admin({nombre: 'Jorge', apellido: 'Castillo', email: 'jindr@admin.com', password: '123456', sucursal: '2', tipoUsuario: 'admin' })
+        // Por ahora se setea - pero el metodo tiene que buscar en la base de datos
+        let unEmpleadoAux = new Empleado({ nombre: 'Jorge', apellido: 'Castillo', email: 'jindr@admin.com', password: '123456', sucursal: '2', tipoUsuario: 'Empleado', rol: rolEnum.RECEPCIONISTA.name })
+
         //Metodo para obtener usuario Logueado
         //if (!unAdmin) throw new Error('Empleado no Existe!')
-        return unEmpleado;
+        return unEmpleadoAux;
     }
 
 }
