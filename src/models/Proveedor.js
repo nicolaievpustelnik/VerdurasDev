@@ -18,7 +18,7 @@ class Proveedor {
 
     getPrecioCompra(scanner) {
         let prodProv = this.productosProveedor.find(p => p.codigoBarra === scanner);
-        let monto = prodProv.precioCompra;
+        let monto = prodProv.getPrecioCompra();
         return monto;
 
     }

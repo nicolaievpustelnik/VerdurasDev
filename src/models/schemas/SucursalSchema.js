@@ -22,7 +22,11 @@ const sucursalSchema = new Schema({
         type: [],
         require: false
     },
-    movimientos: {
+    compras: {
+        type: [],
+        require: false
+    },
+    ventas: {
         type: [],
         require: false
     },

@@ -15,16 +15,21 @@ class Sucursal {
         this.ubicacion = ubicacion;
         this.productosDeSucursal = [];
         this.proveedoresAutorizados = [];
-        this.movimientos = [];
+        this.compras = [];
+        this.ventas = [];
         this.empleadosDeSucursal = [];
         this.incidentesSospechosos = [];
     }
 
-    getUbicacion() {
-        return this.ubicacion
+    obtenerUsuarioLogueado() {
+        let unEmpleado = this.buscarEmpleado(123456);
+        if (!unEmpleado) {
+            throw new Error('No inicio Sesion!');
+        }
+        return unEmpleado;
     }
 
-    recepcionarProducto(idProveedor, codigoBarra, cant, precioCompra) {
+    recepcionarProducto(idProveedor, codigoBarra, cant) {
 
         let seRecepciono = false;
 
@@ -44,7 +49,7 @@ class Sucursal {
                         if (this.validarIngreso(cant)) {
                             unProductoSucursal.actualizarStock(cant)
                             seRecepciono = true;
-                            this.generarMovimiento(cant, unProductoSucursal, prov, precioCompra);
+                            this.generarMovimiento(cant, unProductoSucursal, prov);
                         }
                     }
                 }
@@ -73,42 +78,88 @@ class Sucursal {
         this.disponible = true;
     }
 
-    egresarProducto(dni, scanner, cant) {
+    egresarProducto(dniCliente, nombreCliente, scanner, cant) {
+
         let seEgreso = false;
+
         try {
+
             let unEmpleado = this.obtenerUsuarioLogueado();
+
             if (unEmpleado) {
+
                 if (unEmpleado.verificarSiTieneRol(unEmpleado.rol)) {
-                    //let unCliente = new Cliente(dni); --->No puede crear cliente
-                    let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner)
+
+                    let unCliente = new Cliente({ dniCliente: dniCliente, nombreCliente: nombreCliente });
+
+                    let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner);
+
                     if (this.hayStock(unProductoSucursal, cant)) {
+
                         if (this.validarEgreso(cant)) {
                             unProductoSucursal.actualizarStock(-cant)
                             seEgreso = true;
-                            //this.generarMovimiento(cant, unProductoSucursal, unCliente);
+                            this.generarMovimiento(cant, unProductoSucursal, unCliente);
                         }
                     }
                 }
+
+            } else {
+                this.dispararAlerta(unEmpleado.getNombreCompleto(), "rol de usuario invalido");
             }
+
         } catch (err) {
-            console.log('llego fin')
-            //this.dispararAlerta(unEmpleado, err.message);
+            throw new Error('Error al agresar productos');
         }
         return seEgreso
     }
 
-    generarMovimiento(cant, unProducto, prov) {
-        let monto = this.calcularMonto(cant, prov, unProducto);
-        let unMovimiento = new Movimiento({ cant: cant, descripcionProducto: unProducto.descripcionProducto, nombreProveedor: prov.nombreProveedor, monto: monto });
-        this.movimientos.push(unMovimiento);
+    generarMovimiento(cant, unProducto, proveedor) {
+
+        let monto = this.calcularMonto(cant, proveedor, unProducto);
+        let movimiento = null;
+
+        if (proveedor instanceof Cliente) {
+            movimiento = this.generarVenta(cant, unProducto, proveedor, monto);
+
+        } else {
+            movimiento = this.generarCompra(cant, unProducto, proveedor, monto);
+        }
+
+        return movimiento;
+    }
+
+    generarVenta(cant, unProducto, proveedor, monto) {
+        let venta = new Movimiento({
+            cant: cant,
+            descripcionProducto: unProducto.descripcion,
+            nombreEnte: proveedor.nombreCliente,
+            monto: monto,
+            fecha: new Date().toLocaleDateString(),
+            tipo: "Venta"
+        });
+        this.ventas.push(venta)
+        return venta
+    }
+
+    generarCompra(cant, unProducto, proveedor, monto) {
+        let compra = new Movimiento({
+            cant: cant,
+            descripcionProducto: unProducto.descripcion,
+            nombreEnte: proveedor.nombreProveedor,
+            monto: monto,
+            fecha: new Date().toLocaleDateString(),
+            tipo: "Compra"
+        });
+        this.compras.push(compra);
+        return compra
     }
 
     calcularMonto(cant, prov, unProducto) {
         var unMonto = 0
         if (prov instanceof Cliente) {
-            unMonto = cant * unProducto.getPrecio();
+            unMonto = cant * unProducto.precioVenta;
         } else {
-
             unMonto = cant * prov.getPrecioCompra(unProducto.codigoBarra);
         }
         return unMonto
@@ -194,7 +245,7 @@ class Sucursal {
     hayStock(unProductoDeSucursal, cant) {
         let pudo = true;
         if (unProductoDeSucursal.stock < cant) {
-            throw new Error('No hay stock suficiente!')
+            throw new Error('No hay stock suficiente!');
         }
         return pudo;
     }

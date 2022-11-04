@@ -4,12 +4,13 @@ const movimientoSchema = require("./schemas/MovimientoSchema");
 
 class Movimiento {
 
-    constructor(cant, descripcionProducto, nombreProveedor, monto) {
+    constructor(cant, descripcionProducto, nombreEnte, monto, fecha, tipo) {
         this.cant = cant;
         this.descripcionProducto = descripcionProducto;
-        this.nombreProveedor = nombreProveedor;
+        this.nombreEnte = nombreEnte;
         this.monto = monto;
-        this.fecha = new Date().toLocaleString();
+        this.fecha = fecha;
+        this.tipo = tipo;
     }
 
     getAll() {
@@ -17,7 +18,11 @@ class Movimiento {
     }
 
     mostrar() {
-        return `[${this.fecha} Se recibio ${this.cant} kg de ${this.descripcionProducto} del Proveedor ${this.nombreProveedor} por un monto de ${this.monto} ]`
+        if (this.tipo === 'Compra') {
+            return `[COMPRA-->${this.fecha} Se compró ${this.cant} kg de ${this.descripcionProducto} del Proveedor ${this.nombreEnte} por un monto de ${this.monto} ]`
+        } else {
+            return `[VENTA -->${this.fecha} Se vendió ${this.cant} kg de ${this.descripcionProducto} al Cliente ${this.nombreEnte} por un monto de ${this.monto} ]`
+        }
     }
 
     /* 
