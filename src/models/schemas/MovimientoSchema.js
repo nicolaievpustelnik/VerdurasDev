@@ -11,7 +11,7 @@ const movimientoSchema = new Schema({
         require: true
     },
 
-    nombreProveedor: {
+    nombreEnte: {
         type: String,
         require: true
     },
@@ -22,6 +22,11 @@ const movimientoSchema = new Schema({
     },
 
     fecha: {
+        type: String,
+        require: true
+    },
+
+    tipo: {
         type: String,
         require: true
     },

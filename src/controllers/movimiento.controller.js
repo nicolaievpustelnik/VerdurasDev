@@ -5,9 +5,9 @@ const movimientoControllers = {}
 movimientoControllers.crearMovimiento = async (req, res) => {
     try {
 
-        const { cant,descripcionProducto,nombreProveedor,monto } = req.body;
+        const { cant,descripcionProducto,nombreEnte,monto } = req.body;
 
-        let nuevoMovimiento = new Movimiento({ cant,descripcionProducto,nombreProveedor,monto });
+        let nuevoMovimiento = new Movimiento({ cant,descripcionProducto,nombreEnte,monto,tipo });
 
         await nuevoMovimiento.save();
 

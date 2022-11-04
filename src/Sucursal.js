@@ -14,13 +14,18 @@ class Sucursal {
         this.ubicacion = ubicacion;
         this.productosDeSucursal = [];
         this.proveedoresAutorizados = [];
-        this.movimientos = [];
+        this.compras = [];
+        this.ventas = [];
         this.empleadosDeSucursal = [];
         this.incidentesSospechosos = [];
     }
 
-    getUbicacion() {
-        return this.ubicacion
+    obtenerUsuarioLogueado() {
+        let unEmpleado = this.buscarEmpleado(123456);
+        if (!unEmpleado) {
+            throw new Error('No inicio Sesion!');
+        }
+        return unEmpleado;
     }
 
     recepcionarProducto(idProveedor, scanner, cant) {
@@ -28,7 +33,7 @@ class Sucursal {
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
-                if (unEmpleado.verificarSiTieneRol(rolEnum.RECEPCIONISTA.name)) {
+                if (unEmpleado.verificarSiTieneRol(rolEnum.ORGANIZADOR.name)) {
                     let unProveedor = this.obtenerProveedor(idProveedor)
                     if (unProveedor) {
                         let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner)
@@ -36,28 +41,26 @@ class Sucursal {
                             if (this.validarIngreso(cant)) {
                                 unProductoSucursal.actualizarStock(cant)
                                 seRecepciono = true;
-                                //Pendiente a resolver, no guarda Movimiento
-                                //this.generarMovimiento(cant, unProductoSucursal, unProveedor); 
+                                this.generarMovimiento(cant, unProductoSucursal, unProveedor);
                             }
                         }
                     }
                 }
             }
         } catch (err) {
-
-            //no Guarda la alerta,
-            this.dispararAlerta(unEmpleado.getNombreCompleto(), err.message);
+            this.dispararAlerta(unEmpleado, err.message);
         }
         return seRecepciono;
     }
 
-    dispararAlerta(nombreCompletoEmpleado, error) {
-        console.log(`Empleado  ${nombreCompletoEmpleado}, '--> ' ${error}`)
-        this.incidentesSospechosos.push(new Notificacion(nombreCompletoEmpleado, error));
-    }
-
-    getDisponible() {
-        this.disponible = true;
+    dispararAlerta(unEmpleado, error) {
+        if (!unEmpleado) {
+            console.log('Usuario sin iniciar sesión')
+        } else {
+            console.log(`Empleado  ${unEmpleado.getNombreCompleto()}, '--> ' ${error}`);
+            let unaNotificacion = new Notificacion({ nombreCompletoEmpleado: unEmpleado.getNombreCompleto(), mensaje: error, fecha: new Date().toLocaleString() });
+            this.incidentesSospechosos.push(unaNotificacion);
+        }
     }
 
     egresarProducto(dni, scanner, cant) {
@@ -65,39 +68,67 @@ class Sucursal {
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
-                if (unEmpleado.verificarSiTieneRol(rolEnum.CAJERO.name)) {
-                    //let unCliente = new Cliente(dni); --->No puede crear cliente
+                if (unEmpleado.verificarSiTieneRol(rolEnum.ORGANIZADOR.name)) {
+                    let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias" });
                     let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner)
                     if (this.hayStock(unProductoSucursal, cant)) {
                         if (this.validarEgreso(cant)) {
                             unProductoSucursal.actualizarStock(-cant)
                             seEgreso = true;
-                            //this.generarMovimiento(cant, unProductoSucursal, unCliente);
+                            this.generarMovimiento(cant, unProductoSucursal, unCliente);
                         }
                     }
                 }
             }
         } catch (err) {
-            console.log('llego fin')
-            //this.dispararAlerta(unEmpleado, err.message);
+            this.dispararAlerta(unEmpleado, err.message);
         }
         return seEgreso
     }
 
     generarMovimiento(cant, unProducto, unEnte) {
+        let movimiento = null;
         let monto = this.calcularMonto(cant, unEnte, unProducto);
-        let unMovimiento = new Movimiento(cant, unProducto.descripcion, unEnte.nombreProveedor, monto);
-        this.movimientos.push(unMovimiento);
+        if (unEnte instanceof Cliente) {
+            movimiento = this.generarVenta(cant, unProducto, unEnte, monto);
+
+        } else {
+            movimiento = this.generarCompra(cant, unProducto, unEnte, monto);
+        }
+        return movimiento;
+    }
+    generarVenta(cant, unProducto, unEnte, monto) {
+        let venta = new Movimiento({
+            cant: cant,
+            descripcionProducto: unProducto.descripcion,
+            nombreEnte: unEnte.nombreCliente,
+            monto: monto,
+            fecha: new Date().toLocaleDateString(),
+            tipo: "Venta"
+        });
+        this.ventas.push(venta)
+        return venta
+    }
+
+    generarCompra(cant, unProducto, unEnte, monto) {
+        let compra = new Movimiento({
+            cant: cant,
+            descripcionProducto: unProducto.descripcion,
+            nombreEnte: unEnte.nombreProveedor,
+            monto: monto,
+            fecha: new Date().toLocaleDateString(),
+            tipo: "Compra"
+        });
+        this.compras.push(compra);
+        return compra
     }
 
     calcularMonto(cant, unEnte, unProducto) {
         var unMonto = 0
         if (unEnte instanceof Cliente) {
-            unMonto = cant * unProducto.getPrecio();
+            unMonto = cant * unProducto.precioVenta;
         } else {
-
             unMonto = cant * unEnte.getPrecioCompra(unProducto.codigoBarra);
-            console.log(unMonto)
         }
         return unMonto
     }
@@ -182,20 +213,10 @@ class Sucursal {
     hayStock(unProductoDeSucursal, cant) {
         let pudo = true;
         if (unProductoDeSucursal.stock < cant) {
-            throw new Error('No hay stock suficiente!')
+            throw new Error('No hay stock suficiente!');
         }
         return pudo;
     }
-
-    obtenerUsuarioLogueado() {
-        let unEmpleado = this.buscarEmpleado(654321);
-
-        //let unAdmin = new Admin({nombre: 'Jorge', apellido: 'Castillo', email: 'jindr@admin.com', password: '123456', sucursal: '2', tipoUsuario: 'admin' })
-        //Metodo para obtener usuario Logueado
-        //if (!unAdmin) throw new Error('Empleado no Existe!')
-        return unEmpleado;
-    }
-
 }
 sucursalSchema.loadClass(Sucursal);
 module.exports = model('Sucursal', sucursalSchema);
