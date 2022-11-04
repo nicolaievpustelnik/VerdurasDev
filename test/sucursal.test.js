@@ -113,7 +113,9 @@ describe("Sucursal", () => {
             let unProveedor = unaSucursal.obtenerProveedor(1);
             unProveedor.agregarProductoAProveedor(unProducto);
             let seRecepciono = unaSucursal.recepcionarProducto(1, 111, 50);
-            
+
+            recepcionarProducto(idProveedor, idProducto, cant)
+
             //no guarda Incidente, pendiente a solucionar
             console.log(unaSucursal.incidentesSospechosos)
 
@@ -137,9 +139,9 @@ describe("Sucursal", () => {
             });
             unaSucursal.agregarUsuario(unEmpleado1);
             let seEgreso = unaSucursal.egresarProducto(94807936, 111, 5);
-       
 
-             assert.equal(seEgreso, true);
+
+            assert.equal(seEgreso, true);
         });
     });
 
