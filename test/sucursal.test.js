@@ -1,3 +1,5 @@
+
+
 const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect
@@ -104,33 +106,23 @@ describe("Sucursal", () => {
     describe('Alta Movimiento', () => {
         it('#generarMovimiento(cant, unProducto, unEnte): Movimiento', () => {
             let unProducto = new ProductoProveedor({
-                codigoBarra: 112,
+                codigoBarra: 111,
                 nombreCategoria: "Frutas",
                 marca: "Ecuador",
                 descripcion: "Banana",
                 stock: 1000,
                 precioCompra: 100,
             });
-            let unProductoSuc = new ProductoSucursal({
-                idProducto: 2,
-                codigoBarra: 112,
-                nombreCategoria: 'frutas',
-                marca: 'Del campo',
-                descripcion: 'Banana',
-                stock: 100,
-                idSucursal: 1,
-                precioVenta: 500
-            });
+            let unEnte = unaSucursal.obtenerProveedor(1);
+            unEnte.agregarProductoAProveedor(unProducto);
+            let compra = unaSucursal.generarMovimiento(5, unProducto, unEnte);
+            expect(compra).to.be.an.instanceof(Movimiento);
+        });
+    });
 
-            let prov = new Proveedor({ idProveedor: 1, nombreProveedor: "Provedor test" });
-            unaSucursal.agregarProveedor(prov);
-
-            let unProveedor = unaSucursal.obtenerProveedor(1);
-            unProveedor.agregarProductoAProveedor(unProducto);
-            unaSucursal.agregarProducto(unProductoSuc);
-
-            let seRecepciono = unaSucursal.recepcionarProducto(1, 112, 50);
-
+    describe('Actualizar stock', () => {
+        it('#recepcionarProducto(idProveedor, scanner, cant):booelan', () => {
+            let seRecepciono = unaSucursal.recepcionarProducto(1, 111, 50);
             assert.equal(seRecepciono, true);
         });
 
@@ -146,7 +138,7 @@ describe("Sucursal", () => {
                 rol: rolEnum.ORGANIZADOR.name
             });
             unaSucursal.agregarUsuario(unEmpleado1);
-            let seEgreso = unaSucursal.egresarProducto(94807936, "Jose Perez", 111, 5);
+            let seEgreso = unaSucursal.egresarProducto(94807936, 111, 5);
 
 
             assert.equal(seEgreso, true);
@@ -174,18 +166,12 @@ describe("Sucursal", () => {
             let compras = unaSucursal.compras;
             expect(compras.length > 0).to.equal(true);
             expect(compras).to.be.an('array');
-            // compras.forEach(element => {
-            //     console.log(element.mostrar())
-            // });
         });
 
         it('ventas:Array', () => {
             let ventas = unaSucursal.ventas;
             expect(ventas.length > 0).to.equal(true);
             expect(ventas).to.be.an('array');
-            // ventas.forEach(element => {
-            //     console.log(element.mostrar())
-            // });
         });
     });
 });

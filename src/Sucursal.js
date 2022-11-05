@@ -30,43 +30,28 @@ class Sucursal {
     }
 
     recepcionarProducto(idProveedor, codigoBarra, cant) {
-
         let seRecepciono = false;
-
-        let unEmpleado = this.obtenerUsuarioLogueado();
-
-        //try {
-        if (unEmpleado) {
-
-            if (unEmpleado.verificarSiTieneRol(unEmpleado.rol)) {
-
-                let prov = this.obtenerProveedor(idProveedor);
-                if (prov) {
-
-                    let unProductoSucursal = this.buscarUnProductoEnSucursal(codigoBarra)
-                    if (unProductoSucursal) {
-
-                        if (this.validarIngreso(cant)) {
-                            unProductoSucursal.actualizarStock(cant)
-                            seRecepciono = true;
-                            this.generarMovimiento(cant, unProductoSucursal, prov);
+        try {
+            var unEmpleado = this.obtenerUsuarioLogueado();
+            if (unEmpleado) {
+                if (unEmpleado.verificarSiTieneRol(unEmpleado.rol)) {
+                    let unProveedor = this.obtenerProveedor(idProveedor)
+                    if (unProveedor) {
+                        let unProductoSucursal = this.buscarUnProductoEnSucursal(codigoBarra)
+                        if (unProductoSucursal) {
+                            if (this.validarIngreso(cant)) {
+                                unProductoSucursal.actualizarStock(cant)
+                                seRecepciono = true;
+                                this.generarMovimiento(cant, unProductoSucursal, unProveedor);
+                            }
                         }
                     }
                 }
-
-            } else {
-                this.dispararAlerta(unEmpleado.getNombreCompleto(), "rol de usuario invalido");
             }
+        } catch (err) {
+            this.dispararAlerta(unEmpleado, err.message);
         }
-
         return seRecepciono;
-
-        // } catch (err) {
-
-        //     throw new Error('Empleado invalido');
-        // }
-
-
     }
 
     dispararAlerta(nombreCompletoEmpleado, error) {
@@ -78,24 +63,15 @@ class Sucursal {
         this.disponible = true;
     }
 
-    egresarProducto(dniCliente, nombreCliente, scanner, cant) {
-
+    egresarProducto(dni, scanner, cant) {
         let seEgreso = false;
-
         try {
-
-            let unEmpleado = this.obtenerUsuarioLogueado();
-
+            var unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
-
                 if (unEmpleado.verificarSiTieneRol(unEmpleado.rol)) {
-
-                    let unCliente = new Cliente({ dniCliente: dniCliente, nombreCliente: nombreCliente });
-
-                    let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner);
-
+                    let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias" });
+                    let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner)
                     if (this.hayStock(unProductoSucursal, cant)) {
-
                         if (this.validarEgreso(cant)) {
                             unProductoSucursal.actualizarStock(-cant)
                             seEgreso = true;
@@ -103,13 +79,9 @@ class Sucursal {
                         }
                     }
                 }
-
-            } else {
-                this.dispararAlerta(unEmpleado.getNombreCompleto(), "rol de usuario invalido");
             }
-
         } catch (err) {
-            throw new Error('Error al agresar productos');
+            this.dispararAlerta(unEmpleado, err.message);
         }
         return seEgreso
     }
