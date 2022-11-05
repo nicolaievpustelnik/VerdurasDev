@@ -23,7 +23,7 @@ describe("Sucursal", () => {
     describe('Alta de empleado', () => {
         it('#agregarUsuario():boolean', () => {
             let unEmpleado = new Empleado({
-                legajo: 123456,
+                legajo: '123456',
                 nombre: "Nicolaiev",
                 apellido: "Brito",
                 email: "nicolaievbrito@gmail.com",

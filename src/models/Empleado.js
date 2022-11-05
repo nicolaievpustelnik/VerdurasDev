@@ -7,11 +7,15 @@ const Admin = require('./Admin');
 
 class Empleado extends Usuario {
 
-    constructor(nombre, apellido, email, password, sucursal, tipoUsuario, rol) {
-        super(nombre, apellido, email, password);
+    constructor(legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol) {
+        super(legajo, nombre, apellido, email, password);
         this.sucursal = sucursal;
         this.tipoUsuario = tipoUsuario;
         this.rol = rol;
+    }
+
+    getLegajo() {
+        return this.legajo;
     }
 
     getAll() {
@@ -38,4 +42,4 @@ class Empleado extends Usuario {
 
 }
 usuarioSchema.loadClass(Empleado);
-module.exports = model('Empleado', usuarioSchema);
+module.exports = model('Usuario', usuarioSchema);

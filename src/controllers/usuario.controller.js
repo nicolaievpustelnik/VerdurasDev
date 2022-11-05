@@ -11,24 +11,24 @@ usuariosControllers.renderizarFormUsuario = (req, res) => {
 usuariosControllers.crearUsuario = (req, res) => {
     try {
 
-        const { Legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
+        const { legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
 
         let newUser = null;
 
         switch (tipoUsuario) {
             case 'Admin':
-                newUser = new Admin({Legajo, nombre, apellido, email, password, sucursal, tipoUsuario });
+                newUser = new Admin({ legajo, nombre, apellido, email, password, sucursal, tipoUsuario });
                 break;
 
             case 'Empleado':
-                newUser = new Empleado({ Legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol });
+                newUser = new Empleado({ legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol });
                 break;
 
             default:
                 break;
         }
 
-        res.locals.sucursal.agregarUsuario(newUser);
+        res.locals.sucursal.agregarUsuario(res, newUser);
 
     } catch (e) {
 
@@ -37,8 +37,9 @@ usuariosControllers.crearUsuario = (req, res) => {
 }
 
 // Ver todos los usuarios
-usuariosControllers.renderizarUsuarios = (req, res) => {
-    res.send('Usuario agregado');
+usuariosControllers.renderizarUsuarios = async (req, res) => {
+    const empleados = await Empleado.find();
+    res.render('usuario/usuarios', { empleados });
 }
 
 // Actualizar usuario

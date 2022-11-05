@@ -9,10 +9,6 @@ class Usuario {
         this.password = password
     }
 
-    getLegajo() {
-        return this.legajo;
-    }
-    
     getNombreCompleto() {
         return `${this.nombre} ${this.apellido}`;
     }

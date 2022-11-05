@@ -170,16 +170,16 @@ class Sucursal {
         this.proveedoresAutorizados.push(unProveedor);
     }
 
-    agregarUsuario(unUsuario) {
-        let sePudo = false;
-        if (this.buscarEmpleado(unUsuario.getLegajo())) {
+    async agregarUsuario(res, user) {
+
+        console.log(user)
+
+        if (this.buscarEmpleado(user.getLegajo())) {
             throw new Error('El legajo ya se encuentra asignado a otro empleado!');
         } else {
-            this.empleadosDeSucursal.push(unUsuario)
-            sePudo = true;
+            await user.save();
+            res.send('Usuario agregado');
         }
-        return sePudo;
-
     }
 
     getAll() {
