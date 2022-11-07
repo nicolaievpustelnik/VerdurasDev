@@ -44,7 +44,7 @@ class Sucursal {
                                 seRecepciono = true;
                                 this.generarMovimiento(cant, unProductoSucursal, unProveedor);
                             }
-                        }
+                        }e
                     }
                 }
             }
@@ -172,14 +172,20 @@ class Sucursal {
 
     async agregarUsuario(res, user) {
 
-        console.log(user)
-
         if (this.buscarEmpleado(user.getLegajo())) {
             throw new Error('El legajo ya se encuentra asignado a otro empleado!');
         } else {
             await user.save();
-            res.send('Usuario agregado');
         }
+    }
+
+    async listaDeUsuarios() {
+        return await Empleado.find().lean();
+    }
+
+    async eliminarUsuario(id) {
+
+        await Empleado.findByIdAndDelete(id);
     }
 
     getAll() {
@@ -188,10 +194,6 @@ class Sucursal {
 
     getListaDeProductosEnSucursal() {
         return this.productosDeSucursal
-    }
-
-    listaDeUsuarios() {
-        return this.empleadosDeSucursal
     }
 
     validarIngreso(cant) {
