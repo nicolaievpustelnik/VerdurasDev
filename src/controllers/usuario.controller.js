@@ -52,7 +52,9 @@ usuariosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
 }
 
 usuariosControllers.actualizarUsuario = (req, res) => {
+    
     const { legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
+
     res.locals.sucursal.editarUsuario(req.params.id, { legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol })
     res.redirect('/usuarios');
 }
