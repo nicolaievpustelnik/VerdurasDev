@@ -23,7 +23,20 @@ app.engine('.hbs', handlebars.engine({
     layoutsDir: path.join(app.get('views'), 'layouts'),
     partialsDir: path.join(app.get('views'), 'partials'),
     usuarioDir: path.join(app.get('views'), 'usuario'),
-    extname: '.hbs'
+    extname: '.hbs',
+
+    helpers:{
+
+        ifCond: function(v1, v2, options) {
+        
+            if(v1 == v2) {
+                return options.fn(this);
+            }
+
+            return options.inverse(this);
+        }
+    }
+
 }))
 app.set('view engine', '.hbs');
 

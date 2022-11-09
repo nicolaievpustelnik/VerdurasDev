@@ -188,6 +188,11 @@ class Sucursal {
         await Empleado.findByIdAndDelete(id);
     }
 
+    async buscarUsuarioPorId(id) {
+
+        return await Empleado.findById(id).lean();
+    }
+
     getAll() {
         return `Sucursal[idSucursal:${this.idSucursal}, nombreSucursal:${this.nombreSucursal}, ubicacion:${this.ubicacion}, usuarios:${this.usuarios}, productos:${this.productos}]`;
     }

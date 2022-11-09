@@ -18,7 +18,7 @@ router.post('/nuevoUsuario', crearUsuario);
 router.get('/usuarios', renderizarUsuarios);
 
 // Editar usuario
-router.get('/editarUsuario/:id', renderizadoActualizarFormUsuario);
+router.get('/editarUsuario', renderizadoActualizarFormUsuario);
 router.put('/editarUsuario/:id', actualizarUsuario);
 
 // Eliminar usuario

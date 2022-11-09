@@ -46,9 +46,13 @@ usuariosControllers.renderizarUsuarios = async (req, res) => {
 }
 
 // Actualizar usuario
-usuariosControllers.renderizadoActualizarFormUsuario = (req, res) => {
-    res.send('Usuario actualizado');
+usuariosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
+    let query = require('url').parse(req.url,true).query;
+    let id = query.id;
+    let usuario = await res.locals.sucursal.buscarUsuarioPorId(id)
+    res.render('usuario/editarUsuario', {usuario});
 }
+
 usuariosControllers.actualizarUsuario = (req, res) => {
     res.send('Usuario actualizado');
 }
