@@ -7,10 +7,14 @@ const usuarioSchema = require('./schemas/UsuarioSchema');
 
 class Admin extends Usuario {
 
-    constructor(nombre, apellido, email, password, sucursal, tipoUsuario) {
-        super(nombre, apellido, email, password);
+    constructor(legajo, nombre, apellido, email, password, sucursal, tipoUsuario) {
+        super(legajo, nombre, apellido, email, password);
         this.sucursal = sucursal;
         this.tipoUsuario = tipoUsuario;
+    }
+
+    getLegajo() {
+        return this.legajo;
     }
 
     getAll() {
@@ -49,4 +53,4 @@ class Admin extends Usuario {
 }
 
 usuarioSchema.loadClass(Admin);
-module.exports = model("Admin", usuarioSchema);
+module.exports = model("Usuario", usuarioSchema); 

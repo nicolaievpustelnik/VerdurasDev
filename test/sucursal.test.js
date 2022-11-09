@@ -1,3 +1,5 @@
+
+
 const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect
@@ -21,7 +23,7 @@ describe("Sucursal", () => {
     describe('Alta de empleado', () => {
         it('#agregarUsuario():boolean', () => {
             let unEmpleado = new Empleado({
-                legajo: 123456,
+                legajo: '123456',
                 nombre: "Nicolaiev",
                 apellido: "Brito",
                 email: "nicolaievbrito@gmail.com",
@@ -163,18 +165,12 @@ describe("Sucursal", () => {
             let compras = unaSucursal.compras;
             expect(compras.length > 0).to.equal(true);
             expect(compras).to.be.an('array');
-            compras.forEach(element => {
-                console.log(element.mostrar())
-            });
         });
 
         it('ventas:Array', () => {
             let ventas = unaSucursal.ventas;
             expect(ventas.length > 0).to.equal(true);
             expect(ventas).to.be.an('array');
-            ventas.forEach(element => {
-                console.log(element.mostrar())
-            });
         });
     });
 });

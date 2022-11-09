@@ -2,6 +2,7 @@ const { model } = require('mongoose');
 
 sucursalSchema = require("./models/schemas/SucursalSchema");
 const rolEnum = require('./models/Rol');
+const Empleado = require('./models/Empleado');
 const Cliente = require('./models/Cliente');
 const Movimiento = require('./models/Movimiento');
 const Notificacion = require('./models/Notificacion');
@@ -29,7 +30,7 @@ class Sucursal {
         return unEmpleado;
     }
 
-    recepcionarProducto(idProveedor, scanner, cant) {
+    recepcionarProducto(idProveedor, codigoBarra, cant) {
         let seRecepciono = false;
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
@@ -44,7 +45,7 @@ class Sucursal {
                                 seRecepciono = true;
                                 this.generarMovimiento(cant, unProductoSucursal, unProveedor);
                             }
-                        }
+                        }e
                     }
                 }
             }
@@ -98,22 +99,26 @@ class Sucursal {
         return seEgreso
     }
 
-    generarMovimiento(cant, unProducto, unEnte) {
+    generarMovimiento(cant, unProducto, proveedor) {
+
+        let monto = this.calcularMonto(cant, proveedor, unProducto);
         let movimiento = null;
-        let monto = this.calcularMonto(cant, unEnte, unProducto);
-        if (unEnte instanceof Cliente) {
-            movimiento = this.generarVenta(cant, unProducto, unEnte, monto);
+
+        if (proveedor instanceof Cliente) {
+            movimiento = this.generarVenta(cant, unProducto, proveedor, monto);
 
         } else {
-            movimiento = this.generarCompra(cant, unProducto, unEnte, monto);
+            movimiento = this.generarCompra(cant, unProducto, proveedor, monto);
         }
+
         return movimiento;
     }
-    generarVenta(cant, unProducto, unEnte, monto) {
+
+    generarVenta(cant, unProducto, proveedor, monto) {
         let venta = new Movimiento({
             cant: cant,
             descripcionProducto: unProducto.descripcion,
-            nombreEnte: unEnte.nombreCliente,
+            nombreEnte: proveedor.nombreCliente,
             monto: monto,
             fecha: new Date().toLocaleDateString(),
             tipo: "Venta"
@@ -122,11 +127,11 @@ class Sucursal {
         return venta
     }
 
-    generarCompra(cant, unProducto, unEnte, monto) {
+    generarCompra(cant, unProducto, proveedor, monto) {
         let compra = new Movimiento({
             cant: cant,
             descripcionProducto: unProducto.descripcion,
-            nombreEnte: unEnte.nombreProveedor,
+            nombreEnte: proveedor.nombreProveedor,
             monto: monto,
             fecha: new Date().toLocaleDateString(),
             tipo: "Compra"
@@ -135,12 +140,12 @@ class Sucursal {
         return compra
     }
 
-    calcularMonto(cant, unEnte, unProducto) {
+    calcularMonto(cant, prov, unProducto) {
         var unMonto = 0
-        if (unEnte instanceof Cliente) {
+        if (prov instanceof Cliente) {
             unMonto = cant * unProducto.precioVenta;
         } else {
-            unMonto = cant * unEnte.getPrecioCompra(unProducto.codigoBarra);
+            unMonto = cant * prov.getPrecioCompra(unProducto.codigoBarra);
         }
         return unMonto
     }
@@ -178,16 +183,22 @@ class Sucursal {
         this.proveedoresAutorizados.push(unProveedor);
     }
 
-    agregarUsuario(unUsuario) {
-        let sePudo = false;
-        if (this.buscarEmpleado(unUsuario.getLegajo())) {
+    async agregarUsuario(res, user) {
+
+        if (this.buscarEmpleado(user.getLegajo())) {
             throw new Error('El legajo ya se encuentra asignado a otro empleado!');
         } else {
-            this.empleadosDeSucursal.push(unUsuario)
-            sePudo = true;
+            await user.save();
         }
-        return sePudo;
+    }
 
+    async listaDeUsuarios() {
+        return await Empleado.find().lean();
+    }
+
+    async eliminarUsuario(id) {
+
+        await Empleado.findByIdAndDelete(id);
     }
 
     getAll() {
@@ -196,10 +207,6 @@ class Sucursal {
 
     getListaDeProductosEnSucursal() {
         return this.productosDeSucursal
-    }
-
-    listaDeUsuarios() {
-        return this.empleadosDeSucursal
     }
 
     validarIngreso(cant) {
@@ -229,6 +236,18 @@ class Sucursal {
         }
         return pudo;
     }
+
+    obtenerUsuarioLogueado() {
+        let unEmpleado = this.buscarEmpleado(654321);
+
+        // Por ahora se setea - pero el metodo tiene que buscar en la base de datos
+        let unEmpleadoAux = new Empleado({ nombre: 'Jorge', apellido: 'Castillo', email: 'jindr@admin.com', password: '123456', sucursal: '2', tipoUsuario: 'Empleado', rol: rolEnum.RECEPCIONISTA.name })
+
+        //Metodo para obtener usuario Logueado
+        //if (!unAdmin) throw new Error('Empleado no Existe!')
+        return unEmpleadoAux;
+    }
+
 }
 sucursalSchema.loadClass(Sucursal);
 module.exports = model('Sucursal', sucursalSchema);

@@ -13,7 +13,7 @@ const notificacionSchema = new Schema(
     fecha: {
       type: String,
       require: true,
-    },
+    }
   },
   {
     timestamps: true,
