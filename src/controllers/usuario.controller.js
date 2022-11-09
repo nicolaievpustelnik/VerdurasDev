@@ -39,9 +39,7 @@ usuariosControllers.crearUsuario = async (req, res) => {
 
 // Ver todos los usuarios
 usuariosControllers.renderizarUsuarios = async (req, res) => {
-
     let usuarios = await res.locals.sucursal.listaDeUsuarios()
-
     res.render('usuario/usuarios', { usuarios });
 }
 
@@ -54,12 +52,15 @@ usuariosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
 }
 
 usuariosControllers.actualizarUsuario = (req, res) => {
-    res.send('Usuario actualizado');
+    
+    const { legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
+
+    res.locals.sucursal.editarUsuario(req.params.id, { legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol })
+    res.redirect('/usuarios');
 }
 
 // Eliminar usuario
 usuariosControllers.eliminarUsuario = (req, res) => {
-
     let id = req.params.id;
     res.locals.sucursal.eliminarUsuario(id);
     res.redirect('/usuarios');

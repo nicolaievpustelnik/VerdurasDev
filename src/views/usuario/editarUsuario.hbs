@@ -1,5 +1,6 @@
 <div class="container">
-    <form action="/nuevoUsuario" method="POST">
+    <form action="actualizarUsuario/{{usuario._id}}?_method=PUT" method="POST">
+        <input type="hidden" name="_method" value="PUT">
         <fieldset>
             <legend class="mt-5 mb-3">Editar usuario</legend>
             <div class="form-group">
@@ -25,69 +26,38 @@
             <div class="form-group">
                 <label class="form-label mt-4">Tipo de usuario</label>
                 <select class="form-select" id="selectTipoUsuario" name="tipoUsuario">
-                    {{#ifCond usuario.tipoUsuario "Admin"}}
-                        <option value="Admin" selected>Admin</option>
-                    {{/ifCond}}
-
-                    {{#ifCond usuario.tipoUsuario "Empleado"}}
-                        <option value="Empleado" selected>Empleado</option>
-                    {{/ifCond}}
+                    <option value="Empleado" >Empleado</option> 
+                    <option value="Admin">Admin</option>
                 </select>
             </div>
-
-<h2>{{usuario.rol.[1]}}</h2>
 
             <fieldset class="form-group">
                 <label class="form-label mt-4 mr-5">Tipo de rol</label>
 
-                {{#each usuario.rol}}
-                    <div class="form-check form-check-inline">                    
-                    {{#ifCond this "Cajero"}}
+                    <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="rol" value="Cajero" checked/>
-                        {{else}}
-                        <input class="form-check-input" type="checkbox" name="rol" value="Cajero" />
-                    {{/ifCond}}
-                    <label class="form-check-label">Cajero</label>
+                        <label class="form-check-label">Cajero</label>
                     </div>
 
-                    <div class="form-check form-check-inline">                    
-                    {{#ifCond this "Repositor"}}
+                    <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="rol" value="Repositor" checked/>
-                        {{else}}
-                        <input class="form-check-input" type="checkbox" name="rol" value="Repositor" />
-                    {{/ifCond}}
-                    <label class="form-check-label">Repositor</label>
+                        <label class="form-check-label">Repositor</label>
                     </div>
-                    
-                    <div class="form-check form-check-inline">                    
-                    {{#ifCond this "Organizador"}}
-                        <input class="form-check-input" type="checkbox" name="rol" value="Organizador" checked/>
-                        {{else}}
-                        <input class="form-check-input" type="checkbox" name="rol" value="Organizador" />
-                    {{/ifCond}}
-                    <label class="form-check-label">Organizador</label>
-                    </div>
-                {{/each}}
 
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="rol" value="Organizador" checked/>
+                        <label class="form-check-label">Organizador</label>
+                    </div>
             </fieldset>
+            
             <div class="form-group">
                 <label class="form-label mt-4">Sucursal</label>
                 <select class="form-select" name="sucursal">
-                    <option value="Belgrano">Belgrano</option>
-                    <option value="Palermo">Palermo</option>
-                    <option value="Recoleta">Recoleta</option>
+                    <option value="Belgrano" >Belgrano</option>
+                    <option value="Palermo" >Palermo</option>
+                    <option value="Recoleta" >Recoleta</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary mt-3"> Guardar</button>
     </form>
 </div>
-
-<script>
-    Handlebars.registerHelper('if_eq', function(a, b, opts) {
-        if (a == b) {
-            return opts.fn(this);
-        } else {
-            return opts.inverse(this);
-        }
-    });
-</script>
