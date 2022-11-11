@@ -19,7 +19,7 @@ router.get('/usuarios', renderizarUsuarios);
 
 // Editar usuario
 router.get('/editarUsuario', renderizadoActualizarFormUsuario);
-router.put('/editarUsuario/:id', actualizarUsuario);
+router.put('/actualizarUsuario/:id', actualizarUsuario);
 
 // Eliminar usuario
 router.delete('/eliminarUsuario/:id', eliminarUsuario);

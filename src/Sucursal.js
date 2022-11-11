@@ -197,13 +197,15 @@ class Sucursal {
     }
 
     async eliminarUsuario(id) {
-
         await Empleado.findByIdAndDelete(id);
     }
 
     async buscarUsuarioPorId(id) {
-
         return await Empleado.findById(id).lean();
+    }
+
+    async editarUsuario(id, params) {
+        return await Empleado.findByIdAndUpdate(id, params);
     }
 
     getAll() {
