@@ -5,6 +5,7 @@ const usuarioSchema = require('./schemas/UsuarioSchema');
 const rolEnum = require('./Rol');
 const Admin = require('./Admin');
 
+
 class Empleado extends Usuario {
 
     constructor(legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol) {
@@ -25,21 +26,6 @@ class Empleado extends Usuario {
     getRol() {
         return this.rol
     }
-
-    verificarSiTieneRol(rol) {
-
-        let rolValido = false;
-
-        if (rol == rolEnum.RECEPCIONISTA.name || Usuario instanceof Admin) {
-            rolValido = true;
-        } else {
-            //throw new Error('Intenta ejecutar una tarea no autorizada');
-        }
-
-        return rolValido;
-    }
-
-
 }
 usuarioSchema.loadClass(Empleado);
 module.exports = model('Usuario', usuarioSchema);

@@ -1,11 +1,12 @@
 const { model } = require('mongoose');
 
-const sucursalSchema = require("./models/schemas/SucursalSchema");
+sucursalSchema = require("./models/schemas/SucursalSchema");
 const rolEnum = require('./models/Rol');
 const Empleado = require('./models/Empleado');
 const Cliente = require('./models/Cliente');
 const Movimiento = require('./models/Movimiento');
 const Notificacion = require('./models/Notificacion');
+const ErrorDeIncidencia = require('./models/ErrorDeIncidencia');
 
 class Sucursal {
 
@@ -34,10 +35,10 @@ class Sucursal {
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
-                if (unEmpleado.verificarSiTieneRol(unEmpleado.rol)) {
+                if (verificarRol(unEmpleado, rolEnum.RECEPCIONISTA)) {
                     let unProveedor = this.obtenerProveedor(idProveedor)
                     if (unProveedor) {
-                        let unProductoSucursal = this.buscarUnProductoEnSucursal(codigoBarra)
+                        let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner);
                         if (unProductoSucursal) {
                             if (this.validarIngreso(cant)) {
                                 unProductoSucursal.actualizarStock(cant)
@@ -49,18 +50,30 @@ class Sucursal {
                 }
             }
         } catch (err) {
-            this.dispararAlerta(unEmpleado, err.message);
+            this.dispararAlerta(unEmpleado, err);
         }
         return seRecepciono;
     }
 
-    dispararAlerta(nombreCompletoEmpleado, error) {
-        console.log('Empleado --> ' + nombreCompletoEmpleado + ': ' + error);
-        this.incidentesSospechosos.push(new Notificacion({ nombreCompletoEmpleado: nombreCompletoEmpleado, mensaje: error }));
+    verificarRol(unEmpleado, unRol) {
+        let verificado = false
+        if (!(unEmpleado.getRol() === unRol)) {
+            throw new Error('Intenta ejecutar una tarea no autorizada')
+        }
+        verificado = true;
+        return verificado;
     }
 
-    getDisponible() {
-        this.disponible = true;
+    dispararAlerta(unEmpleado, err) {
+        console.log('------------------------->Error recibido '+err)
+        if (err instanceof ErrorDeIncidencia) {
+           
+            console.log(`Empleado  ${unEmpleado.getNombreCompleto()}, '--> ' ${err.message}`);
+            let unaNotificacion = new Notificacion({ nombreCompletoEmpleado: unEmpleado.getNombreCompleto(), mensaje: err.message, fecha: new Date().toLocaleString() });
+            this.incidentesSospechosos.push(unaNotificacion);
+        } else {
+            console.log('Otro tipo de error')
+        }
     }
 
     egresarProducto(dni, scanner, cant) {
@@ -68,7 +81,7 @@ class Sucursal {
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
-                if (unEmpleado.verificarSiTieneRol(unEmpleado.rol)) {
+                if (verificarRol(unEmpleado, rolEnum.CAJERO)) {
                     let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias" });
                     let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner)
                     if (this.hayStock(unProductoSucursal, cant)) {
@@ -81,7 +94,7 @@ class Sucursal {
                 }
             }
         } catch (err) {
-            this.dispararAlerta(unEmpleado, err.message);
+            this.dispararAlerta(unEmpleado, err);
         }
         return seEgreso
     }
@@ -138,8 +151,8 @@ class Sucursal {
     }
 
     obtenerProveedor(idProveedor) {
-        let unProveedor = this.proveedoresAutorizados.find(p => p.idProveedor == idProveedor);
-        if (!unProveedor) throw new Error('Intenta ingresar mercaderia a proveedor no autorizado');
+        let unProveedor = this.proveedoresAutorizados.find(p => p.idProveedor === idProveedor);
+        if (!unProveedor) throw new ErrorDeIncidencia('Intenta ingresar mercaderia a proveedor no autorizado');
         return unProveedor;
     }
 
@@ -208,7 +221,7 @@ class Sucursal {
         const CANT_MAX = 1000;
         let pudo = true;
         if (cant < CANT_MIN || cant > CANT_MAX) {
-            throw new Error('Intenta ingresar mercaderia fuera de parametros')
+            throw new ErrorDeIncidencia('Intenta ingresar mercaderia fuera de parametros')
         }
         return pudo;
     }
@@ -218,7 +231,7 @@ class Sucursal {
         const CANT_MAX = 50;
         let pudo = true;
         if (cant < CANT_MIN || cant > CANT_MAX) {
-            throw new Error('Intenta egresar mercaderia fuera de parametros')
+            throw new ErrorDeIncidencia('Intenta egresar mercaderia fuera de parametros')
         }
         return pudo;
     }

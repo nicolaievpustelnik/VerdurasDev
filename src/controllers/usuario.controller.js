@@ -28,7 +28,7 @@ usuariosControllers.crearUsuario = async (req, res) => {
                 break;
         }
 
-        res.locals.sucursal.agregarUsuario(res, newUser);
+        await res.locals.sucursal.agregarUsuario(res, newUser);
         res.redirect('/usuarios');
 
     } catch (e) {
@@ -45,10 +45,10 @@ usuariosControllers.renderizarUsuarios = async (req, res) => {
 
 // Actualizar usuario
 usuariosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
-    let query = require('url').parse(req.url,true).query;
+    let query = require('url').parse(req.url, true).query;
     let id = query.id;
     let usuario = await res.locals.sucursal.buscarUsuarioPorId(id)
-    res.render('usuario/editarUsuario', {usuario});
+    res.render('usuario/editarUsuario', { usuario });
 }
 
 usuariosControllers.actualizarUsuario = (req, res) => {

@@ -13,7 +13,7 @@ const { SUC_ID, SUC_NOMBRE, SUC_DIRECCION } = process.env;
 const app = express();
 
 // Configuraciones
-app.set('port', process.env.PORT || 4000);
+app.set('port', process.env.PORT || 4001);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('usuario', path.join(__dirname, 'usuario'));
