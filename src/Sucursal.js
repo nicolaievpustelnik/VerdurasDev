@@ -30,12 +30,12 @@ class Sucursal {
         return unEmpleado;
     }
 
-    recepcionarProducto(idProveedor, codigoBarra, cant) {
+    recepcionarProducto(idProveedor, scanner, cant) {
         let seRecepciono = false;
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
-                if (verificarRol(unEmpleado, rolEnum.RECEPCIONISTA)) {
+                if (this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA)) {
                     let unProveedor = this.obtenerProveedor(idProveedor)
                     if (unProveedor) {
                         let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner);
@@ -45,7 +45,7 @@ class Sucursal {
                                 seRecepciono = true;
                                 this.generarMovimiento(cant, unProductoSucursal, unProveedor);
                             }
-                        }e
+                        }
                     }
                 }
             }
@@ -57,22 +57,19 @@ class Sucursal {
 
     verificarRol(unEmpleado, unRol) {
         let verificado = false
-        if (!(unEmpleado.getRol() === unRol)) {
-            throw new Error('Intenta ejecutar una tarea no autorizada')
+        if (!(unEmpleado.rol[0].name === unRol.name || unEmpleado.rol[0].name === rolEnum.ORGANIZADOR.name )) {
+            throw new ErrorDeIncidencia('Intenta ejecutar una tarea no autorizada')
         }
         verificado = true;
         return verificado;
     }
 
     dispararAlerta(unEmpleado, err) {
-        console.log('------------------------->Error recibido '+err)
         if (err instanceof ErrorDeIncidencia) {
-           
-            console.log(`Empleado  ${unEmpleado.getNombreCompleto()}, '--> ' ${err.message}`);
             let unaNotificacion = new Notificacion({ nombreCompletoEmpleado: unEmpleado.getNombreCompleto(), mensaje: err.message, fecha: new Date().toLocaleString() });
             this.incidentesSospechosos.push(unaNotificacion);
         } else {
-            console.log('Otro tipo de error')
+            console.log('Otro tipo de error: '+err.name + " --> " +err.message)
         }
     }
 
@@ -81,7 +78,7 @@ class Sucursal {
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
-                if (verificarRol(unEmpleado, rolEnum.CAJERO)) {
+                if (this.verificarRol(unEmpleado, rolEnum.CAJERO)) {
                     let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias" });
                     let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner)
                     if (this.hayStock(unProductoSucursal, cant)) {
@@ -100,17 +97,13 @@ class Sucursal {
     }
 
     generarMovimiento(cant, unProducto, proveedor) {
-
         let monto = this.calcularMonto(cant, proveedor, unProducto);
         let movimiento = null;
-
         if (proveedor instanceof Cliente) {
             movimiento = this.generarVenta(cant, unProducto, proveedor, monto);
-
         } else {
             movimiento = this.generarCompra(cant, unProducto, proveedor, monto);
         }
-
         return movimiento;
     }
 
@@ -161,11 +154,15 @@ class Sucursal {
     }
 
     buscarEmpleado(legajo) {
-        return this.empleadosDeSucursal.find(u => u.legajo == legajo);
+        return this.empleadosDeSucursal.find(u => u.legajo === legajo);
     }
 
     buscarUnProductoEnSucursal(scanner) {
-        return this.productosDeSucursal.find(ps => ps.codigoBarra == scanner);
+        let unProducto = this.productosDeSucursal.find(ps => ps.codigoBarra == scanner);
+        /* if (!unProducto) {
+            throw new ErrorDeIncidencia('Esta vendiendo un producto que no existe o no esta agregado');
+        }  */
+        return unProducto;
     }
 
     agregarProducto(unProducto) {
@@ -183,6 +180,17 @@ class Sucursal {
         this.proveedoresAutorizados.push(unProveedor);
     }
 
+    agregarUsuarioTest(unUsuario) {
+        let sePudo = false;
+        if (this.buscarEmpleado(unUsuario.getLegajo())) {
+            throw new Error('El legajo ya se encuentra asignado a otro empleado!');
+        } else {
+            this.empleadosDeSucursal.push(unUsuario)
+            sePudo = true;
+        }
+        return sePudo;
+    }
+
     async agregarUsuario(res, user) {
 
         if (this.buscarEmpleado(user.getLegajo())) {
@@ -190,6 +198,10 @@ class Sucursal {
         } else {
             await user.save();
         }
+    }
+
+     listaDeUsuariosTest() {
+        return  this.empleadosDeSucursal;
     }
 
     async listaDeUsuarios() {
@@ -239,20 +251,19 @@ class Sucursal {
     hayStock(unProductoDeSucursal, cant) {
         let pudo = true;
         if (unProductoDeSucursal.stock < cant) {
-            throw new Error('No hay stock suficiente!');
+            throw new ErrorDeIncidencia('Esta generando un negativo!');
         }
         return pudo;
     }
 
     obtenerUsuarioLogueado() {
-        let unEmpleado = this.buscarEmpleado(654321);
-
+        let unEmpleado = this.buscarEmpleado("123456");
         // Por ahora se setea - pero el metodo tiene que buscar en la base de datos
-        let unEmpleadoAux = new Empleado({ nombre: 'Jorge', apellido: 'Castillo', email: 'jindr@admin.com', password: '123456', sucursal: '2', tipoUsuario: 'Empleado', rol: rolEnum.RECEPCIONISTA.name })
+        //let unEmpleadoAux = new Empleado({ nombre: 'Jorge', apellido: 'Castillo', email: 'jindr@admin.com', password: '123456', sucursal: '2', tipoUsuario: 'Empleado', rol: rolEnum.RECEPCIONISTA.name })
 
         //Metodo para obtener usuario Logueado
         //if (!unAdmin) throw new Error('Empleado no Existe!')
-        return unEmpleadoAux;
+        return unEmpleado;
     }
 
 }
