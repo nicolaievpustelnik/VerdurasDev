@@ -1,0 +1,41 @@
+<h1 class="text-center mt-5 mb-5">Productos</h1>
+<br>
+
+<div class="container blockProductos mb-5">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Código de Barra</th>
+                <th scope="col">Nombre de Categoría</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Sucursal</th>
+                <th scope="col">Precio De Venta</th>
+                <th scope="col">Tipo de Producto</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each productos}}
+            <tr class="table-light text-white">
+                <td class="pt-3">{{@index}}</td>
+                <th class="pt-3" scope="row">{{codigoBarra}}</th>
+                <td class="pt-3">{{nombreCategoria}}</td>
+                <td class="pt-3">{{marca}}</td>
+                <td class="pt-3">{{descripcion}}</td>
+                <td class="pt-3">{{stock}}</td>
+                <td class="pt-3">{{idSucursal}}</td>
+                <td class="pt-3">{{precioVenta}}</td>
+                <td class="pt-3">{{tipoProducto}}</td>
+                <td class="pt-3"><a href="/editarProducto?id={{_id}}"><i class="bi bi-pencil text-primary"></i></a></td>
+                <form action="eliminarProducto/{{_id}}?_method=DELETE" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <td><button class="btn btn-sm bg-transparent"><i class="bi bi-trash3 text-danger"></i></button></td>
+                </form>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
