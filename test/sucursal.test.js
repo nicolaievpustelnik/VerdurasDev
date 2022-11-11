@@ -23,16 +23,16 @@ describe("Sucursal", () => {
     describe('Alta de empleado', () => {
         it('#agregarUsuario():boolean', () => {
             let unEmpleado = new Empleado({
-                legajo: '123456',
+                legajo: "123456",
                 nombre: "Nicolaiev",
                 apellido: "Brito",
                 email: "nicolaievbrito@gmail.com",
                 password: "12345",
                 sucursal: "2",
                 tipoUsuario: "Empleado",
-                rol: rolEnum.ORGANIZADOR.name
+                rol: rolEnum.ORGANIZADOR
             });
-            let empleadoIngresado = unaSucursal.agregarUsuario(unEmpleado);
+            let empleadoIngresado = unaSucursal.agregarUsuarioTest(unEmpleado);
             assert.equal(empleadoIngresado, true);
 
         });
@@ -40,15 +40,15 @@ describe("Sucursal", () => {
 
     describe('Buscar Empleado por Legajo', () => {
         it('#buscarEmpleado(legajo):Empleado', () => {
-            let unEmpleado = unaSucursal.buscarEmpleado(123456);
+            let unEmpleado = unaSucursal.buscarEmpleado("123456");
             expect(unEmpleado).to.be.an.instanceof(Empleado);
         });
     });
 
     describe('Verifica Rol', () => {
-        it('#verificarSiTieneRol(nomRol):boolean', () => {
-            let unEmpleado = unaSucursal.buscarEmpleado(123456);
-            let tieneRol = unEmpleado.verificarSiTieneRol('Recepcionista');
+        it('#verificarRol(Empleado, rolEnum):boolean', () => {
+            let unEmpleado = unaSucursal.buscarEmpleado("123456");
+            let tieneRol = unaSucursal.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA);
             expect(tieneRol).to.equal(true);
         });
     });
@@ -128,14 +128,14 @@ describe("Sucursal", () => {
 
         it('#egresoProducto(dni, scanner, cant):boolean', () => {
             let unEmpleado1 = new Empleado({
-                legajo: 654321,
+                legajo: "654321",
                 nombre: "Carmen",
                 apellido: "Sanchez",
                 email: "sanchez@gmail.com",
                 password: "12545",
                 sucursal: "2",
                 tipoUsuario: "Empleado",
-                rol: rolEnum.ORGANIZADOR.name
+                rol: rolEnum.CAJERO.name
             });
             unaSucursal.agregarUsuario(unEmpleado1);
             let seEgreso = unaSucursal.egresarProducto(94807936, 111, 5);
@@ -153,8 +153,8 @@ describe("Sucursal", () => {
     });
 
     describe('Lista de usuarios', () => {
-        it('listaDeUsuarios:Array', () => {
-            let usuarios = unaSucursal.listaDeUsuarios();
+        it('listaDeUsuariosTest:Array', () => {
+            let usuarios = unaSucursal.listaDeUsuariosTest();
             expect(usuarios.length > 0).to.equal(true);
             expect(usuarios).to.be.an('array')
         });
@@ -171,6 +171,13 @@ describe("Sucursal", () => {
             let ventas = unaSucursal.ventas;
             expect(ventas.length > 0).to.equal(true);
             expect(ventas).to.be.an('array');
+        });
+
+        it('incidentesSospechosos:Array', () => {
+             unaSucursal.egresarProducto(94807936, 111, 10000000);
+            expect(unaSucursal.incidentesSospechosos.length > 0).to.equal(true);
+            expect(unaSucursal.incidentesSospechosos).to.be.an('array');
+            console.log(unaSucursal.incidentesSospechosos)
         });
     });
 });
