@@ -26,6 +26,10 @@ class ProductoSucursal extends Producto {
     getPrecio() {
         this.precioVenta;
     }
+    
+    getCodigoBarra(){
+        return this.codigoBarra
+    }
 }
 
 productoSchema.loadClass(ProductoSucursal);
