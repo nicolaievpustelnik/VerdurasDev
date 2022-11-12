@@ -1,0 +1,40 @@
+<h1 class="text-center mt-5 mb-5">Usuarios</h1>
+<br>
+
+<div class="container blockUsuarios mb-5">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Legajo</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Email</th>
+                <th scope="col">Sucursal</th>
+                <th scope="col">Tipo de usuario</th>
+                <th scope="col">Roles</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each usuarios}}
+            <tr class="table-light text-white">
+                <td class="pt-3">{{@index}}</td>
+                <th class="pt-3" scope="row">{{legajo}}</th>
+                <td class="pt-3">{{nombre}}</td>
+                <td class="pt-3">{{apellido}}</td>
+                <td class="pt-3">{{email}}</td>
+                <td class="pt-3">{{sucursal}}</td>
+                <td class="pt-3">{{tipoUsuario}}</td>
+                <td class="pt-3">{{rol}}</td>
+                <td class="pt-3"><a href="/editarUsuario?id={{_id}}"><i class="bi bi-pencil text-primary"></i></a></td>
+                <form action="eliminarUsuario/{{_id}}?_method=DELETE" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <td><button class="btn btn-sm bg-transparent"><i class="bi bi-trash3 text-danger"></i></button></td>
+                </form>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>

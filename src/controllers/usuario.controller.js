@@ -1,36 +1,35 @@
-const usuariosControllers = {};
-
 const Empleado = require('../models/Empleado');
 const Admin = require('../models/Admin');
-const Usuario = require('../models/Usuario');
+
+const usuariosControllers = {};
 
 // Nuevo usuario
 usuariosControllers.renderizarFormUsuario = (req, res) => {
     res.render('usuario/nuevoUsuario');
 }
+
 usuariosControllers.crearUsuario = async (req, res) => {
     try {
 
-        const { nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
+        const { legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
 
         let newUser = null;
 
         switch (tipoUsuario) {
             case 'Admin':
-                newUser = new Admin({ nombre, apellido, email, password, sucursal, tipoUsuario });
+                newUser = new Admin({ legajo, nombre, apellido, email, password, sucursal, tipoUsuario });
                 break;
 
             case 'Empleado':
-                newUser = new Empleado({ nombre, apellido, email, password, sucursal, tipoUsuario, rol });
+                newUser = new Empleado({ legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol });
                 break;
 
             default:
                 break;
         }
 
-        await newUser.save();
-
-        res.send('Usuario agregado');
+        await res.locals.sucursal.agregarUsuario(res, newUser);
+        res.redirect('/usuarios');
 
     } catch (e) {
 
@@ -39,21 +38,31 @@ usuariosControllers.crearUsuario = async (req, res) => {
 }
 
 // Ver todos los usuarios
-usuariosControllers.renderizarUsuarios = (req, res) => {
-    res.send('Usuario agregado');
+usuariosControllers.renderizarUsuarios = async (req, res) => {
+
+    let usuarios = await res.locals.sucursal.listaDeUsuarios()
+
+    res.render('usuario/usuarios', { usuarios });
 }
 
 // Actualizar usuario
-usuariosControllers.renderizadoActualizarFormUsuario = (req, res) => {
-    res.send('Usuario agregado');
+usuariosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
+    let query = require('url').parse(req.url, true).query;
+    let id = query.id;
+    let usuario = await res.locals.sucursal.buscarUsuarioPorId(id)
+    res.render('usuario/editarUsuario', { usuario });
 }
+
 usuariosControllers.actualizarUsuario = (req, res) => {
-    res.send('Usuario agregado');
+    res.send('Usuario actualizado');
 }
 
 // Eliminar usuario
 usuariosControllers.eliminarUsuario = (req, res) => {
-    res.send('Usuario agregado');
+
+    let id = req.params.id;
+    res.locals.sucursal.eliminarUsuario(id);
+    res.redirect('/usuarios');
 }
 
 module.exports = usuariosControllers;

@@ -1,16 +1,16 @@
 const { model } = require('mongoose');
 
-const notificacionSchema = require('./schemas/notificacionSchema');
+const notificacionSchema = require('./schemas/NotificacionSchema');
 
 class Notificacion {
-  constructor(empleado, mensaje) {
-    this=empleado;
-    this=mensaje;
-    this.Date.today();
-    }
-    getAll(){
-        return `Notificacion[Empleado:${this.employee}, mensaje:${this.mensaje},Date:${Date.today()}`;}
-    }      
- notificacionSchema.loadClass(Notificacion);
+  constructor(nombreCompletoEmpleado, mensaje,fecha) {
+    this.nombreCompletoEmpleado = nombreCompletoEmpleado;
+    this.mensaje = mensaje;
+    this.fecha = fecha;
+  }
+  getAll() {
+    return `Notificacion[Empleado:${this.nombreCompletoEmpleado}, mensaje:${this.mensaje}, Date:${this.fecha}`;
+  }
+}
+notificacionSchema.loadClass(Notificacion);
 module.exports = model("Notificacion", notificacionSchema);
-  

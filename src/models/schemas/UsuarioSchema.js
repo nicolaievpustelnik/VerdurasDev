@@ -3,6 +3,10 @@ const bcryptjs = require('bcryptjs');
 
 const usuarioSchema = new Schema({
 
+    legajo: {
+        type: String,
+        require: true
+    },
     nombre: {
         type: String,
         require: true
@@ -29,7 +33,7 @@ const usuarioSchema = new Schema({
     },
     rol: {
         type: [],
-        require: false
+        require: true
     }
 
 }, {

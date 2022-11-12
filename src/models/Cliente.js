@@ -4,16 +4,17 @@ const clienteSchema = require("./schemas/ClienteSchema");
 
 class Cliente {
 
-    constructor(idCliente) {
-        this.idCliente = idCliente;
+    constructor(dniCliente,nombreCliente) {
+        this.dniCliente = dniCliente;
+        this.nombreCliente = nombreCliente;
     }
 
     getAll() {
-        return `Cliente[idCliente:${this.idCliente}]`;
+        return `Cliente[dniCliente:${this.dniCliente},nombreCliente:${this.dniCliente}]`;
     }
 
     getId() {
-        return this.idCliente;
+        return this.dniCliente;
     }
 }
 clienteSchema.loadClass(Cliente);

@@ -2,8 +2,12 @@ const {Schema} = require('mongoose');
 
 const clienteSchema= new Schema({
     
-    idCliente:{
+    dniCliente:{
         type:Number,
+        require:true
+    },
+    nombreCliente:{
+        type:String,
         require:true
     },
 },

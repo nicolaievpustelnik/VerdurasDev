@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "dotenv": "^16.0.2",
+    "handlebars": "^4.5.0",
     "mocha": "^10.0.0",
     "nodemon": "^2.0.20",
     "npm-check-updates": "^16.1.0"
