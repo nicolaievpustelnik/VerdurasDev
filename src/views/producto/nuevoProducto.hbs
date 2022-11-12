@@ -1,0 +1,32 @@
+<div class="container">
+    <form action="/nuevoProducto" method="POST">
+        <fieldset>
+            <legend class="mt-5 mb-3">Agregar Producto</legend>
+            <div class="form-group">
+                <label class="form-label mt-4">Código de Barra</label>
+                <input type="text" class="form-control" name="codigoBarra" placeholder="Ingresar EAN">
+            </div>
+            <div class="form-group">
+                <label class="form-label mt-4">Nombre de Categoría</label>
+                <input type="text" class="form-control" name="nombreCategoria"
+                    placeholder="Ingresar Nombre de Categoría">
+            </div>
+            <div class="form-group">
+                <label class="form-label mt-4">Marca</label>
+                <input type="text" class="form-control" name="marca" placeholder="Ingresar Marca">
+            </div>
+            <div class="form-group">
+                <label class="form-label mt-4">Descripción</label>
+                <input type="text" class="form-control" name="descripcion" placeholder="Ingresar Descripción">
+            </div>
+            <div class="form-group">
+                <label class="form-label mt-4">Sucursal</label>
+                <input type="text" class="form-control" name="sucursal" placeholder="Ingresar Sucursal">
+            </div>
+            <div class="form-group">
+                <label class="form-label mt-4">Precio De Venta</label>
+                <input type="text" class="form-control" name="precioVenta" placeholder="Ingrese Precio de base">
+            </div>
+            <button type="submit" class="btn btn-primary mt-3"> Guardar</button>
+    </form>
+</div>

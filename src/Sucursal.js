@@ -3,6 +3,7 @@ const { model } = require('mongoose');
 sucursalSchema = require("./models/schemas/SucursalSchema");
 const rolEnum = require('./models/Rol');
 const Empleado = require('./models/Empleado');
+const ProductoSucursal = require('./models/ProductoSucursal');
 const Cliente = require('./models/Cliente');
 const Movimiento = require('./models/Movimiento');
 const Notificacion = require('./models/Notificacion');
@@ -150,7 +151,7 @@ class Sucursal {
     }
 
     obtenerStockProducto(idProducto) {
-        return this.ProductoDeSucursal.find(p => p.idProducto == idProducto).getStock();
+        return this.ProductoSucursal.find(p => p.idProducto == idProducto).getStock();
     }
 
     buscarEmpleado(legajo) {
@@ -208,12 +209,24 @@ class Sucursal {
         return await Empleado.find().lean();
     }
 
+    async listaDeProductos() {
+        return await ProductoSucursal.find().lean();
+    }
+
     async eliminarUsuario(id) {
         await Empleado.findByIdAndDelete(id);
+    }
+    
+    async eliminarProducto(id) {
+        await ProductoSucursal.findByIdAndDelete(id);
     }
 
     async buscarUsuarioPorId(id) {
         return await Empleado.findById(id).lean();
+    }
+
+    async buscarProductoPorId(id) {
+        return await ProductoSucursal.findById(id).lean();
     }
 
     async editarUsuario(id, params) {
