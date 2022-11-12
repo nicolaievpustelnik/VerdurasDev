@@ -17,14 +17,14 @@ app.set('port', process.env.PORT || 4001);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('usuario', path.join(__dirname, 'usuario'));
-//app.set('producto', path.join(__dirname, 'producto'));
+app.set('producto', path.join(__dirname, 'producto'));
 
 app.engine('.hbs', handlebars.engine({
     defaultLayout: 'main',
     layoutsDir: path.join(app.get('views'), 'layouts'),
     partialsDir: path.join(app.get('views'), 'partials'),
     usuarioDir: path.join(app.get('views'), 'usuario'),
-   // productoDir: path.join(app.get('views'), 'producto'),
+    productoDir: path.join(app.get('views'), 'producto'),
     extname: '.hbs',
 
     helpers:{
@@ -56,7 +56,7 @@ app.use((req, res, next) => {
 // Rutas
 app.use(require('./routers/index.routes'));
 app.use(require('./routers/usuario.routes'));
-//app.use(require('./routers/producto.routes'));
+app.use(require('./routers/producto.routes'));
 
 // Archivos static
 app.use(express.static(path.join(__dirname, 'public')));

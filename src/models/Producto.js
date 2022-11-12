@@ -25,6 +25,7 @@ class Producto {
     getStock() {
         return this.stock;
     }
+    
 }
 
 module.exports = Producto;

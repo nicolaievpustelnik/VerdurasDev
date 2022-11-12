@@ -58,7 +58,7 @@ class Sucursal {
 
     verificarRol(unEmpleado, unRol) {
         let verificado = false
-        if (!(unEmpleado.rol[0].name === unRol.name || unEmpleado.rol[0].name === rolEnum.ORGANIZADOR.name )) {
+        if (!(unEmpleado.rol[0].name === unRol.name || unEmpleado.rol[0].name === rolEnum.ORGANIZADOR.name)) {
             throw new ErrorDeIncidencia('Intenta ejecutar una tarea no autorizada')
         }
         verificado = true;
@@ -70,7 +70,7 @@ class Sucursal {
             let unaNotificacion = new Notificacion({ nombreCompletoEmpleado: unEmpleado.getNombreCompleto(), mensaje: err.message, fecha: new Date().toLocaleString() });
             this.incidentesSospechosos.push(unaNotificacion);
         } else {
-            console.log('Otro tipo de error: '+err.name + " --> " +err.message)
+            console.log('Otro tipo de error: ' + err.name + " --> " + err.message)
         }
     }
 
@@ -166,7 +166,7 @@ class Sucursal {
         return unProducto;
     }
 
-    agregarProducto(unProducto) {
+    agregarProductoTest(unProducto) {
         let sePudo = false;
         if (this.buscarUnProductoEnSucursal(unProducto.codigoBarra)) {
             throw new Error('El Producto ya se encuentra agregado!');
@@ -201,8 +201,17 @@ class Sucursal {
         }
     }
 
-     listaDeUsuariosTest() {
-        return  this.empleadosDeSucursal;
+    async agregarProducto(res, prod) {
+
+        if (this.buscarProducto(prod.codigoBarra())) {
+            throw new Error('El Producto ya se encuentra registrado!');
+        } else {
+            await prod.save();
+        }
+    }
+
+    listaDeUsuariosTest() {
+        return this.empleadosDeSucursal;
     }
 
     async listaDeUsuarios() {
@@ -216,7 +225,7 @@ class Sucursal {
     async eliminarUsuario(id) {
         await Empleado.findByIdAndDelete(id);
     }
-    
+
     async eliminarProducto(id) {
         await ProductoSucursal.findByIdAndDelete(id);
     }

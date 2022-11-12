@@ -1,6 +1,5 @@
 const ProductoSucursal = require('../models/ProductoSucursal');
 const ProductoProveedor = require('../models/ProductoProveedor');
-const Producto = require('../models/Producto');
 
 const productosControllers = {};
 
@@ -13,8 +12,6 @@ productosControllers.crearProducto = async (req, res) => {
     try {
 
         const { codigoBarra, nombreCategoria, marca, descripcion, stock,idSucursal,idProveedor,precioVenta,precioCompra,tipoProducto } = req.body;
-
-
 
         let nuevoProducto = null;
 
@@ -30,10 +27,9 @@ productosControllers.crearProducto = async (req, res) => {
             default:
                 break;
         }
-
-        await nuevoProducto.save();
-
-        res.send('Producto agregado');
+console.log(nuevoProducto)
+        await res.locals.sucursal.agregarProducto(res, nuevoProducto);
+        res.redirect('/productos');
 
     } catch (err) {
 
@@ -41,18 +37,18 @@ productosControllers.crearProducto = async (req, res) => {
     }
 }
 
-// Ver todos los producto
+// Ver todos los productos
 productosControllers.renderizarProductos = async (req, res) => {
     let productos = await res.locals.sucursal.listaDeProductos()
     res.render('producto/productos', { productos });
 }
 
 // Actualizar producto
-productosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
+productosControllers.renderizadoActualizarFormProducto = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
     let id = query.id;
     let producto = await res.locals.sucursal.buscarProductoPorId(id)
-    res.render('Producto/editarProductp', { producto });
+    res.render('producto/editarProducto', { producto });
 }
 
 productosControllers.actualizarProducto = (req, res) => {
@@ -60,7 +56,7 @@ productosControllers.actualizarProducto = (req, res) => {
 }
 
 // Eliminar usuario
-productosControllers.eliminarProducto= (req, res) => {
+productosControllers.eliminarProducto = (req, res) => {
 
     let id = req.params.id;
     res.locals.sucursal.eliminarProducto(id);
