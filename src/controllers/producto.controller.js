@@ -9,25 +9,28 @@ productosControllers.renderizarFormProducto = (req, res) => {
 }
 
 productosControllers.crearProducto = async (req, res) => {
+    
     try {
 
-        const { codigoBarra, nombreCategoria, marca, descripcion, stock,idSucursal,idProveedor,precioVenta,precioCompra,tipoProducto } = req.body;
-
+        const { codigoBarra, nombreCategoria, marca, descripcion, tipoProducto, sucursal, precioVenta } = req.body;
+        
+        let stock = 0;
+        let idProducto = 0;
         let nuevoProducto = null;
 
         switch (tipoProducto) {
             case 'Producto':
-                nuevoProducto = new ProductoSucursal({ codigoBarra, nombreCategoria, marca, descripcion, stock, idSucursal, precioVenta});
+                nuevoProducto = new ProductoSucursal({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, sucursal, precioVenta});
                 break;
 
             case 'Proveedor':
-                nuevoProducto = new ProductoProveedor({ codigoBarra, nombreCategoria, marca, descripcion, stock,idProveedor, precioCompra});
+                nuevoProducto = new ProductoProveedor({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idProveedor, precioCompra});
                 break;
 
             default:
                 break;
         }
-console.log(nuevoProducto)
+
         await res.locals.sucursal.agregarProducto(res, nuevoProducto);
         res.redirect('/productos');
 
