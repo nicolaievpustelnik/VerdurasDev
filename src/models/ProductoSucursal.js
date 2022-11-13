@@ -33,4 +33,4 @@ class ProductoSucursal extends Producto {
 }
 
 productoSchema.loadClass(ProductoSucursal);
-module.exports = model('ProductoSucursal', productoSchema);
+module.exports = model('Producto', productoSchema);

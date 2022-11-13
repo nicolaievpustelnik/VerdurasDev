@@ -203,7 +203,9 @@ class Sucursal {
 
     async agregarProducto(res, prod) {
 
-        if (this.buscarProducto(prod.codigoBarra())) {
+        let product = await this.buscarProductoPorCodigoBarra(prod.getCodigoBarra());
+    
+        if (product[0]) {
             throw new Error('El Producto ya se encuentra registrado!');
         } else {
             await prod.save();
@@ -236,6 +238,10 @@ class Sucursal {
 
     async buscarProductoPorId(id) {
         return await ProductoSucursal.findById(id).lean();
+    }
+
+    async buscarProductoPorCodigoBarra(cod) {
+        return await ProductoSucursal.find({"codigoBarra":cod});
     }
 
     async editarUsuario(id, params) {
