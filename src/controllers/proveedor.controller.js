@@ -1,67 +1,50 @@
+const Proveedor = require('../models/Proveedor');
 
+const proveedoresControllers = {};
 
-const proveedorControllers = {};
-
-// Nuevo usuario
-proveedorControllers.renderizarFormProveedor = (req, res) => {
+// Nuevo Proveedor
+proveedoresControllers.renderizarFormProveedor = (req, res) => {
     res.render('proveedor/nuevoProveedor');
 }
 
-proveedorControllers.crearProveedor = async (req, res) => {
+proveedoresControllers.crearProveedor = async (req, res) => {
     try {
+        const { cuilProveedor, nombreProveedor } = req.body;
+        let nuevoProveedor = null;
+         nuevoProveedor = new Proveedor({ cuilProveedor, nombreProveedor });
 
-        const { cuil, nombre } = req.body;
-
-        let nuevoProveedor = new Proveedor({ cuil, nombre});
-
-        switch (tipoProveedor) {
-            case 'Admin':
-                newUser = new Admin({ legajo, nombre, apellido, email, password, sucursal, tipoProveedor });
-                break;
-
-            case 'Empleado':
-                newUser = new Empleado({ legajo, nombre, apellido, email, password, sucursal, tipoProveedor, rol });
-                break;
-
-            default:
-                break;
-        }
-
-        await res.locals.sucursal.agregarProveedor(res, newUser);
+        await res.locals.sucursal.agregarProveedor(res, nuevoProveedor);
         res.redirect('/proveedores');
-
     } catch (e) {
-
         console.log(e)
     }
 }
 
-// Ver todos los usuarios
-usuariosControllers.renderizarUsuarios = async (req, res) => {
+// Ver todos los Proveedores
+proveedoresControllers.renderizarProveedores = async (req, res) => {
 
-    let usuarios = await res.locals.sucursal.listaDeUsuarios()
+    let proveedores = await res.locals.sucursal.listaDeProveedores()
 
-    res.render('usuario/usuarios', { usuarios });
+    res.render('proveedor/proveedores', { proveedores });
 }
 
-// Actualizar usuario
-usuariosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
+// Actualizar Proveedor
+proveedoresControllers.renderizadoActualizarFormProveedor = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
     let id = query.id;
-    let usuario = await res.locals.sucursal.buscarUsuarioPorId(id)
-    res.render('usuario/editarUsuario', { usuario });
+    let Proveedor = await res.locals.sucursal.buscarProveedorPorId(id)
+    res.render('proveedor/editarProveedor', { Proveedor });
 }
 
-usuariosControllers.actualizarUsuario = (req, res) => {
-    res.send('Usuario actualizado');
+proveedoresControllers.actualizarProveedor = (req, res) => {
+    res.send('Proveedor actualizado');
 }
 
-// Eliminar usuario
-usuariosControllers.eliminarUsuario = (req, res) => {
-
+// Eliminar Proveedor
+proveedoresControllers.eliminarProveedor = (req, res) => {
     let id = req.params.id;
-    res.locals.sucursal.eliminarUsuario(id);
-    res.redirect('/usuarios');
+    res.locals.sucursal.eliminarProveedor(id);
+    res.redirect('/proveedores');
 }
 
-module.exports = usuariosControllers;
+module.exports = proveedoresControllers;
