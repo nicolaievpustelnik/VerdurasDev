@@ -174,3 +174,10 @@
   height: auto;
   padding-bottom: 150px;
 }
+
+.msj-alert{
+  width: 500px;
+  height: 100px;
+  margin: auto;
+  padding-top: 50px;
+}

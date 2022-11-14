@@ -77,6 +77,7 @@ async function verSucursal() {
 // Variables globales
 app.use((req, res, next) => {
     res.locals.sucursal = suc;
+    res.locals.success_msg = req.flash('success_msg');
     next();
 });
 
