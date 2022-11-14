@@ -4,6 +4,7 @@ sucursalSchema = require("./models/schemas/SucursalSchema");
 const rolEnum = require('./models/Rol');
 const Empleado = require('./models/Empleado');
 const ProductoSucursal = require('./models/ProductoSucursal');
+const ProductoProveedor = require('./models/ProductoProveedor');
 const Cliente = require('./models/Cliente');
 const Movimiento = require('./models/Movimiento');
 const Notificacion = require('./models/Notificacion');
@@ -230,8 +231,12 @@ class Sucursal {
         return await Empleado.find().lean();
     }
 
-    async listaDeProductos() {
+    async listaDeProductosSucursal() {
         return await ProductoSucursal.find().lean();
+    }
+
+    async listaDeProductosProveedor() {
+        return await ProductoProveedor.find().lean();
     }
 
     async eliminarUsuario(id) {
@@ -260,10 +265,6 @@ class Sucursal {
 
     getAll() {
         return `Sucursal[idSucursal:${this.idSucursal}, nombreSucursal:${this.nombreSucursal}, ubicacion:${this.ubicacion}, usuarios:${this.usuarios}, productos:${this.productos}]`;
-    }
-
-    getListaDeProductosEnSucursal() {
-        return this.productosDeSucursal
     }
 
     validarIngreso(cant) {
