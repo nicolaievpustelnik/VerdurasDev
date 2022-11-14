@@ -25,4 +25,4 @@ class ProductoProveedor extends Producto {
 }
 
 productoSchema.loadClass(ProductoProveedor);
-module.exports = model('Producto', productoSchema);
+module.exports = model('ProductoProveedor', productoSchema);
