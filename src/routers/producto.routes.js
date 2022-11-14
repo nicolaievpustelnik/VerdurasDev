@@ -15,7 +15,7 @@ router.get('/formProducto', renderizarFormProducto);
 router.post('/nuevoProducto', crearProducto);
 
 // Ver todos los Producto
-router.get('/producto', renderizarProductos);
+router.get('/productos', renderizarProductos);
 
 // Editar usuario
 router.get('/editarProducto', renderizadoActualizarFormProducto);

@@ -12,7 +12,7 @@ productosControllers.crearProducto = async (req, res) => {
     
     try {
 
-        const { codigoBarra, nombreCategoria, marca, descripcion, tipoProducto, idSucursal, precioVenta } = req.body;
+        const { codigoBarra, nombreCategoria, marca, descripcion, tipoProducto, idSucursal, idProveedor, precioVenta, precioCompra } = req.body;
         
         let stock = 0;
         let idProducto = 0;
@@ -42,8 +42,9 @@ productosControllers.crearProducto = async (req, res) => {
 
 // Ver todos los productos
 productosControllers.renderizarProductos = async (req, res) => {
-    let productos = await res.locals.sucursal.listaDeProductos()
-    res.render('producto/productos', { productos });
+    let producSuc = await res.locals.sucursal.listaDeProductosSucursal();
+    let producProv = await res.locals.sucursal.listaDeProductosProveedor();
+    res.render('producto/productos', { producSuc, producProv });
 }
 
 // Actualizar producto

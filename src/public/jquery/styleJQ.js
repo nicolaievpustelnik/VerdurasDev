@@ -11,4 +11,18 @@ $(document).ready(function () {
             $(".form-check-input").prop("disabled", false);
         }
     });
+
+    $(".suc").hide();
+    $(".prov").hide();
+
+    $('#selectTipoProducto').on('change', function () {
+
+        if ($(this).val() == 'Producto') {
+            $(".suc").show();
+            $(".prov").hide();
+        } else {
+            $(".prov").show();
+            $(".suc").hide();
+        }
+    });
 });
