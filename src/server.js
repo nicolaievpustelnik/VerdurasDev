@@ -47,9 +47,27 @@ app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride('_method'))
 
+// Config Suc
+const suc = new Sucursal({ idSucursal: SUC_ID, nombreSucursal: SUC_NOMBRE, ubicacion: SUC_DIRECCION });
+setSucursal(suc);
+
+// Set Sucursal
+async function setSucursal(suc) {
+
+    let sucExistente = await Sucursal.find({"idSucursal":suc.idSucursal});
+
+    if (sucExistente.length == 0) {
+        await suc.save();
+    } 
+}
+
+async function verSucursal() {
+    return await Sucursal.find({"idSucursal":12345});
+}
+
 // Variables globales
 app.use((req, res, next) => {
-    res.locals.sucursal = new Sucursal({ idSucursal: SUC_ID, nombreSucursal: SUC_NOMBRE, ubicacion: SUC_DIRECCION });
+    res.locals.sucursal = suc;
     next();
 });
 

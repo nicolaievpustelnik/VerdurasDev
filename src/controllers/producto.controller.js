@@ -12,7 +12,7 @@ productosControllers.crearProducto = async (req, res) => {
     
     try {
 
-        const { codigoBarra, nombreCategoria, marca, descripcion, tipoProducto, sucursal, precioVenta } = req.body;
+        const { codigoBarra, nombreCategoria, marca, descripcion, tipoProducto, idSucursal, precioVenta } = req.body;
         
         let stock = 0;
         let idProducto = 0;
@@ -20,7 +20,7 @@ productosControllers.crearProducto = async (req, res) => {
 
         switch (tipoProducto) {
             case 'Producto':
-                nuevoProducto = new ProductoSucursal({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, sucursal, precioVenta});
+                nuevoProducto = new ProductoSucursal({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idSucursal, precioVenta});
                 break;
 
             case 'Proveedor':
