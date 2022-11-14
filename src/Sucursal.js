@@ -31,7 +31,7 @@ class Sucursal {
         return unEmpleado;
     }
 
-    recepcionarProducto(idProveedor, scanner, cant) {
+    async recepcionarProducto(idProveedor, scanner, cant) {
         let seRecepciono = false;
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
@@ -39,8 +39,8 @@ class Sucursal {
                 if (this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA)) {
                     let unProveedor = this.obtenerProveedor(idProveedor)
                     if (unProveedor) {
-                        let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner);
-                        if (unProductoSucursal) {
+                        let unProductoSucursal = await this.buscarProductoPorCodigoBarra(scanner);
+                        if (unProductoSucursal[0]) {
                             if (this.validarIngreso(cant)) {
                                 unProductoSucursal.actualizarStock(cant)
                                 seRecepciono = true;
@@ -74,15 +74,15 @@ class Sucursal {
         }
     }
 
-    egresarProducto(dni, scanner, cant) {
+    async egresarProducto(dni, scanner, cant) {
         let seEgreso = false;
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
                 if (this.verificarRol(unEmpleado, rolEnum.CAJERO)) {
                     let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias" });
-                    let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner)
-                    if (this.hayStock(unProductoSucursal, cant)) {
+                    let unProductoSucursal = await this.buscarProductoPorCodigoBarra(scanner)
+                    if (this.hayStock(unProductoSucursal[0], cant)) {
                         if (this.validarEgreso(cant)) {
                             unProductoSucursal.actualizarStock(-cant)
                             seEgreso = true;
@@ -158,22 +158,17 @@ class Sucursal {
         return this.empleadosDeSucursal.find(u => u.legajo === legajo);
     }
 
-    buscarUnProductoEnSucursal(scanner) {
-        let unProducto = this.productosDeSucursal.find(ps => ps.codigoBarra == scanner);
-        /* if (!unProducto) {
-            throw new ErrorDeIncidencia('Esta vendiendo un producto que no existe o no esta agregado');
-        }  */
-        return unProducto;
-    }
-
-    agregarProductoTest(unProducto) {
+    async agregarProductoTest(unProducto) {
         let sePudo = false;
-        if (this.buscarUnProductoEnSucursal(unProducto.codigoBarra)) {
+        let product = await this.buscarProductoPorCodigoBarra(unProducto.codigoBarra);
+
+        if (product[0]) {
             throw new Error('El Producto ya se encuentra agregado!');
         } else {
             this.productosDeSucursal.push(unProducto);
             sePudo = true;
         }
+
         return sePudo;
     }
 
@@ -209,6 +204,7 @@ class Sucursal {
             throw new Error('El Producto ya se encuentra registrado!');
         } else {
             await prod.save();
+            return true;
         }
     }
 
