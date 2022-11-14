@@ -1,0 +1,28 @@
+<div class="container">
+    <form action="actualizarProductoSucursal/{{producto._id}}?_method=PUT" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+        <fieldset>
+            <legend class="mt-5 mb-3">Editar producto</legend>
+            <div class="form-group">
+                <label class="form-label mt-4">Marca</label>
+                <input type="text" class="form-control" name="marca" placeholder="Ingresar marca"
+                    value="{{producto.marca}}">
+            </div>
+            <div class="form-group">
+                <label class="form-label mt-4">Descripción</label>
+                <input type="text" class="form-control" name="descripcion" placeholder="Ingresar descripcion"
+                    value="{{producto.descripcion}}">
+            </div>
+            <div class="form-group">
+                <label class="form-label mt-4">Sucursal</label>
+                <input type="text" class="form-control" name="sucursal" placeholder="Ingresar Sucursal"
+                    value="{{producto.idSucursal}}">
+            </div>
+            <div class="form-group">
+                <label class="form-label mt-4">Precio de Venta</label>
+                <input type="text" class="form-control" name="precioVenta" placeholder="Ingresar Precio de Venta"
+                    value="{{producto.precioVenta}}">
+            </div>
+            <button type="submit" class="btn btn-primary mt-3"> Guardar</button>
+    </form>
+</div>

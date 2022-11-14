@@ -5,8 +5,10 @@ const {
     renderizarFormProducto,
     crearProducto,
     renderizarProductos,
-    renderizadoActualizarFormProducto,
-    actualizarProducto,
+    renderizadoActualizarFormProductoSucursal,
+    renderizadoActualizarFormProductoProveedor,
+    actualizarProductoSucursal,
+    actualizarProductoProveedor,
     eliminarProducto
 } = require('../controllers/producto.controller');
 
@@ -18,8 +20,10 @@ router.post('/nuevoProducto', crearProducto);
 router.get('/productos', renderizarProductos);
 
 // Editar usuario
-router.get('/editarProducto', renderizadoActualizarFormProducto);
-router.put('/actualizarProducto/:id', actualizarProducto);
+router.get('/editarProductoSucursal', renderizadoActualizarFormProductoSucursal);
+router.put('/actualizarProductoSucursal/:id', actualizarProductoSucursal);
+router.get('/editarProductoProveedor', renderizadoActualizarFormProductoProveedor);
+router.put('/actualizarProductoProveedor/:id', actualizarProductoProveedor);
 
 // Eliminar Producto
 router.delete('/eliminarProducto/:id', eliminarProducto);
