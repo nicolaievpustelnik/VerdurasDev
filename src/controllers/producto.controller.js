@@ -63,12 +63,12 @@ productosControllers.renderizadoActualizarFormProductoProveedor = async (req, re
 
 productosControllers.actualizarProductoSucursal = async (req, res) => {
     await res.locals.sucursal.editarProductoSucursal(req.params.id, req.body)
-    //require.flash('success_msg', "Producto editado exitosamente");
+    req.flash('success_msg', "Producto editado exitosamente");
     res.redirect('/productos');
 }
 productosControllers.actualizarProductoProveedor = async (req, res) => {
     await res.locals.sucursal.editarProductoProveedor(req.params.id, req.body)
-    //require.flash('success_msg', "Producto editado exitosamente");
+    req.flash('success_msg', "Producto editado exitosamente");
     res.redirect('/productos');
 }
 
@@ -77,6 +77,7 @@ productosControllers.eliminarProducto = (req, res) => {
 
     let id = req.params.id;
     res.locals.sucursal.eliminarProducto(id);
+    req.flash('success_msg', "Producto eliminado exitosamente");
     res.redirect('/productos');
 }
 

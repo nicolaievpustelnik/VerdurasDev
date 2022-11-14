@@ -28,7 +28,7 @@ usuariosControllers.crearUsuario = async (req, res) => {
                 break;
         }
         await res.locals.sucursal.agregarUsuario(res, newUser);
-        require.flash('success_msg', "Usuario agregado exitosamente");
+        req.flash('success_msg', "Usuario agregado exitosamente");
         res.redirect('/usuarios');
 
     } catch (e) {
@@ -55,7 +55,7 @@ usuariosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
 
 usuariosControllers.actualizarUsuario = async (req, res) => {
     await res.locals.sucursal.editarUsuario(req.params.id, req.body)
-    require.flash('success_msg', "Usuario editado exitosamente");
+    req.flash('success_msg', "Usuario editado exitosamente");
     res.redirect('/usuarios');
 }
 
@@ -64,6 +64,7 @@ usuariosControllers.eliminarUsuario = (req, res) => {
 
     let id = req.params.id;
     res.locals.sucursal.eliminarUsuario(id);
+    req.flash('success_msg', "Usuario eliminado exitosamente");
     res.redirect('/usuarios');
 }
 
