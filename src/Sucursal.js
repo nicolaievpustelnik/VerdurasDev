@@ -9,6 +9,7 @@ const Cliente = require('./models/Cliente');
 const Movimiento = require('./models/Movimiento');
 const Notificacion = require('./models/Notificacion');
 const ErrorDeIncidencia = require('./models/ErrorDeIncidencia');
+const Proveedor = require('./models/Proveedor');
 
 class Sucursal {
 
@@ -173,7 +174,7 @@ class Sucursal {
         return sePudo;
     }
 
-    agregarProveedor(unProveedor) {
+    agregarProveedorTest(unProveedor) {
         this.proveedoresAutorizados.push(unProveedor);
     }
 
@@ -186,6 +187,15 @@ class Sucursal {
             sePudo = true;
         }
         return sePudo;
+    }
+    async agregarProveedor(res, prov) {
+        console.log(prov)
+       /*  if (this.buscarEmpleado(user.getLegajo())) {
+            throw new Error('El legajo ya se encuentra asignado a otro empleado!');
+        } else { */
+       
+            await prov.save();
+        //}
     }
 
     async agregarUsuario(res, user) {
@@ -211,6 +221,10 @@ class Sucursal {
 
     listaDeUsuariosTest() {
         return this.empleadosDeSucursal;
+    }
+    
+    async listaDeProveedores() {
+        return await Proveedor.find().lean();
     }
 
     async listaDeUsuarios() {

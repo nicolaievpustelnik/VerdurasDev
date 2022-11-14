@@ -2,7 +2,7 @@ const { Schema } = require('mongoose');
 
 const proveedorSchema = new Schema({
 
-    idProveedor: {
+    cuilProveedor: {
         type: Number,
         require: true
     },
@@ -10,11 +10,11 @@ const proveedorSchema = new Schema({
         type: String,
         require: true
     },
-    productosProveedor: {
+ /*    productosProveedor: {
         type: [],
         require: true
     },
-
+ */
 }, {
     timestamps: true
 })

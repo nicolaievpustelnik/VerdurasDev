@@ -27,7 +27,6 @@ usuariosControllers.crearUsuario = async (req, res) => {
             default:
                 break;
         }
-
         await res.locals.sucursal.agregarUsuario(res, newUser);
         res.redirect('/usuarios');
 

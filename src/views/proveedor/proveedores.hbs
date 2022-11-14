@@ -1,0 +1,30 @@
+<h1 class="text-center mt-5 mb-5">Proveedores</h1>
+<br>
+
+<div class="container blockProveedores mb-5">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Ciul</th>
+                <th scope="col">Razon Social</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each proveedores}}
+            <tr class="table-light text-white">
+                <td class="pt-3">{{@index}}</td>
+                <th class="pt-3" scope="row">{{cuilProveedor}}</th>
+                <td class="pt-3">{{nombreProveedor}}</td>
+                <td class="pt-3"><a href="/editarProveedor?id={{cuil}}"><i class="bi bi-pencil text-primary"></i></a></td>
+                <form action="eliminarProveedor/{{cuil}}?_method=DELETE" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <td><button class="btn btn-sm bg-transparent"><i class="bi bi-trash3 text-danger"></i></button></td>
+                </form>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
