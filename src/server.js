@@ -3,7 +3,8 @@ const handlebars = require('express-handlebars');
 const path = require('path');
 const morgan = require('morgan');
 const methodOverride = require('method-override');
-var session = require('express-session')
+const session = require('express-session');
+const flash = require('connect-flash');
 
 const Sucursal = require('./Sucursal');
 
@@ -47,7 +48,13 @@ app.set('view engine', '.hbs');
 // Middlewares
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
-app.use(methodOverride('_method'))
+app.use(methodOverride('_method'));
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(flash());
 
 // Config Suc
 const suc = new Sucursal({ idSucursal: SUC_ID, nombreSucursal: SUC_NOMBRE, ubicacion: SUC_DIRECCION });
@@ -70,6 +77,7 @@ async function verSucursal() {
 // Variables globales
 app.use((req, res, next) => {
     res.locals.sucursal = suc;
+    res.locals.success_msg = req.flash('success_msg');
     next();
 });
 

@@ -256,8 +256,11 @@ class Sucursal {
         return await Empleado.findById(id).lean();
     }
 
-    async buscarProductoPorId(id) {
+    async buscarProductoPorIdSucursal(id) {
         return await ProductoSucursal.findById(id).lean();
+    }
+    async buscarProductoPorIdProveedor(id) {
+        return await ProductoProveedor.findById(id).lean();
     }
 
     async buscarProveedorPorId(id) {
@@ -273,8 +276,20 @@ class Sucursal {
         return await ProductoSucursal.find({ "codigoBarra": cod });
     }
 
+    async buscarProductoPorCodigoBarraProveedor(cod) {
+        return await ProductoProveedor.find({"codigoBarra":cod});
+    }
+
     async editarUsuario(id, params) {
         return await Empleado.findByIdAndUpdate(id, params);
+    }
+
+    async editarProductoSucursal(id, params) {
+        return await ProductoSucursal.findByIdAndUpdate(id, params);
+    }
+
+    async editarProductoProveedor(id, params) {
+        return await ProductoProveedor.findByIdAndUpdate(id, params);
     }
 
     getAll() {
