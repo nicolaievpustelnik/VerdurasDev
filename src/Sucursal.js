@@ -189,13 +189,14 @@ class Sucursal {
         return sePudo;
     }
     async agregarProveedor(res, prov) {
-        console.log(prov)
-       /*  if (this.buscarEmpleado(user.getLegajo())) {
-            throw new Error('El legajo ya se encuentra asignado a otro empleado!');
-        } else { */
-       
+        let proveedor = await this.buscarProveedorPorCuil(prov.getCuil());
+
+        if (proveedor) {
+            throw new Error('El Proveedor ya se encuentra registrado!');
+        } else {
             await prov.save();
-        //}
+            return true;
+        }
     }
 
     async agregarUsuario(res, user) {
@@ -210,7 +211,7 @@ class Sucursal {
     async agregarProducto(res, prod) {
 
         let product = await this.buscarProductoPorCodigoBarra(prod.getCodigoBarra());
-    
+
         if (product[0]) {
             throw new Error('El Producto ya se encuentra registrado!');
         } else {
@@ -221,10 +222,6 @@ class Sucursal {
 
     listaDeUsuariosTest() {
         return this.empleadosDeSucursal;
-    }
-    
-    async listaDeProveedores() {
-        return await Proveedor.find().lean();
     }
 
     async listaDeUsuarios() {
@@ -239,8 +236,16 @@ class Sucursal {
         return await ProductoProveedor.find().lean();
     }
 
+    async listaDeProveedores() {
+        return await Proveedor.find().lean();
+    }
+
     async eliminarUsuario(id) {
         await Empleado.findByIdAndDelete(id);
+    }
+
+    async eliminarProveedor(id) {
+        await Proveedor.findByIdAndDelete(id);
     }
 
     async eliminarProducto(id) {
@@ -255,8 +260,17 @@ class Sucursal {
         return await ProductoSucursal.findById(id).lean();
     }
 
+    async buscarProveedorPorId(id) {
+        console.log(id)
+        return await Proveedor.findById(id).lean();
+    }
+
+    async buscarProveedorPorCuil(cuilProveedor) {
+        return await Proveedor.findOne({ "cuilProveedor": cuilProveedor });
+    }
+
     async buscarProductoPorCodigoBarra(cod) {
-        return await ProductoSucursal.find({"codigoBarra":cod});
+        return await ProductoSucursal.find({ "codigoBarra": cod });
     }
 
     async editarUsuario(id, params) {

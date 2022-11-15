@@ -52,6 +52,7 @@ productosControllers.renderizadoActualizarFormProducto = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
     let id = query.id;
     let producto = await res.locals.sucursal.buscarProductoPorId(id)
+    console.log("---------------->"+producto)
     res.render('producto/editarProducto', { producto });
 }
 

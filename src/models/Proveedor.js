@@ -22,6 +22,10 @@ class Proveedor {
 
     }
 
+    getCuil() {
+        return this.cuilProveedor;
+    }
+
     getAll() {
         return `Proveedor[cuilProveedor:${this.cuilProveedor}, nombreProveedor:${this.nombreProveedor}, productosProveedor:${this.productosProveedor}]`
     }

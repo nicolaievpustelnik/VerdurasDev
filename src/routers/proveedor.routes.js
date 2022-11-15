@@ -15,13 +15,13 @@ router.get('/formProveedor', renderizarFormProveedor);
 router.post('/nuevoProveedor', crearProveedor);
 
 // Ver todos los proveedor
-router.get('/proveedor', renderizarProveedores);
+router.get('/proveedores', renderizarProveedores);
 
 // Editar proveedor
 router.get('/editarProveedor', renderizadoActualizarFormProveedor);
-router.put('/actualizarProveedor/:cuil', actualizarProveedor);
+router.put('/actualizarProveedor/:id', actualizarProveedor);
 
 // Eliminar proveedor
-router.delete('/eliminarProveedor/:cuil', eliminarProveedor);
+router.delete('/eliminarProveedor/:id', eliminarProveedor);
 
 module.exports = router;
