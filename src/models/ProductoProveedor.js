@@ -18,6 +18,10 @@ class ProductoProveedor extends Producto {
     getPrecioCompra() {
         return this.precioCompra;
     }
+    
+    getCodigoBarra(){
+        return this.codigoBarra
+    }
 }
 
 productoSchema.loadClass(ProductoProveedor);

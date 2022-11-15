@@ -27,8 +27,8 @@ usuariosControllers.crearUsuario = async (req, res) => {
             default:
                 break;
         }
-
         await res.locals.sucursal.agregarUsuario(res, newUser);
+        req.flash('success_msg', "Usuario agregado exitosamente");
         res.redirect('/usuarios');
 
     } catch (e) {
@@ -53,8 +53,10 @@ usuariosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
     res.render('usuario/editarUsuario', { usuario });
 }
 
-usuariosControllers.actualizarUsuario = (req, res) => {
-    res.send('Usuario actualizado');
+usuariosControllers.actualizarUsuario = async (req, res) => {
+    await res.locals.sucursal.editarUsuario(req.params.id, req.body)
+    req.flash('success_msg', "Usuario editado exitosamente");
+    res.redirect('/usuarios');
 }
 
 // Eliminar usuario
@@ -62,6 +64,7 @@ usuariosControllers.eliminarUsuario = (req, res) => {
 
     let id = req.params.id;
     res.locals.sucursal.eliminarUsuario(id);
+    req.flash('success_msg', "Usuario eliminado exitosamente");
     res.redirect('/usuarios');
 }
 

@@ -20,12 +20,27 @@
                 <input type="text" class="form-control" name="descripcion" placeholder="Ingresar Descripción">
             </div>
             <div class="form-group">
-                <label class="form-label mt-4">Sucursal</label>
-                <input type="text" class="form-control" name="sucursal" placeholder="Ingresar Sucursal">
+                <label class="form-label mt-4">Tipo de usuario</label>
+                <select class="form-select" id="selectTipoProducto" name="tipoProducto">
+                    <option value="Producto" >Producto</option> 
+                    <option value="Proveedor">Proveedor</option>
+                </select>
             </div>
-            <div class="form-group">
+            <div class="form-group suc">
+                <label class="form-label mt-4">Id Sucursal</label>
+                <input type="text" class="form-control" name="idSucursal" placeholder="Ingresar Sucursal">
+            </div>
+            <div class="form-group prov">
+                <label class="form-label mt-4">Id Proveedor</label>
+                <input type="text" class="form-control" name="idProveedor" placeholder="Ingresar CUIL">
+            </div>
+            <div class="form-group suc">
                 <label class="form-label mt-4">Precio De Venta</label>
                 <input type="text" class="form-control" name="precioVenta" placeholder="Ingrese Precio de base">
+            </div>
+            <div class="form-group prov">
+                <label class="form-label mt-4">Precio De Compra</label>
+                <input type="text" class="form-control" name="precioCompra" placeholder="Ingrese Precio de base">
             </div>
             <button type="submit" class="btn btn-primary mt-3"> Guardar</button>
     </form>

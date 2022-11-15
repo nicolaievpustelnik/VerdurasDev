@@ -6,10 +6,9 @@ const proveedorSchema = require("./schemas/ProveedorSchema")
 
 class Proveedor {
 
-    constructor(idProveedor, nombreProveedor) {
-        this.idProveedor = idProveedor;
+    constructor(cuilProveedor, nombreProveedor) {
+        this.cuilProveedor = cuilProveedor;
         this.nombreProveedor = nombreProveedor;
-        this.productosProveedor = [];
     }
 
     agregarProductoAProveedor(productAux) {
@@ -24,12 +23,12 @@ class Proveedor {
     }
 
     getAll() {
-        return `Proveedor[idProveedor:${this.idProveedor}, nombreProveedor:${this.nombreProveedor}, productosProveedor:${this.productosProveedor}]`
+        return `Proveedor[cuilProveedor:${this.cuilProveedor}, nombreProveedor:${this.nombreProveedor}, productosProveedor:${this.productosProveedor}]`
     }
 
-    getProductos() {
+    /* getProductos() {
         return this.productosProveedor
-    }
+    } */
 
     /* getPrecioCompra(scanner){
         return this.productosProveedor.find(p => p.scanner == scanner);

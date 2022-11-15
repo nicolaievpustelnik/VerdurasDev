@@ -4,10 +4,12 @@ sucursalSchema = require("./models/schemas/SucursalSchema");
 const rolEnum = require('./models/Rol');
 const Empleado = require('./models/Empleado');
 const ProductoSucursal = require('./models/ProductoSucursal');
+const ProductoProveedor = require('./models/ProductoProveedor');
 const Cliente = require('./models/Cliente');
 const Movimiento = require('./models/Movimiento');
 const Notificacion = require('./models/Notificacion');
 const ErrorDeIncidencia = require('./models/ErrorDeIncidencia');
+const Proveedor = require('./models/Proveedor');
 
 class Sucursal {
 
@@ -31,7 +33,7 @@ class Sucursal {
         return unEmpleado;
     }
 
-    recepcionarProducto(idProveedor, scanner, cant) {
+    async recepcionarProducto(idProveedor, scanner, cant) {
         let seRecepciono = false;
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
@@ -39,8 +41,8 @@ class Sucursal {
                 if (this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA)) {
                     let unProveedor = this.obtenerProveedor(idProveedor)
                     if (unProveedor) {
-                        let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner);
-                        if (unProductoSucursal) {
+                        let unProductoSucursal = await this.buscarProductoPorCodigoBarra(scanner);
+                        if (unProductoSucursal[0]) {
                             if (this.validarIngreso(cant)) {
                                 unProductoSucursal.actualizarStock(cant)
                                 seRecepciono = true;
@@ -58,7 +60,7 @@ class Sucursal {
 
     verificarRol(unEmpleado, unRol) {
         let verificado = false
-        if (!(unEmpleado.rol[0].name === unRol.name || unEmpleado.rol[0].name === rolEnum.ORGANIZADOR.name )) {
+        if (!(unEmpleado.rol[0].name === unRol.name || unEmpleado.rol[0].name === rolEnum.ORGANIZADOR.name)) {
             throw new ErrorDeIncidencia('Intenta ejecutar una tarea no autorizada')
         }
         verificado = true;
@@ -70,19 +72,19 @@ class Sucursal {
             let unaNotificacion = new Notificacion({ nombreCompletoEmpleado: unEmpleado.getNombreCompleto(), mensaje: err.message, fecha: new Date().toLocaleString() });
             this.incidentesSospechosos.push(unaNotificacion);
         } else {
-            console.log('Otro tipo de error: '+err.name + " --> " +err.message)
+            console.log('Otro tipo de error: ' + err.name + " --> " + err.message)
         }
     }
 
-    egresarProducto(dni, scanner, cant) {
+    async egresarProducto(dni, scanner, cant) {
         let seEgreso = false;
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
                 if (this.verificarRol(unEmpleado, rolEnum.CAJERO)) {
                     let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias" });
-                    let unProductoSucursal = this.buscarUnProductoEnSucursal(scanner)
-                    if (this.hayStock(unProductoSucursal, cant)) {
+                    let unProductoSucursal = await this.buscarProductoPorCodigoBarra(scanner)
+                    if (this.hayStock(unProductoSucursal[0], cant)) {
                         if (this.validarEgreso(cant)) {
                             unProductoSucursal.actualizarStock(-cant)
                             seEgreso = true;
@@ -158,26 +160,21 @@ class Sucursal {
         return this.empleadosDeSucursal.find(u => u.legajo === legajo);
     }
 
-    buscarUnProductoEnSucursal(scanner) {
-        let unProducto = this.productosDeSucursal.find(ps => ps.codigoBarra == scanner);
-        /* if (!unProducto) {
-            throw new ErrorDeIncidencia('Esta vendiendo un producto que no existe o no esta agregado');
-        }  */
-        return unProducto;
-    }
-
-    agregarProducto(unProducto) {
+    async agregarProductoTest(unProducto) {
         let sePudo = false;
-        if (this.buscarUnProductoEnSucursal(unProducto.codigoBarra)) {
+        let product = await this.buscarProductoPorCodigoBarra(unProducto.codigoBarra);
+
+        if (product[0]) {
             throw new Error('El Producto ya se encuentra agregado!');
         } else {
             this.productosDeSucursal.push(unProducto);
             sePudo = true;
         }
+
         return sePudo;
     }
 
-    agregarProveedor(unProveedor) {
+    agregarProveedorTest(unProveedor) {
         this.proveedoresAutorizados.push(unProveedor);
     }
 
@@ -191,6 +188,15 @@ class Sucursal {
         }
         return sePudo;
     }
+    async agregarProveedor(res, prov) {
+        console.log(prov)
+       /*  if (this.buscarEmpleado(user.getLegajo())) {
+            throw new Error('El legajo ya se encuentra asignado a otro empleado!');
+        } else { */
+       
+            await prov.save();
+        //}
+    }
 
     async agregarUsuario(res, user) {
 
@@ -201,22 +207,42 @@ class Sucursal {
         }
     }
 
-     listaDeUsuariosTest() {
-        return  this.empleadosDeSucursal;
+    async agregarProducto(res, prod) {
+
+        let product = await this.buscarProductoPorCodigoBarra(prod.getCodigoBarra());
+    
+        if (product[0]) {
+            throw new Error('El Producto ya se encuentra registrado!');
+        } else {
+            await prod.save();
+            return true;
+        }
+    }
+
+    listaDeUsuariosTest() {
+        return this.empleadosDeSucursal;
+    }
+    
+    async listaDeProveedores() {
+        return await Proveedor.find().lean();
     }
 
     async listaDeUsuarios() {
         return await Empleado.find().lean();
     }
 
-    async listaDeProductos() {
+    async listaDeProductosSucursal() {
         return await ProductoSucursal.find().lean();
+    }
+
+    async listaDeProductosProveedor() {
+        return await ProductoProveedor.find().lean();
     }
 
     async eliminarUsuario(id) {
         await Empleado.findByIdAndDelete(id);
     }
-    
+
     async eliminarProducto(id) {
         await ProductoSucursal.findByIdAndDelete(id);
     }
@@ -225,20 +251,35 @@ class Sucursal {
         return await Empleado.findById(id).lean();
     }
 
-    async buscarProductoPorId(id) {
+    async buscarProductoPorIdSucursal(id) {
         return await ProductoSucursal.findById(id).lean();
+    }
+    async buscarProductoPorIdProveedor(id) {
+        return await ProductoProveedor.findById(id).lean();
+    }
+
+    async buscarProductoPorCodigoBarraSucursal(cod) {
+        return await ProductoSucursal.find({"codigoBarra":cod});
+    }
+
+    async buscarProductoPorCodigoBarraProveedor(cod) {
+        return await ProductoProveedor.find({"codigoBarra":cod});
     }
 
     async editarUsuario(id, params) {
         return await Empleado.findByIdAndUpdate(id, params);
     }
 
-    getAll() {
-        return `Sucursal[idSucursal:${this.idSucursal}, nombreSucursal:${this.nombreSucursal}, ubicacion:${this.ubicacion}, usuarios:${this.usuarios}, productos:${this.productos}]`;
+    async editarProductoSucursal(id, params) {
+        return await ProductoSucursal.findByIdAndUpdate(id, params);
     }
 
-    getListaDeProductosEnSucursal() {
-        return this.productosDeSucursal
+    async editarProductoProveedor(id, params) {
+        return await ProductoProveedor.findByIdAndUpdate(id, params);
+    }
+
+    getAll() {
+        return `Sucursal[idSucursal:${this.idSucursal}, nombreSucursal:${this.nombreSucursal}, ubicacion:${this.ubicacion}, usuarios:${this.usuarios}, productos:${this.productos}]`;
     }
 
     validarIngreso(cant) {
