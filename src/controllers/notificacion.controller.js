@@ -1,4 +1,5 @@
 const Notificacion = require("../models/Notificacion");
+
 const notificacionesControllers = {};
 
 // Nuevo Proveedor
@@ -25,20 +26,16 @@ notificacionesControllers.crearNotificacion = async (req, res) => {
 
 // Ver todos los Notificaciones
 notificacionesControllers.renderizarNotificaciones = async (req, res) => {
-  let notificacion = await res.locals.sucursal.listaDeNotificaciones();
-
-  res.render("notificacion/notificaciones", { notificacion });
+  let notificaciones = await res.locals.sucursal.listaDeNotificaciones();
+  res.render("notificacion/notificaciones", { notificaciones });
 };
 
 // Actualizar Notificacion
-notificacionesControllers.renderizadoActualizarFormNotificacion = async (
-  req,
-  res
-) => {
+notificacionesControllers.renderizadoActualizarFormNotificacion = async (req,res) => {
   let query = require("url").parse(req.url, true).query;
   let id = query.id;
-  let Notificacion = await res.locals.sucursal.buscarNotificacionPorId(id);
-  res.render("notificacion/editarNotificacion", { Notificacion });
+  let notificacion = await res.locals.sucursal.buscarNotificacionPorId(id);
+  res.render("notificacion/editarNotificacion", { notificacion });
 };
 
 notificacionesControllers.actualizarNotificacion = (req, res) => {

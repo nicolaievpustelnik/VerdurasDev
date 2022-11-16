@@ -15,7 +15,7 @@ router.get("/formNotificacion", renderizarFormNotificacion);
 router.post("/nuevaNotificacion", crearNotificacion);
 
 // Ver todos las notificaciones
-router.get("/notificacion", renderizarNotificaciones);
+router.get("/notificaciones", renderizarNotificaciones);
 
 // Editar notificacion
 router.get("/editarNotificacion", renderizadoActualizarFormNotificacion);

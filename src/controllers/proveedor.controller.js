@@ -14,6 +14,7 @@ proveedoresControllers.crearProveedor = async (req, res) => {
          nuevoProveedor = new Proveedor({ cuilProveedor, nombreProveedor });
 
         await res.locals.sucursal.agregarProveedor(res, nuevoProveedor);
+        req.flash('success_msg', "Proveedor agregado exitosamente");
         res.redirect('/proveedores');
     } catch (e) {
         console.log(e)
@@ -36,7 +37,9 @@ proveedoresControllers.renderizadoActualizarFormProveedor = async (req, res) => 
     res.render('proveedor/editarProveedor', { proveedor});
 }
 
-proveedoresControllers.actualizarProveedor = (req, res) => {
+proveedoresControllers.actualizarProveedor = async(req, res) => {
+    await res.locals.sucursal.editarProveedor(req.params.id, req.body)
+    req.flash('success_msg', "Proveedor editado exitosamente");
     res.send('Proveedor actualizado');
 }
 
@@ -44,6 +47,7 @@ proveedoresControllers.actualizarProveedor = (req, res) => {
 proveedoresControllers.eliminarProveedor = (req, res) => {
     let id = req.params.id;
     res.locals.sucursal.eliminarProveedor(id);
+    req.flash('success_msg', "Proveedor eliminado exitosamente");
     res.redirect('/proveedores');
 }
 

@@ -31,7 +31,7 @@ app.engine(
     usuarioDir: path.join(app.get("views"), "usuario"),
     productoDir: path.join(app.get("views"), "producto"),
     proveedorDir: path.join(app.get("views"), "proveedor"),
-    noificacionDir: path.join(app.get("views"), "notificacion"),
+    notificacionDir: path.join(app.get("views"), "notificacion"),
     extname: ".hbs",
 
     helpers: {
