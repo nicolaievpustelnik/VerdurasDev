@@ -2,8 +2,8 @@ const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect
 
-let Producto = require('../src/models/Producto.js');
-let ProductoSucursal = require('../src/models/ProductoSucursal.js');
+let Producto = require('../src/repository/Producto.js');
+let ProductoSucursal = require('../src/repository/ProductoSucursal.js');
 
 const prodSuc = new ProductoSucursal({ idProducto: 3, codigoBarra: 111, nombreCategoria: "Frutas", marca: "Ecuador", descripcion: "Banana", stock: 100, idSucursal: 2, precioVenta: 155 })
 

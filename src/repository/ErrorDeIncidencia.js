@@ -1,4 +1,3 @@
-const errorDeIncidenciaSchema = require("./schemas/errorDeIncidenciaSchema");
  class ErrorDeIncidencia extends Error {
 
     

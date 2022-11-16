@@ -2,7 +2,7 @@
 const { model } = require('mongoose');
 
 const Usuario = require('./Usuario');
-const usuarioSchema = require('./schemas/usuarioSchema');
+const usuarioSchema = require('../models/schemas/UsuarioSchema');
 
 
 class Admin extends Usuario {

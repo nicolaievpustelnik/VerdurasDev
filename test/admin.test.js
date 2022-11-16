@@ -1,19 +1,18 @@
 const chai = require('chai');
-const { $where } = require('../src/models/Admin');
 const should = chai.should();
 const assert = chai.assert;
 const expect = chai.expect;
 
-const Admin = require('../src/models/Admin');
-const Empleado = require('../src/models/Empleado');
-const Sucursal = require('../src/Sucursal');
-const Rol = require('../src/models/Rol.js');
+const Admin = require('../src/repository/Admin');
+const Empleado = require('../src/repository/Empleado');
+const Sucursal = require('../src/SucursalRepository');
+const Rol = require('../src/repository/Rol.js');
 
 describe("Admin", function () {
 
     describe("Metodo nombre completo", function () {
 
-        let newAdmin = new Admin({ nombre: "Nicolaiev", apellido: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "1" });
+        let newAdmin = new Admin({legajo: "128956", nombre: "Nicolaiev", apellido: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "1" });
 
         let nombreCompleto = newAdmin.getNombreCompleto();
 

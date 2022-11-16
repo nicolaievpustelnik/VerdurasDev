@@ -1,7 +1,7 @@
 const chai = require('chai');
 const assert = chai.assert;
 
-const Cliente = require('../src/models/Cliente');
+const Cliente = require('../src/repository/Cliente');
 
 describe("Cliente", function () {
     describe("Method id cliente", function () {

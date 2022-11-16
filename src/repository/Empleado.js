@@ -1,9 +1,9 @@
 const { model } = require('mongoose');
 
-const Usuario = require('./Usuario');
-const usuarioSchema = require('./schemas/UsuarioSchema');
-const rolEnum = require('./Rol');
-const Admin = require('./Admin');
+const Usuario = require('../repository/Usuario');
+const usuarioSchema = require('../models/schemas/UsuarioSchema');
+const rolEnum = require('../repository/Rol');
+const Admin = require('../repository/Admin');
 
 
 class Empleado extends Usuario {

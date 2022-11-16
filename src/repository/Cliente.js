@@ -1,6 +1,6 @@
 const { model } = require('mongoose');
 
-const clienteSchema = require("./schemas/ClienteSchema");
+const clienteSchema = require("../models/schemas/ClienteSchema");
 
 class Cliente {
 
