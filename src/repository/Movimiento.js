@@ -1,6 +1,6 @@
 const { model } = require('mongoose');
 
-const movimientoSchema = require("./schemas/MovimientoSchema");
+const movimientoSchema = require("../models/schemas/MovimientoSchema");
 
 class Movimiento {
 

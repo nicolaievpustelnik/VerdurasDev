@@ -3,7 +3,7 @@ const should = chai.should();
 const assert = chai.assert;
 const expect = chai.expect;
 
-const Reporte = require("../src/models/Reporte");
+const Reporte = require("../src/repository/Reporte");
 
 describe("Reporte", function () {
   describe("Metodo get fecha", function () {

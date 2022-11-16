@@ -4,13 +4,13 @@ const chai = require('chai');
 const assert = chai.assert;
 const expect = chai.expect
 
-const Sucursal = require('../src/Sucursal.js');
-const ProductoSucursal = require('../src/models/ProductoSucursal.js')
-const Empleado = require('../src/models/Empleado.js');
-const rolEnum = require('../src/models/Rol.js');
-const Proveedor = require('../src/models/Proveedor.js');
-const Movimiento = require('../src/models/Movimiento.js');
-const ProductoProveedor = require('../src/models/ProductoProveedor.js');
+const Sucursal = require('../src/SucursalRepository');
+const ProductoSucursal = require('../src/repository/ProductoSucursal.js')
+const Empleado = require('../src/repository/Empleado.js');
+const rolEnum = require('../src/repository/Rol.js');
+const Proveedor = require('../src/repository/Proveedor.js');
+const Movimiento = require('../src/repository/Movimiento.js');
+const ProductoProveedor = require('../src/repository/ProductoProveedor.js');
 
 const unaSucursal = new Sucursal({
     idSucursal: 1,
@@ -32,7 +32,7 @@ describe("Sucursal", () => {
                 tipoUsuario: "Empleado",
                 rol: rolEnum.ORGANIZADOR
             });
-            let empleadoIngresado = unaSucursal.agregarUsuarioTest(unEmpleado);
+            let empleadoIngresado = unaSucursal.agregarUsuario(unEmpleado);
             assert.equal(empleadoIngresado, true);
 
         });
@@ -83,7 +83,7 @@ describe("Sucursal", () => {
 
     describe('Buscar Producto por scanner', () => {
         it('#buscarProductoEnSucursal(scanner): Producto', () => {
-            let unProducto = unaSucursal.buscarUnProductoEnSucursal(111);
+            let unProducto = unaSucursal.buscarProductoPorCodigoBarra(111);
             expect(unProducto).to.be.an.instanceof(ProductoSucursal);
         });
     });
@@ -153,8 +153,8 @@ describe("Sucursal", () => {
     });
 
     describe('Lista de usuarios', () => {
-        it('listaDeUsuariosTest:Array', () => {
-            let usuarios = unaSucursal.listaDeUsuariosTest();
+        it('listaDeUsuarios:Array', () => {
+            let usuarios = unaSucursal.listaDeUsuarios();
             expect(usuarios.length > 0).to.equal(true);
             expect(usuarios).to.be.an('array')
         });

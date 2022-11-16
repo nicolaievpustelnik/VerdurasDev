@@ -1,7 +1,7 @@
 const { model } = require('mongoose');
 
 const Producto = require('./Producto');
-const productoSchema = require('./schemas/ProductoSchema');
+const productoSchema = require('../models/schemas/ProductoSchema');
 
 class ProductoProveedor extends Producto {
 

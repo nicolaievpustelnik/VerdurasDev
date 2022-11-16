@@ -1,15 +1,15 @@
 const { model } = require('mongoose');
 
 sucursalSchema = require("./models/schemas/SucursalSchema");
-const rolEnum = require('./models/Rol');
-const Empleado = require('./models/Empleado');
-const ProductoSucursal = require('./models/ProductoSucursal');
-const ProductoProveedor = require('./models/ProductoProveedor');
-const Cliente = require('./models/Cliente');
-const Movimiento = require('./models/Movimiento');
-const Notificacion = require('./models/Notificacion');
-const ErrorDeIncidencia = require('./models/ErrorDeIncidencia');
-const Proveedor = require('./models/Proveedor');
+const rolEnum = require('./repository/Rol');
+const Empleado = require('./repository/Empleado');
+const ProductoSucursal = require('./repository/ProductoSucursal');
+const ProductoProveedor = require('./repository/ProductoProveedor');
+const Cliente = require('./repository/Cliente');
+const Movimiento = require('./repository/Movimiento');
+const Notificacion = require('./repository/Notificacion');
+const ErrorDeIncidencia = require('./repository/ErrorDeIncidencia');
+const Proveedor = require('./repository/Proveedor');
 
 class Sucursal {
 
@@ -33,7 +33,7 @@ class Sucursal {
         return unEmpleado;
     }
 
-     recepcionarProducto(idProveedor, scanner, cant) {
+    recepcionarProducto(idProveedor, scanner, cant) {
         let seRecepciono = false;
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
@@ -59,8 +59,8 @@ class Sucursal {
     }
 
     verificarRol(unEmpleado, unRol) {
-        let verificado = false
-        if (!(unEmpleado.rol.name === unRol.name || unEmpleado.rol.name === rolEnum.ORGANIZADOR.name)) {
+        let verificado = false;
+        if (!(unEmpleado.rol[0].name === unRol.name || unEmpleado.rol[0].name === rolEnum.ORGANIZADOR.name)) {
             throw new ErrorDeIncidencia('Intenta ejecutar una tarea no autorizada')
         }
         verificado = true;
@@ -76,14 +76,14 @@ class Sucursal {
         }
     }
 
-     egresarProducto(dni, scanner, cant) {
+    egresarProducto(dni, scanner, cant) {
         let seEgreso = false;
         try {
             var unEmpleado = this.obtenerUsuarioLogueado();
             if (unEmpleado) {
                 if (this.verificarRol(unEmpleado, rolEnum.CAJERO)) {
                     let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias" });
-                    let unProductoSucursal =  this.buscarProductoPorCodigoBarra(scanner)
+                    let unProductoSucursal = this.buscarProductoPorCodigoBarra(scanner)
                     if (this.hayStock(unProductoSucursal, cant)) {
                         if (this.validarEgreso(cant)) {
                             unProductoSucursal.actualizarStock(-cant)
@@ -160,11 +160,11 @@ class Sucursal {
         return this.empleadosDeSucursal.find(u => u.legajo === legajo);
     }
 
-     agregarProducto(unProducto) {
+    agregarProducto(unProducto) {
         let sePudo = false;
-        let product =  this.buscarProductoPorCodigoBarra(unProducto.codigoBarra);
-
-        if (product[0]) {
+        let product = this.buscarProductoPorCodigoBarra(unProducto.codigoBarra);
+        console.log("--------------->"+product)
+        if (product) {
             throw new Error('El Producto ya se encuentra agregado!');
         } else {
             this.productosDeSucursal.push(unProducto);
@@ -174,11 +174,11 @@ class Sucursal {
         return sePudo;
     }
 
-    agregarProveedorTest(unProveedor) {
+    agregarProveedor(unProveedor) {
         this.proveedoresAutorizados.push(unProveedor);
     }
 
-    agregarUsuarioTest(unUsuario) {
+    agregarUsuario(unUsuario) {
         let sePudo = false;
         if (this.buscarEmpleado(unUsuario.getLegajo())) {
             throw new Error('El legajo ya se encuentra asignado a otro empleado!');
@@ -188,112 +188,19 @@ class Sucursal {
         }
         return sePudo;
     }
-    async agregarProveedor(res, prov) {
-        let proveedor = await this.buscarProveedorPorCuil(prov.getCuil());
 
-        if (proveedor) {
-            throw new Error('El Proveedor ya se encuentra registrado!');
-        } else {
-            await prov.save();
-            return true;
-        }
-    }
 
-    async agregarUsuario(res, user) {
-
-        if (this.buscarEmpleado(user.getLegajo())) {
-            throw new Error('El legajo ya se encuentra asignado a otro empleado!');
-        } else {
-            await user.save();
-        }
-    }
-
-    async agregarProducto(res, prod) {
-
-        let product = await this.buscarProductoPorCodigoBarra(prod.getCodigoBarra());
-
-        if (product[0]) {
-            throw new Error('El Producto ya se encuentra registrado!');
-        } else {
-            await prod.save();
-            return true;
-        }
-    }
-
-    listaDeUsuariosTest() {
+    listaDeUsuarios() {
         return this.empleadosDeSucursal;
     }
 
-    async listaDeUsuarios() {
-        return await Empleado.find().lean();
-    }
-
-    async listaDeProductosSucursal() {
-        return await ProductoSucursal.find().lean();
-    }
-
-    async listaDeProductosProveedor() {
-        return await ProductoProveedor.find().lean();
-    }
-
-    async listaDeProveedores() {
-        return await Proveedor.find().lean();
-    }
-
-    async eliminarUsuario(id) {
-        await Empleado.findByIdAndDelete(id);
-    }
-
-    async eliminarProveedor(id) {
-        await Proveedor.findByIdAndDelete(id);
-    }
-
-    async eliminarProducto(id) {
-        await ProductoSucursal.findByIdAndDelete(id);
-    }
-
-    async buscarUsuarioPorId(id) {
-        return await Empleado.findById(id).lean();
-    }
-
-    async buscarProductoPorIdSucursal(id) {
-        return await ProductoSucursal.findById(id).lean();
-    }
-    async buscarProductoPorIdProveedor(id) {
-        return await ProductoProveedor.findById(id).lean();
-    }
-
-    async buscarProveedorPorId(id) {
-        console.log(id)
-        return await Proveedor.findById(id).lean();
-    }
-
-    async buscarProveedorPorCuil(cuilProveedor) {
-        return await Proveedor.findOne({ "cuilProveedor": cuilProveedor });
-    }
-
-     buscarProductoPorCodigoBarra(cod) {
-        let unProducto= this.listaDeProductosSucursal.find(cod);
-        if(unProducto){
-            
+    buscarProductoPorCodigoBarra(cod) {
+        let unProducto = this.listaDeProductosSucursal.find(p => p.codigoBarra == cod);
+        console.log(unProducto)
+        if (unProducto) {
+            throw new Error('Producto ya se encuentra registrado')
         }
-        return  unProducto
-    }
-
-    async buscarProductoPorCodigoBarraProveedor(cod) {
-        return await ProductoProveedor.find({"codigoBarra":cod});
-    }
-
-    async editarUsuario(id, params) {
-        return await Empleado.findByIdAndUpdate(id, params);
-    }
-
-    async editarProductoSucursal(id, params) {
-        return await ProductoSucursal.findByIdAndUpdate(id, params);
-    }
-
-    async editarProductoProveedor(id, params) {
-        return await ProductoProveedor.findByIdAndUpdate(id, params);
+        return unProducto
     }
 
     getAll() {
