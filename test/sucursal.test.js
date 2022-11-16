@@ -56,7 +56,7 @@ describe("Sucursal", () => {
     describe('Alta Proveedor', () => {
         it('#agregarProveedor(unProveedor):Proveedor', () => {
             let unProveedor = new Proveedor({
-                idProveedor: 1,
+                cuilProveedor: 1,
                 nombreProveedor: "Julio",
             });
             unaSucursal.agregarProveedor(unProveedor);
@@ -82,7 +82,7 @@ describe("Sucursal", () => {
     });
 
     describe('Buscar Producto por scanner', () => {
-        it('#buscarProductoEnSucursal(scanner): Producto', () => {
+        it('#buscarProductoPorCodigoBarra(scanner): Producto', () => {
             let unProducto = unaSucursal.buscarProductoPorCodigoBarra(111);
             expect(unProducto).to.be.an.instanceof(ProductoSucursal);
         });
@@ -90,7 +90,7 @@ describe("Sucursal", () => {
 
     describe('Hay Stock', () => {
         it('#hayStock(Producto, cant): boolean', () => {
-            let unProducto = unaSucursal.buscarUnProductoEnSucursal(111);
+            let unProducto = unaSucursal.buscarProductoPorCodigoBarra(111);
             let hayStock = unaSucursal.hayStock(unProducto, 10)
             expect(hayStock).to.equal(true);
         });
@@ -120,7 +120,7 @@ describe("Sucursal", () => {
         });
     });
 
-    describe('Actualizar stock', () => {
+     describe('Actualizar stock', () => {
         it('#recepcionarProducto(idProveedor, scanner, cant):booelan', () => {
             let seRecepciono = unaSucursal.recepcionarProducto(1, 111, 50);
             assert.equal(seRecepciono, true);
@@ -146,7 +146,7 @@ describe("Sucursal", () => {
 
     describe('Productos en sucursal', () => {
         it('listaDeProductosEnSucursal():Array', () => {
-            let productos = unaSucursal.getListaDeProductosEnSucursal();
+            let productos = unaSucursal.listaDeProductosEnSucursal();
             expect(productos.length > 0).to.equal(true);
             expect(productos).to.be.an('array')
         });
@@ -179,5 +179,5 @@ describe("Sucursal", () => {
             expect(unaSucursal.incidentesSospechosos).to.be.an('array');
             console.log(unaSucursal.incidentesSospechosos)
         });
-    });
+    }); 
 });

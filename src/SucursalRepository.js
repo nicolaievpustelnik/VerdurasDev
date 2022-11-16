@@ -146,8 +146,8 @@ class Sucursal {
         return unMonto
     }
 
-    obtenerProveedor(idProveedor) {
-        let unProveedor = this.proveedoresAutorizados.find(p => p.idProveedor === idProveedor);
+    obtenerProveedor(cuil) {
+        let unProveedor = this.proveedoresAutorizados.find(p => p.cuilProveedor === cuil);
         if (!unProveedor) throw new ErrorDeIncidencia('Intenta ingresar mercaderia a proveedor no autorizado');
         return unProveedor;
     }
@@ -163,7 +163,6 @@ class Sucursal {
     agregarProducto(unProducto) {
         let sePudo = false;
         let product = this.buscarProductoPorCodigoBarra(unProducto.codigoBarra);
-        console.log("--------------->"+product)
         if (product) {
             throw new Error('El Producto ya se encuentra agregado!');
         } else {
@@ -194,13 +193,13 @@ class Sucursal {
         return this.empleadosDeSucursal;
     }
 
+    listaDeProductosEnSucursal(){
+        return this.productosDeSucursal;
+    }
+
     buscarProductoPorCodigoBarra(cod) {
-        let unProducto = this.listaDeProductosSucursal.find(p => p.codigoBarra == cod);
-        console.log(unProducto)
-        if (unProducto) {
-            throw new Error('Producto ya se encuentra registrado')
-        }
-        return unProducto
+        let unProducto = this.productosDeSucursal.find(p => p.codigoBarra === cod);
+        return unProducto;
     }
 
     getAll() {

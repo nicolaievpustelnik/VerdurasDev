@@ -1,6 +1,6 @@
 const { model } = require('mongoose');
 
-const ProductoProveedor = require("../models/ProductoProveedor")
+const ProductoProveedor = require("../repository/ProductoProveedor")
 
 const proveedorSchema = require("../models/schemas/ProveedorSchema")
 
@@ -9,6 +9,7 @@ class Proveedor {
     constructor(cuilProveedor, nombreProveedor) {
         this.cuilProveedor = cuilProveedor;
         this.nombreProveedor = nombreProveedor;
+        this.productosProveedor = [];
     }
 
     agregarProductoAProveedor(productAux) {
