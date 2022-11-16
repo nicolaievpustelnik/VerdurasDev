@@ -23,7 +23,7 @@ proveedoresControllers.crearProveedor = async (req, res) => {
 // Ver todos los Proveedores
 proveedoresControllers.renderizarProveedores = async (req, res) => {
 
-    let proveedores = await res.locals.sucursal.listaDeProveedores()
+    let proveedores = await res.locals.sucursal.listaDeProveedores();
 
     res.render('proveedor/proveedores', { proveedores });
 }
@@ -32,8 +32,8 @@ proveedoresControllers.renderizarProveedores = async (req, res) => {
 proveedoresControllers.renderizadoActualizarFormProveedor = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
     let id = query.id;
-    let Proveedor = await res.locals.sucursal.buscarProveedorPorId(id)
-    res.render('proveedor/editarProveedor', { Proveedor });
+    let proveedor = await res.locals.sucursal.buscarProveedorPorId(id);
+    res.render('proveedor/editarProveedor', { proveedor});
 }
 
 proveedoresControllers.actualizarProveedor = (req, res) => {
