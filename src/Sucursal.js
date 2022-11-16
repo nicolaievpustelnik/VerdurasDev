@@ -32,7 +32,7 @@ class Sucursal {
     return unEmpleado;
   }
 
-  async recepcionarProducto(idProveedor, scanner, cant) {
+  async recepcionarProductoSucursal(idProveedor, scanner, cant) {
     let seRecepciono = false;
     try {
       var unEmpleado = this.obtenerUsuarioLogueado();
@@ -40,7 +40,7 @@ class Sucursal {
         if (this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA)) {
           let unProveedor = this.obtenerProveedor(idProveedor);
           if (unProveedor) {
-            let unProductoSucursal = await this.buscarProductoPorCodigoBarra(
+            let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(
               scanner
             );
             if (unProductoSucursal[0]) {
@@ -96,7 +96,7 @@ class Sucursal {
             dniCliente: dni,
             nombreCliente: "Matias",
           });
-          let unProductoSucursal = await this.buscarProductoPorCodigoBarra(
+          let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(
             scanner
           );
           if (this.hayStock(unProductoSucursal[0], cant)) {
@@ -184,7 +184,7 @@ class Sucursal {
 
   async agregarProductoTest(unProducto) {
     let sePudo = false;
-    let product = await this.buscarProductoPorCodigoBarra(
+    let product = await this.buscarProductoPorCodigoBarraSucursal(
       unProducto.codigoBarra
     );
 
@@ -239,13 +239,26 @@ class Sucursal {
     }
   }
 
-  async agregarProducto(res, prod) {
-    let product = await this.buscarProductoPorCodigoBarra(
+  async agregarProductoSucursal(res, prod) {
+    let product = await this.buscarProductoPorCodigoBarraSucursal(
       prod.getCodigoBarra()
     );
 
     if (product[0]) {
-      throw new Error("El Producto ya se encuentra registrado!");
+      throw new Error("El Producto Sucursal ya se encuentra registrado!");
+    } else {
+      await prod.save();
+      return true;
+    }
+  }
+
+  async agregarProductoProveedor(res, prod) {
+    let product = await this.buscarProductoPorCodigoBarraProveedor(
+      prod.getCodigoBarra()
+    );
+
+    if (product[0]) {
+      throw new Error("El Producto Proveedor ya se encuentra registrado!");
     } else {
       await prod.save();
       return true;
@@ -275,8 +288,12 @@ class Sucursal {
     await Empleado.findByIdAndDelete(id);
   }
 
-  async eliminarProducto(id) {
+  async eliminarProductoSucursal(id) {
     await ProductoSucursal.findByIdAndDelete(id);
+  }
+
+  async eliminarProductoProveedor(id) {
+    await ProductoProveedor.findByIdAndDelete(id);
   }
 
   async eliminarNotificacion(id) {

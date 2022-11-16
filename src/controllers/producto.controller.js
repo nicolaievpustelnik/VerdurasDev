@@ -21,17 +21,18 @@ productosControllers.crearProducto = async (req, res) => {
         switch (tipoProducto) {
             case 'Producto':
                 nuevoProducto = new ProductoSucursal({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idSucursal, precioVenta});
+                await res.locals.sucursal.agregarProductoSucursal(res, nuevoProducto);
                 break;
 
             case 'Proveedor':
                 nuevoProducto = new ProductoProveedor({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idProveedor, precioCompra});
+                await res.locals.sucursal.agregarProductoProveedor(res, nuevoProducto);
                 break;
 
             default:
                 break;
         }
-
-        await res.locals.sucursal.agregarProducto(res, nuevoProducto);
+        
         req.flash('success_msg', "Producto agregado exitosamente");
         res.redirect('/productos');
 
@@ -74,10 +75,16 @@ productosControllers.actualizarProductoProveedor = async (req, res) => {
 }
 
 // Eliminar usuario
-productosControllers.eliminarProducto = (req, res) => {
-
+productosControllers.eliminarProductoSucursal = (req, res) => {
     let id = req.params.id;
-    res.locals.sucursal.eliminarProducto(id);
+    res.locals.sucursal.eliminarProductoSucursal(id);
+    req.flash('success_msg', "Producto eliminado exitosamente");
+    res.redirect('/productos');
+}
+
+productosControllers.eliminarProductoProveedor = (req, res) => {
+    let id = req.params.id;
+    res.locals.sucursal.eliminarProductoProveedor(id);
     req.flash('success_msg', "Producto eliminado exitosamente");
     res.redirect('/productos');
 }

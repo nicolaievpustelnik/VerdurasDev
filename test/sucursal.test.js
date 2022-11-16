@@ -82,15 +82,15 @@ describe("Sucursal", () => {
     });
 
     describe('Buscar Producto por scanner', () => {
-        it('#buscarProductoPorCodigoBarra(scanner): Producto', () => {
-            let unProducto = unaSucursal.buscarProductoPorCodigoBarra(111);
+        it('#buscarProductoPorCodigoBarraSucursal(scanner): Producto', () => {
+            let unProducto = unaSucursal.buscarProductoPorCodigoBarraSucursal(111);
             expect(unProducto).to.be.an.instanceof(ProductoSucursal);
         });
     });
 
     describe('Hay Stock', () => {
         it('#hayStock(Producto, cant): boolean', () => {
-            let unProducto = unaSucursal.buscarProductoPorCodigoBarra(111);
+            let unProducto = unaSucursal.buscarProductoPorCodigoBarraSucursal(111);
             let hayStock = unaSucursal.hayStock(unProducto, 10)
             expect(hayStock).to.equal(true);
         });
