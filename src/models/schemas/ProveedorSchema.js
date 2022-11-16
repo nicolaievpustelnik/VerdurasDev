@@ -10,11 +10,11 @@ const proveedorSchema = new Schema({
         type: String,
         require: true
     },
- /*    productosProveedor: {
+    productosProveedor: {
         type: [],
         require: true
     },
- */
+ 
 }, {
     timestamps: true
 })
