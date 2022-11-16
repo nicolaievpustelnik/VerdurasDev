@@ -1,9 +1,9 @@
-const { model } = require('mongoose');
+const { model } = require("mongoose");
 
-const notificacionSchema = require('./schemas/NotificacionSchema');
+const notificacionSchema = require("./schemas/NotificacionSchema");
 
 class Notificacion {
-  constructor(nombreCompletoEmpleado, mensaje,fecha) {
+  constructor(nombreCompletoEmpleado, mensaje, fecha) {
     this.nombreCompletoEmpleado = nombreCompletoEmpleado;
     this.mensaje = mensaje;
     this.fecha = fecha;
