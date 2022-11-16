@@ -1,0 +1,24 @@
+<div class="container">
+    <form action="actualizarNotificacion/{{notificacion._id}}?_method=PUT" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+        <fieldset>
+            <legend class="mt-5 mb-3">Editar notificacion</legend>
+            <div class="form-group">
+                <label class="form-label mt-4">Nombre Completo Empleado</label>
+                <input type="text" class="form-control" name="nombreCompletoEmpleado" placeholder="Ingresar nombre del empleado"
+                    value="{{notificacion.nombreCompletoEmpleado}}">
+            </div>
+            <div class="form-group">
+                <label class="form-label mt-4">Mensaje</label>
+                <input type="text" class="form-control" name="mensaje" placeholder="Ingresar mensaje"
+                    value="{{notificacion.mensaje}}">
+            </div>
+            <div class="form-group">
+                <label class="form-label mt-4">Fecha</label>
+                <input type="text" class="form-control" name="fecha" placeholder="Ingresar fecha"
+                    value="{{notificacion.fecha}}">
+            </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3"> Guardar</button>
+    </form>
+</div>

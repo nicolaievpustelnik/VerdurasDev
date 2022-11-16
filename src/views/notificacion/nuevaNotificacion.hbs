@@ -1,0 +1,23 @@
+<div class="container">
+    <form action="/nuevaNotificacion" method="POST">
+        <fieldset>
+            <legend class="mt-5 mb-3">Agregar notificacion</legend>
+            
+            <div class="form-group">
+                <label class="form-label mt-4">Nombre Completo Empleado</label>
+                <input type="text" class="form-control" name="nombreCompletoEmpleado" placeholder="Ingrese el nombre del empleado">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label mt-4">Mensaje</label>
+                <input type="text" class="form-control" name="mensaje" placeholder="Ingrese mensaje">
+            </div>
+
+             <div class="form-group">
+                <label class="form-label mt-4">Fecha</label>
+                <input type="text" class="form-control" name="fecha" placeholder="Ingrese fecha">
+            </div>
+            
+            <button type="submit" class="btn btn-primary mt-3"> Guardar</button>
+    </form>
+</div>
