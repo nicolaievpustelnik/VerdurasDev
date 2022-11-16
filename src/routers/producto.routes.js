@@ -9,7 +9,8 @@ const {
     renderizadoActualizarFormProductoProveedor,
     actualizarProductoSucursal,
     actualizarProductoProveedor,
-    eliminarProducto
+    eliminarProductoSucursal,
+    eliminarProductoProveedor
 } = require('../controllers/producto.controller');
 
 // Nuevo Producto
@@ -26,6 +27,7 @@ router.get('/editarProductoProveedor', renderizadoActualizarFormProductoProveedo
 router.put('/actualizarProductoProveedor/:id', actualizarProductoProveedor);
 
 // Eliminar Producto
-router.delete('/eliminarProducto/:id', eliminarProducto);
+router.delete('/eliminarProductoSucursal/:id', eliminarProductoSucursal);
+router.delete('/eliminarProductoProveedor/:id', eliminarProductoProveedor);
 
 module.exports = router;
