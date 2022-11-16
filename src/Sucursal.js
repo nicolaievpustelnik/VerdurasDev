@@ -252,10 +252,6 @@ class Sucursal {
     }
   }
 
-  listaDeUsuariosTest() {
-    return this.empleadosDeSucursal;
-  }
-
   async listaDeNotificaciones() {
     return await Notificacion.find().lean();
   }
@@ -307,6 +303,10 @@ class Sucursal {
 
   async buscarProductoPorCodigoBarraProveedor(cod) {
     return await ProductoProveedor.find({ codigoBarra: cod });
+  }
+
+  async editarProveedor(id, params) {
+    return await Proveedor.findByIdAndUpdate(id, params);
   }
 
   async editarUsuario(id, params) {

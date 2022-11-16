@@ -2,7 +2,6 @@
 <br />
 
 <div class="container blockNotificaciones mb-5">
-  <h5 class="mb-4">notificacion</h5>
   <table class="table table-hover">
     <thead>
       <tr>
@@ -16,21 +15,17 @@
     </thead>
     <tbody>
       {{#each notificaciones}}
-        <tr class="table-light text-white">
-          <td class="pt-3">{{@index}}</td>
-          <th class="pt-3" scope="row">{{nombreCompletoEmpleado}}</th>
-          <td class="pt-3">{{mensaje}}</td>
-          <td class="pt-3">{{fecha}}</td>
-          <td class="pt-3"><a href="/editarNotificacion?id={{_id}}"><i
-                class="bi bi-pencil text-primary"
-              ></i></a></td>
-          <form action="eliminarNotificacion?_method=DELETE" method="POST">
-            <input type="hidden" name="_method" value="DELETE" />
-            <td><button class="btn btn-sm bg-transparent"><i
-                  class="bi bi-trash3 text-danger"
-                ></i></button></td>
-          </form>
-        </tr>
+      <tr class="table-light text-white">
+        <td class="pt-3">{{@index}}</td>
+        <th class="pt-3" scope="row">{{nombreCompletoEmpleado}}</th>
+        <td class="pt-3">{{mensaje}}</td>
+        <td class="pt-3">{{fecha}}</td>
+        <td class="pt-3"><a href="/editarNotificacion?id={{_id}}"><i class="bi bi-pencil text-primary"></i></a></td>
+        <form action="eliminarNotificacion/{{_id}}?_method=DELETE" method="POST">
+          <input type="hidden" name="_method" value="DELETE" />
+          <td><button class="btn btn-sm bg-transparent"><i class="bi bi-trash3 text-danger"></i></button></td>
+        </form>
+      </tr>
       {{/each}}
     </tbody>
   </table>

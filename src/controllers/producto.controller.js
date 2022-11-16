@@ -32,6 +32,7 @@ productosControllers.crearProducto = async (req, res) => {
         }
 
         await res.locals.sucursal.agregarProducto(res, nuevoProducto);
+        req.flash('success_msg', "Producto agregado exitosamente");
         res.redirect('/productos');
 
     } catch (err) {
