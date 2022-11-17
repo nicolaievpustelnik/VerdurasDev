@@ -7,7 +7,12 @@ const {
     renderizarUsuarios,
     renderizadoActualizarFormUsuario,
     actualizarUsuario,
-    eliminarUsuario
+    eliminarUsuario,
+    renderRegistrarUsuarioForm,
+    registrarUsuario,
+    renderLoginUsuarioForm,
+    loginUsuario,
+    cerrarSesionUsuario
 } = require('../controllers/usuario.controller');
 
 // Nuevo usuario
@@ -23,5 +28,16 @@ router.put('/actualizarUsuario/:id', actualizarUsuario);
 
 // Eliminar usuario
 router.delete('/eliminarUsuario/:id', eliminarUsuario);
+
+// Registrar usuario
+router.get('/formRegistroUsuario', renderRegistrarUsuarioForm);
+router.post('/registroUsuario', registrarUsuario);
+
+// Login usuario
+router.get('/formLoginUsuario', renderLoginUsuarioForm);
+router.post('/loginUsuario', loginUsuario);
+
+// Cerrar sesion usuario
+router.get('/cerrarSesion', cerrarSesionUsuario);
 
 module.exports = router;
