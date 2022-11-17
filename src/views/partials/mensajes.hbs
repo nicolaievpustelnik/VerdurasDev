@@ -4,3 +4,10 @@
         <strong>Bien!</strong> {{success_msg}}.
     </div>
 {{/if}}
+
+{{#if error_msg}}
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>Algo salio mal!</strong> {{error_msg}}.
+    </div>
+{{/if}}

@@ -232,7 +232,10 @@ class Sucursal {
   }
 
   async agregarUsuario(res, user) {
-    if (this.buscarEmpleado(user.getLegajo())) {
+
+    let userLegajo = await this.buscarUsuarioPorLegajo(user.getLegajo());
+
+    if (userLegajo.length > 0) {
       throw new Error("El legajo ya se encuentra asignado a otro empleado!");
     } else {
       await user.save();
@@ -302,6 +305,14 @@ class Sucursal {
 
   async buscarUsuarioPorId(id) {
     return await Empleado.findById(id).lean();
+  }
+
+  async buscarUsuarioPorLegajo(legajo) {
+    return await Empleado.find({ legajo: legajo });
+  }
+
+  async buscarUsuarioPorEmail(email) {
+    return await Empleado.find({ email: email });
   }
 
   async buscarNotificacionPorId(id) {
