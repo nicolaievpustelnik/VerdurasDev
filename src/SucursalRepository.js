@@ -41,7 +41,7 @@ class Sucursal {
                 if (this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA)) {
                     let unProveedor = this.obtenerProveedor(idProveedor)
                     if (unProveedor) {
-                        let unProductoSucursal = this.buscarProductoPorCodigoBarra(scanner);
+                        let unProductoSucursal = this.buscarProductoPorCodigoBarraSucursal(scanner);
                         if (unProductoSucursal) {
                             if (this.validarIngreso(cant)) {
                                 unProductoSucursal.actualizarStock(cant)
@@ -83,7 +83,7 @@ class Sucursal {
             if (unEmpleado) {
                 if (this.verificarRol(unEmpleado, rolEnum.CAJERO)) {
                     let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias" });
-                    let unProductoSucursal = this.buscarProductoPorCodigoBarra(scanner)
+                    let unProductoSucursal = this.buscarProductoPorCodigoBarraSucursal(scanner)
                     if (this.hayStock(unProductoSucursal, cant)) {
                         if (this.validarEgreso(cant)) {
                             unProductoSucursal.actualizarStock(-cant)
@@ -162,7 +162,7 @@ class Sucursal {
 
     agregarProducto(unProducto) {
         let sePudo = false;
-        let product = this.buscarProductoPorCodigoBarra(unProducto.codigoBarra);
+        let product = this.buscarProductoPorCodigoBarraSucursal(unProducto.codigoBarra);
         if (product) {
             throw new Error('El Producto ya se encuentra agregado!');
         } else {
@@ -197,7 +197,7 @@ class Sucursal {
         return this.productosDeSucursal;
     }
 
-    buscarProductoPorCodigoBarra(cod) {
+    buscarProductoPorCodigoBarraSucursal(cod) {
         let unProducto = this.productosDeSucursal.find(p => p.codigoBarra === cod);
         return unProducto;
     }
