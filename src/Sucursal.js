@@ -25,7 +25,7 @@ class Sucursal {
   }
 
   async obtenerUsuarioLogueado() {
-    let unEmpleado = await this.buscarEmpleado("11255");
+    let unEmpleado = await this.buscarEmpleado("123456");
     if (!unEmpleado) {
       throw new Error("No inicio Sesion!");
     }
@@ -39,13 +39,14 @@ class Sucursal {
     }
   }
 
-  async recepcionarProductoSucursal(idProveedor, scanner, cant) {
+  async recepcionarProductoSucursal(cuil, scanner, cant) {
     let seRecepciono = false;
     try {
-      var unEmpleado = this.obtenerUsuarioLogueado();
+      var unEmpleado = await this.obtenerUsuarioLogueado();
       if (unEmpleado) {
-        if (this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA)) {
-          let unProveedor = this.obtenerProveedor(idProveedor);
+        let rolValido = await this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA);
+        if (rolValido) {
+          let unProveedor = await this.obtenerProveedor(cuil);
           if (unProveedor) {
             let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(
               scanner
@@ -66,14 +67,17 @@ class Sucursal {
     return seRecepciono;
   }
 
-  verificarRol(unEmpleado, unRol) {
+  async verificarRol(unEmpleado, unRol) {
     let verificado = false;
+    console.log(unEmpleado[0].rol[0])
+    console.log(unRol.name)
     if (
       !(
-        unEmpleado.rol[0].name === unRol.name ||
-        unEmpleado.rol[0].name === rolEnum.ORGANIZADOR.name
+        unEmpleado[0].rol[0] === unRol.name ||
+        unEmpleado[0].rol[0] === rolEnum.ORGANIZADOR.name
       )
     ) {
+      console.log("No rol")
       throw new ErrorDeIncidencia("Intenta ejecutar una tarea no autorizada");
     }
     verificado = true;
@@ -82,7 +86,7 @@ class Sucursal {
 
   async dispararAlerta(res, err) {
    let usuarioLogueado = await this.obtenerUsuarioLogueado();
-   console.log("------------------>"+usuarioLogueado[0])
+   console.log("------------------>"+err.message)
     if (err instanceof ErrorDeIncidencia) {
       console.log("Entro A error de incidencia")
       let unaNotificacion = new Notificacion({
@@ -171,15 +175,13 @@ class Sucursal {
     return unMonto;
   }
 
-  obtenerProveedor(idProveedor) {
-    let unProveedor = this.proveedoresAutorizados.find(
-      (p) => p.idProveedor === idProveedor
-    );
-    if (!unProveedor)
+  async obtenerProveedor(cuil) {
+    let proveedorEncontrado = await Proveedor.find({ cuilProveedor: cuil });
+    if (!proveedorEncontrado)
       throw new ErrorDeIncidencia(
         "Intenta ingresar mercaderia a proveedor no autorizado"
       );
-    return unProveedor;
+    return proveedorEncontrado;
   }
 
   obtenerStockProducto(idProducto) {
