@@ -27,6 +27,10 @@ usuariosControllers.crearUsuario = async (req, res) => {
             default:
                 break;
         }
+    
+        // Encriptar pass
+        newUser.password = await newUser.encryptPassword(password);
+    
         await res.locals.sucursal.agregarUsuario(res, newUser);
         req.flash('success_msg', "Usuario agregado exitosamente");
         res.redirect('/usuarios');
@@ -66,6 +70,85 @@ usuariosControllers.eliminarUsuario = (req, res) => {
     res.locals.sucursal.eliminarUsuario(id);
     req.flash('success_msg', "Usuario eliminado exitosamente");
     res.redirect('/usuarios');
+}
+
+
+usuariosControllers.renderRegistrarUsuarioForm = (req, res) => {
+    res.render('usuario/registroUsuario');
+}
+
+usuariosControllers.registrarUsuario = async (req, res) => {
+
+    const errores = [];
+    const { nombre, apellido, email, password, confirmPassword} = req.body;
+
+    let userEmail = await res.locals.sucursal.buscarUsuarioPorEmail(email);
+
+    if(userEmail.length > 0){
+        req.flash('error_msg', "Email existente");
+        res.redirect('/formRegistroUsuario');
+
+    }else{
+
+        if(password != confirmPassword){
+
+            errores.push({texto: "La password no coincide"})
+        }
+    
+        if(password.length < 8){
+    
+            errores.push({texto: "Password sin caracteres suficientes (Min 8)"})
+        }
+    
+        if(errores.length > 0){
+    
+            res.render('usuario/registroUsuario', {
+                errores, 
+                nombre, 
+                apellido, 
+                email
+            });
+    
+        }else{
+    
+            do {
+                var legajo = generateLegajo();
+                var user = await res.locals.sucursal.buscarUsuarioPorLegajo(legajo);    
+            } while (user.lenght > 0);
+    
+            //Datos por defecto
+            let sucursal = 0;
+            let tipoUsuario = "Empleado"
+            let rol = [];
+            
+            newUser = new Empleado({ legajo, nombre, apellido, email, password, sucursal, tipoUsuario, rol });
+    
+            // Encriptar pass
+            newUser.password = await newUser.encryptPassword(password);
+    
+            await res.locals.sucursal.agregarUsuario(res, newUser);
+            req.flash('success_msg', "Usuario registrado");
+            res.redirect('/formLoginUsuario');
+        }
+    }
+}
+
+function generateLegajo() {
+    let min = 0000;
+    let max = 9999;
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+usuariosControllers.renderLoginUsuarioForm = (req, res) => {
+    res.render('usuario/loginUsuario');
+}
+
+usuariosControllers.loginUsuario = (req, res) => {
+    res.send('loginUsuario');
+}
+
+usuariosControllers.cerrarSesionUsuario = (req, res) => {
+    res.send('cerrarSesionUsuario');
 }
 
 module.exports = usuariosControllers;
