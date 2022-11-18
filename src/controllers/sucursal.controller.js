@@ -1,5 +1,3 @@
-const Sucursal = require('../Sucursal');
-
 const sucursalesControllers = {};
 
 // Nuevo Proveedor
