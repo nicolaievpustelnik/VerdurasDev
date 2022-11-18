@@ -24,12 +24,19 @@ class Sucursal {
     this.incidentesSospechosos = [];
   }
 
-  obtenerUsuarioLogueado() {
-    let unEmpleado = this.buscarEmpleado(123456);
+  async obtenerUsuarioLogueado() {
+    let unEmpleado = await this.buscarEmpleado("11255");
     if (!unEmpleado) {
       throw new Error("No inicio Sesion!");
     }
     return unEmpleado;
+  }
+
+  async validarSiEsDeSucursal(res, nombreSucursalRecibido) {
+    let usuarioLogueado = await this.obtenerUsuarioLogueado();
+    if (!(nombreSucursalRecibido == usuarioLogueado[0].sucursal)) {
+      throw new ErrorDeIncidencia("Entrando a sucursal que no corresponde")
+    }
   }
 
   async recepcionarProductoSucursal(idProveedor, scanner, cant) {
@@ -73,14 +80,17 @@ class Sucursal {
     return verificado;
   }
 
-  dispararAlerta(unEmpleado, err) {
+  async dispararAlerta(res, err) {
+   let usuarioLogueado = await this.obtenerUsuarioLogueado();
+   console.log("------------------>"+usuarioLogueado[0])
     if (err instanceof ErrorDeIncidencia) {
+      console.log("Entro A error de incidencia")
       let unaNotificacion = new Notificacion({
-        nombreCompletoEmpleado: unEmpleado.getNombreCompleto(),
+        nombreCompletoEmpleado: usuarioLogueado[0].nombre,
         mensaje: err.message,
         fecha: new Date().toLocaleString(),
       });
-      this.incidentesSospechosos.push(unaNotificacion);
+      await unaNotificacion.save();
     } else {
       console.log("Otro tipo de error: " + err.name + " --> " + err.message);
     }
@@ -178,8 +188,8 @@ class Sucursal {
     ).getStock();
   }
 
-  buscarEmpleado(legajo) {
-    return this.empleadosDeSucursal.find((u) => u.legajo === legajo);
+  async buscarEmpleado(legajo) {
+    return await Empleado.find({ legajo: legajo });
   }
 
   async agregarProductoTest(unProducto) {
@@ -288,6 +298,10 @@ class Sucursal {
     await Empleado.findByIdAndDelete(id);
   }
 
+  async eliminarProveedor(id) {
+    await Proveedor.findByIdAndDelete(id);
+  }
+
   async eliminarProductoSucursal(id) {
     await ProductoSucursal.findByIdAndDelete(id);
   }
@@ -372,16 +386,6 @@ class Sucursal {
       throw new ErrorDeIncidencia("Esta generando un negativo!");
     }
     return pudo;
-  }
-
-  obtenerUsuarioLogueado() {
-    let unEmpleado = this.buscarEmpleado("123456");
-    // Por ahora se setea - pero el metodo tiene que buscar en la base de datos
-    //let unEmpleadoAux = new Empleado({ nombre: 'Jorge', apellido: 'Castillo', email: 'jindr@admin.com', password: '123456', sucursal: '2', tipoUsuario: 'Empleado', rol: rolEnum.RECEPCIONISTA.name })
-
-    //Metodo para obtener usuario Logueado
-    //if (!unAdmin) throw new Error('Empleado no Existe!')
-    return unEmpleado;
   }
 }
 sucursalSchema.loadClass(Sucursal);

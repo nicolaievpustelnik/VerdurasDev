@@ -21,6 +21,7 @@ app.set("usuario", path.join(__dirname, "usuario"));
 app.set("producto", path.join(__dirname, "producto"));
 app.set("proveedor", path.join(__dirname, "proveedor"));
 app.set("notificacion", path.join(__dirname, "notificacion"));
+app.set("sucursal", path.join(__dirname, "sucursal"));
 
 app.engine(
   ".hbs",
@@ -32,6 +33,7 @@ app.engine(
     productoDir: path.join(app.get("views"), "producto"),
     proveedorDir: path.join(app.get("views"), "proveedor"),
     notificacionDir: path.join(app.get("views"), "notificacion"),
+    sucursalDir: path.join(app.get("views"), "sucursal"),
     extname: ".hbs",
 
     helpers: {
@@ -94,6 +96,7 @@ app.use(require("./routers/usuario.routes"));
 app.use(require("./routers/producto.routes"));
 app.use(require("./routers/proveedor.routes"));
 app.use(require("./routers/notificacion.routes"));
+app.use(require("./routers/sucursal.routes"));
 
 // Archivos static
 app.use(express.static(path.join(__dirname, "public")));
