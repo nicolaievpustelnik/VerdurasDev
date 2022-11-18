@@ -84,7 +84,7 @@ nuevoEmpleado = new Empleado({
    email: "emi@gmail.com",
    password: "12345678",
    sucursal: "1",
-   rol: Rol.REPOSITOR.name
+   rol: Rol.RECEPCIONISTA.name
 });
 newSucursal.agregarUsuario(nuevoEmpleado)
 
