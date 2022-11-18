@@ -2,6 +2,7 @@ const Empleado = require('../models/Empleado');
 const Admin = require('../models/Admin');
 
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
 const usuariosControllers = {};
 
@@ -43,16 +44,55 @@ usuariosControllers.crearUsuario = async (req, res) => {
     }
 }
 
+//Auth
+usuariosControllers.auth = async (req, res, done) => {
+
+    const { email, password } = req.body;
+
+    const user = await Empleado.findOne({email});
+
+    if(!user){
+        res.sendStatus(403);
+    }else{
+
+        const match = await user.matchPassword(password);
+
+        if (match) {
+            
+            jwt.sign({user}, 'secretkey', (err, token) => {
+                res.status(200).json({
+                    token
+                });
+            });
+
+        }else{
+            res.sendStatus(403);
+        }
+    }
+}
+
 // Ver todos los usuarios
 usuariosControllers.renderizarUsuarios = async (req, res) => {
+
     let usuarios = await res.locals.sucursal.listaDeUsuarios();
     let query = require('url').parse(req.url, true).query;
-    let json = query.json;
-    if(json){
-        res.status(200).json({status: 200, usuarios: usuarios});
+    let jsonResponse = query.jsonResponse;
+
+    if(jsonResponse == "true"){
+
+        jwt.verify(req.token, 'secretkey', (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+                res.status(200).json({status: 200, usuarios: usuarios});
+            }
+        });
+        
     }else{
         res.render('usuario/usuarios', { usuarios });
-    }
+    }   
+
+    
 }
 
 usuariosControllers.usuariosJson = async (req, res) => {
