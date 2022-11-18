@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const router = Router();
 
+const {isAuthenticated} = require('../helps/auth');
+
 const {
     renderizarFormUsuario,
     crearUsuario,
@@ -12,7 +14,8 @@ const {
     registrarUsuario,
     renderLoginUsuarioForm,
     loginUsuario,
-    cerrarSesionUsuario
+    cerrarSesionUsuario,
+    usuariosJson
 } = require('../controllers/usuario.controller');
 
 // Nuevo usuario
@@ -20,7 +23,8 @@ router.get('/formUsuario', renderizarFormUsuario);
 router.post('/nuevoUsuario', crearUsuario);
 
 // Ver todos los usuarios
-router.get('/usuarios', renderizarUsuarios);
+//router.get('/usuarios', isAuthenticated, renderizarUsuarios);
+router.get('/usuarios', isAuthenticated, renderizarUsuarios);
 
 // Editar usuario
 router.get('/editarUsuario', renderizadoActualizarFormUsuario);

@@ -1,6 +1,8 @@
 const Empleado = require('../models/Empleado');
 const Admin = require('../models/Admin');
 
+const passport = require('passport');
+
 const usuariosControllers = {};
 
 // Nuevo usuario
@@ -43,10 +45,19 @@ usuariosControllers.crearUsuario = async (req, res) => {
 
 // Ver todos los usuarios
 usuariosControllers.renderizarUsuarios = async (req, res) => {
+    let usuarios = await res.locals.sucursal.listaDeUsuarios();
+    let query = require('url').parse(req.url, true).query;
+    let json = query.json;
+    if(json){
+        res.status(200).json({status: 200, usuarios: usuarios});
+    }else{
+        res.render('usuario/usuarios', { usuarios });
+    }
+}
 
-    let usuarios = await res.locals.sucursal.listaDeUsuarios()
-
-    res.render('usuario/usuarios', { usuarios });
+usuariosControllers.usuariosJson = async (req, res) => {
+    let usuarios = await res.locals.sucursal.listaDeUsuarios();
+    res.status(200).json({status: 200, usuarios: usuarios});
 }
 
 // Actualizar usuario
@@ -143,12 +154,19 @@ usuariosControllers.renderLoginUsuarioForm = (req, res) => {
     res.render('usuario/loginUsuario');
 }
 
-usuariosControllers.loginUsuario = (req, res) => {
-    res.send('loginUsuario');
-}
+usuariosControllers.loginUsuario = passport.authenticate('local', {
+    failureRedirect: '/formLoginUsuario',
+    successRedirect: '/',
+    failureFlash: true
+});
 
 usuariosControllers.cerrarSesionUsuario = (req, res) => {
-    res.send('cerrarSesionUsuario');
+    req.logout(function(err) {
+        if (err) { return next(err); }
+        req.flash('success_msg', "Usuario fuera de sesión");
+        res.redirect('/formLoginUsuario');
+    });
+    
 }
 
 module.exports = usuariosControllers;
