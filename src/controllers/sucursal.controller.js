@@ -16,17 +16,41 @@ sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
 
     } catch (err) {
         await res.locals.sucursal.dispararAlerta(res, err);
-        req.flash('success_msg', "Usuario no pertenece a Sucursal");
+        req.flash('error_msg', "Usuario no pertenece a Sucursal");
         res.redirect('/formSucursal');
     }
 }
 
-// Ver todos los Proveedores
+// Ver toda las opciones 
 sucursalesControllers.renderizarOpciones = async (req, res) => {
     let usuario = await res.locals.sucursal.obtenerUsuarioLogueado();
-    let emailUsuario = usuario[0].email
-    console.log(emailUsuario[0].email)
-    res.render('sucursal/opciones', { emailUsuario});
+    let emailUsuario = usuario[0].email;
+    let nombreSuc = usuario[0].sucursal;
+    res.render('sucursal/opciones', { emailUsuario,nombreSuc});
+}
+
+//mostrar formulario de recepcion
+sucursalesControllers.renderizadoRecepcionFormProducto = async(req,res) => {
+    res.render('sucursal/formRecepcion');
+}
+
+ sucursalesControllers.recepcionarProductos = async (req, res) => {
+    console.log("Entre a controller recepcionar")
+    try {
+        const { cuilProveedor, codigoBarra, cantidad } = req.body;
+        let cuil = cuilProveedor;
+        let scanner = codigoBarra;
+        let cant = cantidad;
+
+        await res.locals.sucursal.recepcionarProductoSucursal(res, cuil,scanner,cant);
+        req.flash('success_msg', "Se recepciono exitosamente");
+        
+
+    } catch (err) {
+        await res.locals.sucursal.dispararAlerta(res, err);
+        req.flash('error_msg', "Se genero una notificacion");
+        //res.redirect('/formSucursal');
+    } 
 }
 
 module.exports = sucursalesControllers;
