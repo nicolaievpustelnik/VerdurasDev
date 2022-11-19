@@ -98,12 +98,13 @@ class Sucursal {
     }
   }
 
+//revisar hay stock
   async egresarProducto(dni, scanner, cant) {
     let seEgreso = false;
     try {
       var unEmpleado = this.obtenerUsuarioLogueado();
-      if (unEmpleado) {
-        if (this.verificarRol(unEmpleado, rolEnum.CAJERO)) {
+      if (unEmpleado[0]) {
+        if (this.verificarRol(unEmpleado[0], rolEnum.CAJERO)) {
           let unCliente = new Cliente({
             dniCliente: dni,
             nombreCliente: "Matias",
@@ -396,13 +397,18 @@ class Sucursal {
     return pudo;
   }
 
-  hayStock(unProductoDeSucursal, cant) {
-    let pudo = true;
-    if (unProductoDeSucursal.stock < cant) {
-      throw new ErrorDeIncidencia("Esta generando un negativo!");
+ async hayStock(unProductoDeSucursal, cant) {
+    let pudo = false;
+        if(unProductoDeSucursal.stock < cant){
+          throw new ErrorDeIncidencia("Esta generando un negativo en el stock!");
+        }
+        return pudo;
+      }
+     
+    
     }
-    return pudo;
-  }
-}
+  
+
+
 sucursalSchema.loadClass(Sucursal);
 module.exports = model("Sucursal", sucursalSchema);
