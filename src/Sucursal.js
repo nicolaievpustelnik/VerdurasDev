@@ -220,7 +220,7 @@ class Sucursal {
 
   }
 
-  async agregarUsuario(req, user, jsonResponse) {
+  async agregarUsuario(req, res, user, jsonResponse) {
 
     let userLegajo = await this.buscarUsuarioPorEmail(user.getEmail());
 
@@ -353,7 +353,11 @@ class Sucursal {
   }
 
   async editarUsuario(id, params) {
-    return await Empleado.findByIdAndUpdate(id, params);
+    try {
+      return await Empleado.findByIdAndUpdate(id, params);  
+    } catch (error) {
+      return false; 
+    }
   }
 
   async editarProductoSucursal(id, params) {
