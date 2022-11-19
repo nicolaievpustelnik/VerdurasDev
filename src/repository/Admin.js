@@ -17,6 +17,10 @@ class Admin extends Usuario {
         return this.legajo;
     }
 
+    getEmail() {
+        return this.email;
+    }
+
     getAll() {
         return `Admin[id:${this.id}, nombre:${this.nombre}, apellido:${this.apellido}, email:${this.email}, password:${this.password}, sucursal:${this.sucursal}]`;
     }

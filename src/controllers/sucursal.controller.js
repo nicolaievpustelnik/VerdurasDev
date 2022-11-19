@@ -9,7 +9,6 @@ sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
     try {
         const { nombreSucursal } = req.body;
         let nombreSucursalRecibido = nombreSucursal;
-        
         await res.locals.sucursal.validarSiEsDeSucursal(res, nombreSucursalRecibido);
         req.flash('success_msg', "Eres miembro de esta sucursal");
         res.redirect('/opciones');
@@ -35,7 +34,6 @@ sucursalesControllers.renderizadoRecepcionFormProducto = async(req,res) => {
 }
 
  sucursalesControllers.recepcionarProductos = async (req, res) => {
-    console.log("Entre a controller recepcionar")
     try {
         const { cuilProveedor, codigoBarra, cantidad } = req.body;
         let cuil = cuilProveedor;
@@ -44,6 +42,7 @@ sucursalesControllers.renderizadoRecepcionFormProducto = async(req,res) => {
 
         await res.locals.sucursal.recepcionarProductoSucursal(res, cuil,scanner,cant);
         req.flash('success_msg', "Se recepciono exitosamente");
+        res.redirect('/formRecepcion');
         
 
     } catch (err) {

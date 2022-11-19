@@ -39,7 +39,7 @@ class Sucursal {
     }
   }
 
-  async recepcionarProductoSucursal(cuil, scanner, cant) {
+  async recepcionarProductoSucursal(res, cuil, scanner, cant) {
     let seRecepciono = false;
     try {
       var unEmpleado = await this.obtenerUsuarioLogueado();
@@ -47,15 +47,13 @@ class Sucursal {
         let rolValido = await this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA);
         if (rolValido) {
           let unProveedor = await this.obtenerProveedor(cuil);
-          if (unProveedor) {
-            let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(
-              scanner
-            );
+          if (unProveedor[0]) {
+            let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(scanner);
             if (unProductoSucursal[0]) {
               if (this.validarIngreso(cant)) {
-                unProductoSucursal.actualizarStock(cant);
+                await this.ActualizarStockProducto(unProductoSucursal[0], cant)
                 seRecepciono = true;
-                this.generarMovimiento(cant, unProductoSucursal, unProveedor);
+                await this.generarMovimiento(cant, unProductoSucursal[0], unProveedor[0]);
               }
             }
           }
@@ -85,8 +83,8 @@ class Sucursal {
   }
 
   async dispararAlerta(res, err) {
-   let usuarioLogueado = await this.obtenerUsuarioLogueado();
-   console.log("------------------>"+err.message)
+    let usuarioLogueado = await this.obtenerUsuarioLogueado();
+    console.log("------------------>" + err.message)
     if (err instanceof ErrorDeIncidencia) {
       console.log("Entro A error de incidencia")
       let unaNotificacion = new Notificacion({
@@ -129,18 +127,20 @@ class Sucursal {
     return seEgreso;
   }
 
-  generarMovimiento(cant, unProducto, proveedor) {
-    let monto = this.calcularMonto(cant, proveedor, unProducto);
+  async generarMovimiento(cant, unProducto, unProveedor) {
+    let monto = await this.calcularMonto(cant, unProveedor, unProducto);
     let movimiento = null;
-    if (proveedor instanceof Cliente) {
-      movimiento = this.generarVenta(cant, unProducto, proveedor, monto);
+    if (unProveedor instanceof Cliente) {
+      console.log("Soy cliente")
+      movimiento = await this.generarVenta(cant, unProducto, unProveedor, monto);
     } else {
-      movimiento = this.generarCompra(cant, unProducto, proveedor, monto);
+      console.log("Soy proveedor")
+      movimiento = await this.generarCompra(cant, unProducto, unProveedor, monto);
     }
     return movimiento;
   }
 
-  generarVenta(cant, unProducto, proveedor, monto) {
+  async generarVenta(cant, unProducto, proveedor, monto) {
     let venta = new Movimiento({
       cant: cant,
       descripcionProducto: unProducto.descripcion,
@@ -149,11 +149,11 @@ class Sucursal {
       fecha: new Date().toLocaleDateString(),
       tipo: "Venta",
     });
-    this.ventas.push(venta);
+    await venta.save();
     return venta;
   }
 
-  generarCompra(cant, unProducto, proveedor, monto) {
+  async generarCompra(cant, unProducto, proveedor, monto) {
     let compra = new Movimiento({
       cant: cant,
       descripcionProducto: unProducto.descripcion,
@@ -162,26 +162,26 @@ class Sucursal {
       fecha: new Date().toLocaleDateString(),
       tipo: "Compra",
     });
-    this.compras.push(compra);
+    await compra.save();
     return compra;
   }
 
-  calcularMonto(cant, prov, unProducto) {
+  async calcularMonto(cant, prov, unProducto) {
     var unMonto = 0;
     if (prov instanceof Cliente) {
-      unMonto = cant * unProducto.precioVenta;
+      unMonto = cant * unProducto[0].precioVenta;
     } else {
-      unMonto = cant * prov.getPrecioCompra(unProducto.codigoBarra);
+      let productoBuscado= await  this.buscarProductoPorCodigoBarraProveedor(unProducto.codigoBarra)
+      unMonto = parseFloat(cant) * parseFloat(productoBuscado[0].precioCompra);
     }
     return unMonto;
   }
 
   async obtenerProveedor(cuil) {
+    console.log("llegue aca naa mas" + cuil)
     let proveedorEncontrado = await Proveedor.find({ cuilProveedor: cuil });
-    if (!proveedorEncontrado)
-      throw new ErrorDeIncidencia(
-        "Intenta ingresar mercaderia a proveedor no autorizado"
-      );
+    if (!proveedorEncontrado[0])
+      throw new ErrorDeIncidencia("Intenta ingresar mercaderia a proveedor no autorizado");
     return proveedorEncontrado;
   }
 
@@ -211,47 +211,34 @@ class Sucursal {
     return sePudo;
   }
 
-  agregarProveedorTest(unProveedor) {
-    this.proveedoresAutorizados.push(unProveedor);
-  }
-
-  agregarUsuarioTest(unUsuario) {
-    let sePudo = false;
-    if (this.buscarEmpleado(unUsuario.getLegajo())) {
-      throw new Error("El legajo ya se encuentra asignado a otro empleado!");
-    } else {
-      this.empleadosDeSucursal.push(unUsuario);
-      sePudo = true;
-    }
-    return sePudo;
-  }
   async agregarProveedor(res, prov) {
     console.log(prov);
-    /*  if (this.buscarEmpleado(user.getLegajo())) {
-            throw new Error('El legajo ya se encuentra asignado a otro empleado!');
-        } else { */
-
     await prov.save();
-    //}
   }
   async agregarNotificacion(res, nuevaNotificacion) {
-    /*  if (this.buscarEmpleado(user.getLegajo())) {
-            throw new Error('El legajo ya se encuentra asignado a otro empleado!');
-        } else { */
-
     await nuevaNotificacion.save();
     return true;
-    //}
+
   }
 
-  async agregarUsuario(res, user) {
+  async agregarUsuario(req, res, user, jsonResponse) {
 
-    let userLegajo = await this.buscarUsuarioPorLegajo(user.getLegajo());
+    let userLegajo = await this.buscarUsuarioPorEmail(user.getEmail());
 
     if (userLegajo.length > 0) {
-      throw new Error("El legajo ya se encuentra asignado a otro empleado!");
+      
+      if(jsonResponse == true){
+        res.sendStatus(403);
+      } else {
+        req.flash('error_msg', "Email existente");
+        //throw new Error("El email ya se encuentra asignado a otro empleado!");
+      }
+
+      return false;
+
     } else {
       await user.save();
+      return true;
     }
   }
 
@@ -338,6 +325,7 @@ class Sucursal {
   async buscarProductoPorIdSucursal(id) {
     return await ProductoSucursal.findById(id).lean();
   }
+
   async buscarProductoPorIdProveedor(id) {
     return await ProductoProveedor.findById(id).lean();
   }
@@ -354,8 +342,23 @@ class Sucursal {
     return await Proveedor.findByIdAndUpdate(id, params);
   }
 
+  async ActualizarStockProducto(unProducto, cant) {
+    let idProducto = unProducto._id;
+    let cantActualizada = 0;
+    cantActualizada = unProducto.stock += parseFloat(cant);
+    let productoActualizado = new ProductoSucursal({
+      _id: idProducto,
+      stock: cantActualizada,
+    })
+    await this.editarProductoSucursal(idProducto, productoActualizado)
+  }
+
   async editarUsuario(id, params) {
-    return await Empleado.findByIdAndUpdate(id, params);
+    try {
+      return await Empleado.findByIdAndUpdate(id, params);  
+    } catch (error) {
+      return false; 
+    }
   }
 
   async editarProductoSucursal(id, params) {

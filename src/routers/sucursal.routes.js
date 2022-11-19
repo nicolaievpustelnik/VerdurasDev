@@ -23,10 +23,6 @@ router.get('/opciones', renderizarOpciones);
 router.get('/formRecepcion', renderizadoRecepcionFormProducto);
 router.post('/recepcionar', recepcionarProductos);
 
-//Egreso producto
-router.get('/formEgresar', renderizadoEgresarFormProducto);
-router.post('/egresar', egresarProductos);
-
 /*// Eliminar proveedor
 router.delete('/eliminarProveedor/:id', eliminarProveedor); */
 

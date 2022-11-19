@@ -15,24 +15,29 @@ const {
     renderLoginUsuarioForm,
     loginUsuario,
     cerrarSesionUsuario,
-    auth
+    auth,
+    getUserByEmail
 } = require('../controllers/usuario.controller');
 
+// Auth Token
 router.post('/auth', auth);
+
+// Ver usuarios por mail
+router.get('/usuario', verifyToken, getUserByEmail);
 
 // Nuevo usuario
 router.get('/formUsuario', renderizarFormUsuario);
-router.post('/nuevoUsuario', crearUsuario);
+router.post('/nuevoUsuario', verifyToken, isAuthenticated, crearUsuario);
 
 // Ver todos los usuarios
 router.get('/usuarios', verifyToken, isAuthenticated, renderizarUsuarios);
 
 // Editar usuario
 router.get('/editarUsuario', renderizadoActualizarFormUsuario);
-router.put('/actualizarUsuario/:id', actualizarUsuario);
+router.put('/actualizarUsuario/:id', verifyToken, actualizarUsuario);
 
 // Eliminar usuario
-router.delete('/eliminarUsuario/:id', eliminarUsuario);
+router.delete('/eliminarUsuario/:id', verifyToken, eliminarUsuario);
 
 // Registrar usuario
 router.get('/formRegistroUsuario', renderRegistrarUsuarioForm);
