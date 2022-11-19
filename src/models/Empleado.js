@@ -19,6 +19,10 @@ class Empleado extends Usuario {
         return this.legajo;
     }
 
+    getEmail() {
+        return this.email;
+    }
+
     getAll() {
         return `Empleado[nombre:${this.nombre}, apellido:${this.apellido}, email:${this.email}, password:${this.password}, sucursal:${this.sucursal}, rol:${this.rol}]`;
     }
