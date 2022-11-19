@@ -98,7 +98,7 @@ class Sucursal {
     }
   }
 
-//revisar hay stock
+
   async egresarProducto(dni, scanner, cant) {
     let seEgreso = false;
     try {
