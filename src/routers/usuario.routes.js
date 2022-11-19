@@ -22,7 +22,7 @@ router.post('/auth', auth);
 
 // Nuevo usuario
 router.get('/formUsuario', renderizarFormUsuario);
-router.post('/nuevoUsuario', crearUsuario);
+router.post('/nuevoUsuario', verifyToken, isAuthenticated, crearUsuario);
 
 // Ver todos los usuarios
 router.get('/usuarios', verifyToken, isAuthenticated, renderizarUsuarios);

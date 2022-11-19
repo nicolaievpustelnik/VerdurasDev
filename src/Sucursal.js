@@ -243,14 +243,24 @@ class Sucursal {
     //}
   }
 
-  async agregarUsuario(res, user) {
+  async agregarUsuario(req, user, jsonResponse) {
 
-    let userLegajo = await this.buscarUsuarioPorLegajo(user.getLegajo());
+    let userLegajo = await this.buscarUsuarioPorEmail(user.getEmail());
 
     if (userLegajo.length > 0) {
-      throw new Error("El legajo ya se encuentra asignado a otro empleado!");
+      
+      if(jsonResponse == true){
+        res.sendStatus(403);
+      } else {
+        req.flash('error_msg', "Email existente");
+        //throw new Error("El email ya se encuentra asignado a otro empleado!");
+      }
+
+      return false;
+
     } else {
       await user.save();
+      return true;
     }
   }
 
