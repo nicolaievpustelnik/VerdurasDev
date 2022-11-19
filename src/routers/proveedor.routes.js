@@ -21,6 +21,7 @@ router.get('/proveedores', renderizarProveedores);
 router.get('/editarProveedor', renderizadoActualizarFormProveedor);
 router.put('/actualizarProveedor/:id', actualizarProveedor);
 
+
 // Eliminar proveedor
 router.delete('/eliminarProveedor/:id', eliminarProveedor);
 
