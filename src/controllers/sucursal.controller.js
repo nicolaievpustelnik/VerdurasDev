@@ -9,6 +9,7 @@ sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
     try {
         const { nombreSucursal } = req.body;
         let nombreSucursalRecibido = nombreSucursal;
+
         await res.locals.sucursal.validarSiEsDeSucursal(res, nombreSucursalRecibido);
         req.flash('success_msg', "Eres miembro de esta sucursal");
         res.redirect('/opciones');
@@ -22,9 +23,9 @@ sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
 
 // Ver toda las opciones 
 sucursalesControllers.renderizarOpciones = async (req, res) => {
-    let usuario = await res.locals.sucursal.obtenerUsuarioLogueado();
-    let emailUsuario = usuario[0].email;
-    let nombreSuc = usuario[0].sucursal;
+    let usuario = res.locals.user; 
+    let emailUsuario = usuario.email;
+    let nombreSuc = usuario.sucursal;
     res.render('sucursal/opciones', { emailUsuario,nombreSuc});
 }
 

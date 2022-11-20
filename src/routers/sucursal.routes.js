@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const router = Router();
 
+const {isAuthenticated, verifyToken} = require('../helps/auth');
+
 const {
     renderizarFormIngresoASucursal,
     validarUsuarioSucursal,
@@ -13,11 +15,11 @@ const {
 } = require('../controllers/sucursal.controller');
 
 // Sucursal
-router.get('/formSucursal', renderizarFormIngresoASucursal);
+router.get('/formSucursal', isAuthenticated, renderizarFormIngresoASucursal);
 router.post('/nuevaSucursal', validarUsuarioSucursal);
 
 // Ver todos las Opciones
-router.get('/opciones', renderizarOpciones);
+router.get('/opciones', isAuthenticated, renderizarOpciones);
 
 //Recepcionar producto
 router.get('/formRecepcion', renderizadoRecepcionFormProducto);
