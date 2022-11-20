@@ -26,7 +26,7 @@ class Sucursal {
 
   async obtenerUsuarioLogueado() {
     let unEmpleado = await this.buscarEmpleado("123456");
-    if (!unEmpleado) {
+    if (unEmpleado.length < 1) {
       throw new Error("No inicio Sesion!");
     }
     return unEmpleado;
@@ -41,40 +41,31 @@ class Sucursal {
 
   async recepcionarProductoSucursal(res, cuil, scanner, cant) {
     let seRecepciono = false;
-    try {
-      var unEmpleado = await this.obtenerUsuarioLogueado();
-      if (unEmpleado) {
-        let rolValido = await this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA);
-        if (rolValido) {
-          let unProveedor = await this.obtenerProveedor(cuil);
-          if (unProveedor[0]) {
-            let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(scanner);
-            if (unProductoSucursal[0]) {
-              if (this.validarIngreso(cant)) {
-                await this.ActualizarStockProducto(unProductoSucursal[0], cant)
-                seRecepciono = true;
-                await this.generarMovimiento(cant, unProductoSucursal[0], unProveedor[0]);
-              }
+    var unEmpleado = await this.obtenerUsuarioLogueado();
+    if (unEmpleado.length > 0) {
+      let rolValido = await this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA);
+      if (rolValido) {
+        let unProveedor = await this.obtenerProveedor(cuil);
+        if (unProveedor.length > 0) {
+          let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(scanner);
+          if (unProductoSucursal.length > 0) {
+            if (this.validarIngreso(cant)) {
+              await this.ActualizarStockProducto(unProductoSucursal[0], cant)
+              seRecepciono = true;
+              await this.generarMovimiento(cant, unProductoSucursal[0], unProveedor[0]);
             }
           }
         }
       }
-    } catch (err) {
-      this.dispararAlerta(unEmpleado, err);
     }
+
     return seRecepciono;
   }
 
   async verificarRol(unEmpleado, unRol) {
     let verificado = false;
-    console.log(unEmpleado[0].rol[0])
-    console.log(unRol.name)
-    if (
-      !(
-        unEmpleado[0].rol[0] === unRol.name ||
-        unEmpleado[0].rol[0] === rolEnum.ORGANIZADOR.name
-      )
-    ) {
+    if (!(unEmpleado[0].rol[0] === unRol.name ||
+      unEmpleado[0].rol[0] === rolEnum.ORGANIZADOR.name)) {
       console.log("No rol")
       throw new ErrorDeIncidencia("Intenta ejecutar una tarea no autorizada");
     }
@@ -83,9 +74,9 @@ class Sucursal {
   }
 
   async dispararAlerta(res, err) {
-    let usuarioLogueado = await this.obtenerUsuarioLogueado();
-    console.log("------------------>" + err.message)
     if (err instanceof ErrorDeIncidencia) {
+      console.log(err)
+      let usuarioLogueado = await this.obtenerUsuarioLogueado();
       console.log("Entro A error de incidencia")
       let unaNotificacion = new Notificacion({
         nombreCompletoEmpleado: usuarioLogueado[0].nombre,
@@ -98,7 +89,7 @@ class Sucursal {
     }
   }
 
-//revisar hay stock
+  //revisar hay stock
   async egresarProducto(dni, scanner, cant) {
     let seEgreso = false;
     try {
@@ -171,17 +162,19 @@ class Sucursal {
     if (ente instanceof Cliente) {
       unMonto = cant * unProducto[0].precioVenta;
     } else {
-      let productoBuscado= await  this.buscarProductoPorCodigoBarraProveedor(unProducto.codigoBarra)
+      let productoBuscado = await this.buscarProductoPorCodigoBarraProveedor(unProducto.codigoBarra)
       unMonto = parseFloat(cant) * parseFloat(productoBuscado[0].precioCompra);
     }
     return unMonto;
   }
 
   async obtenerProveedor(cuil) {
-    console.log("llegue aca naa mas" + cuil)
     let proveedorEncontrado = await Proveedor.find({ cuilProveedor: cuil });
-    if (!proveedorEncontrado[0])
+    if (proveedorEncontrado.length < 1) {
+      console.log("LLegaal error")
       throw new ErrorDeIncidencia("Intenta ingresar mercaderia a proveedor no autorizado");
+    }
+
     return proveedorEncontrado;
   }
 
@@ -226,8 +219,8 @@ class Sucursal {
     let userLegajo = await this.buscarUsuarioPorEmail(user.getEmail());
 
     if (userLegajo.length > 0) {
-      
-      if(jsonResponse == true){
+
+      if (jsonResponse == true) {
         res.sendStatus(403);
       } else {
         req.flash('error_msg', "Email existente");
@@ -331,7 +324,11 @@ class Sucursal {
   }
 
   async buscarProductoPorCodigoBarraSucursal(cod) {
-    return await ProductoSucursal.find({ codigoBarra: cod });
+    let unProducto = await ProductoSucursal.find({ codigoBarra: cod });
+    if (unProducto.length < 1) {
+      throw new ErrorDeIncidencia("Intenta ingresar producto que no esta en el surtido!");
+    }
+    return unProducto
   }
 
   async buscarProductoPorCodigoBarraProveedor(cod) {
@@ -355,9 +352,9 @@ class Sucursal {
 
   async editarUsuario(id, params) {
     try {
-      return await Empleado.findByIdAndUpdate(id, params);  
+      return await Empleado.findByIdAndUpdate(id, params);
     } catch (error) {
-      return false; 
+      return false;
     }
   }
 
@@ -397,17 +394,17 @@ class Sucursal {
     return pudo;
   }
 
- async hayStock(unProductoDeSucursal, cant) {
+  async hayStock(unProductoDeSucursal, cant) {
     let pudo = false;
-        if(unProductoDeSucursal.stock < cant){
-          throw new ErrorDeIncidencia("Esta generando un negativo en el stock!");
-        }
-        return pudo;
-      }
-     
-    
+    if (unProductoDeSucursal.stock < cant) {
+      throw new ErrorDeIncidencia("Esta generando un negativo en el stock!");
     }
-  
+    return pudo;
+  }
+
+
+}
+
 
 
 sucursalSchema.loadClass(Sucursal);
