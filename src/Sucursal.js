@@ -127,15 +127,15 @@ class Sucursal {
     return seEgreso;
   }
 
-  async generarMovimiento(cant, unProducto, unProveedor) {
-    let monto = await this.calcularMonto(cant, unProveedor, unProducto);
+  async generarMovimiento(cant, unProducto, ente) {
+    let monto = await this.calcularMonto(cant, ente, unProducto);
     let movimiento = null;
-    if (unProveedor instanceof Cliente) {
+    if (ente instanceof Cliente) {
       console.log("Soy cliente")
-      movimiento = await this.generarVenta(cant, unProducto, unProveedor, monto);
+      movimiento = await this.generarVenta(cant, unProducto, ente, monto);
     } else {
       console.log("Soy proveedor")
-      movimiento = await this.generarCompra(cant, unProducto, unProveedor, monto);
+      movimiento = await this.generarCompra(cant, unProducto, ente, monto);
     }
     return movimiento;
   }
@@ -166,9 +166,9 @@ class Sucursal {
     return compra;
   }
 
-  async calcularMonto(cant, prov, unProducto) {
+  async calcularMonto(cant, ente, unProducto) {
     var unMonto = 0;
-    if (prov instanceof Cliente) {
+    if (ente instanceof Cliente) {
       unMonto = cant * unProducto[0].precioVenta;
     } else {
       let productoBuscado= await  this.buscarProductoPorCodigoBarraProveedor(unProducto.codigoBarra)
