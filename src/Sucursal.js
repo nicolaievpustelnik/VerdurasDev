@@ -24,8 +24,9 @@ class Sucursal {
     this.incidentesSospechosos = [];
   }
 
-  async obtenerUsuarioLogueado() {
-    let unEmpleado = await this.buscarEmpleado("123456");
+  async obtenerUsuarioLogueado(res) {
+    let unEmpleado = res.locals.user;
+    console.log("------->"+unEmpleado)
     if (unEmpleado.length < 1) {
       throw new Error("No inicio Sesion!");
     }
@@ -33,7 +34,7 @@ class Sucursal {
   }
 
   async validarSiEsDeSucursal(res, nombreSucursalRecibido) {
-    let usuarioLogueado = await this.obtenerUsuarioLogueado();
+    let usuarioLogueado = await this.obtenerUsuarioLogueado(res);
     if (!(nombreSucursalRecibido == usuarioLogueado[0].sucursal)) {
       throw new ErrorDeIncidencia("Entrando a sucursal que no corresponde")
     }
