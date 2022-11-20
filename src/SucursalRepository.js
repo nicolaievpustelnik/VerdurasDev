@@ -25,18 +25,10 @@ class Sucursal {
         this.incidentesSospechosos = [];
     }
 
-    obtenerUsuarioLogueado() {
-        let unEmpleado = this.buscarEmpleado(123456);
-        if (!unEmpleado) {
-            throw new Error('No inicio Sesion!');
-        }
-        return unEmpleado;
-    }
-
     recepcionarProducto(idProveedor, scanner, cant) {
         let seRecepciono = false;
         try {
-            var unEmpleado = this.obtenerUsuarioLogueado();
+            var unEmpleado = res.locals.user;
             if (unEmpleado) {
                 if (this.verificarRol(unEmpleado, rolEnum.RECEPCIONISTA)) {
                     let unProveedor = this.obtenerProveedor(idProveedor)
@@ -79,7 +71,7 @@ class Sucursal {
     egresarProducto(dni, scanner, cant) {
         let seEgreso = false;
         try {
-            var unEmpleado = this.obtenerUsuarioLogueado();
+            var unEmpleado = res.locals.user;
             if (unEmpleado) {
                 if (this.verificarRol(unEmpleado, rolEnum.CAJERO)) {
                     let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias" });
@@ -232,16 +224,6 @@ class Sucursal {
             throw new ErrorDeIncidencia('Esta generando un negativo!');
         }
         return pudo;
-    }
-
-    obtenerUsuarioLogueado() {
-        let unEmpleado = this.buscarEmpleado("123456");
-        // Por ahora se setea - pero el metodo tiene que buscar en la base de datos
-        //let unEmpleadoAux = new Empleado({ nombre: 'Jorge', apellido: 'Castillo', email: 'jindr@admin.com', password: '123456', sucursal: '2', tipoUsuario: 'Empleado', rol: rolEnum.RECEPCIONISTA.name })
-
-        //Metodo para obtener usuario Logueado
-        //if (!unAdmin) throw new Error('Empleado no Existe!')
-        return unEmpleado;
     }
 
 }
