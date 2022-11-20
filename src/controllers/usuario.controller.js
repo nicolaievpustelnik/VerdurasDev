@@ -1,6 +1,7 @@
 const Empleado = require('../models/Empleado');
 const Admin = require('../models/Admin');
 
+const bcryptjs = require('bcryptjs');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
@@ -30,6 +31,27 @@ usuariosControllers.auth = async (req, res, done) => {
         }else{
             res.sendStatus(403);
         }
+    }
+}
+
+// Get usuario por email
+usuariosControllers.getUserByEmail = async (req, res) => {
+
+    let query = require('url').parse(req.url, true).query;
+    let email = query.email;
+
+    if(email){
+        let usuario = await res.locals.sucursal.buscarUsuarioPorEmail(email)
+
+        jwt.verify(req.token, 'secretkey', (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+                res.status(200).json({status: 200, usuarios: usuario});
+            }
+        }); 
+    } else {
+        res.sendStatus(403);
     }
 }
 
@@ -72,16 +94,14 @@ usuariosControllers.crearUsuario = async (req, res) => {
                 if (error) {
                     res.sendStatus(403);
                 } else {
-                    await res.locals.sucursal.agregarUsuario(req, newUser, true);
+                    await res.locals.sucursal.agregarUsuario(req, res, newUser, true);
                     res.status(200).json({status: 200, usuario: newUser});
                 }
             });
     
         }else{
 
-            let userAgregado = await res.locals.sucursal.agregarUsuario(req, newUser, false);
-
-            console.log(userAgregado)
+            let userAgregado = await res.locals.sucursal.agregarUsuario(req, res, newUser, false);
             
             if (userAgregado) {
                 req.flash('success_msg', "Usuario agregado exitosamente");
@@ -119,11 +139,6 @@ usuariosControllers.renderizarUsuarios = async (req, res) => {
     }   
 }
 
-usuariosControllers.usuariosJson = async (req, res) => {
-    let usuarios = await res.locals.sucursal.listaDeUsuarios();
-    res.status(200).json({status: 200, usuarios: usuarios});
-}
-
 // Actualizar usuario
 usuariosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
@@ -133,18 +148,65 @@ usuariosControllers.renderizadoActualizarFormUsuario = async (req, res) => {
 }
 
 usuariosControllers.actualizarUsuario = async (req, res) => {
-    await res.locals.sucursal.editarUsuario(req.params.id, req.body)
-    req.flash('success_msg', "Usuario editado exitosamente");
-    res.redirect('/usuarios');
+
+    let usuarios = await res.locals.sucursal.listaDeUsuarios();
+    let query = require('url').parse(req.url, true).query;
+    let jsonResponse = query.jsonResponse;
+
+    if(jsonResponse == "true"){
+
+        jwt.verify(req.token, 'secretkey', async (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+
+                const salt = await bcryptjs.genSalt(10);
+                let newPasswordHash = await bcryptjs.hash(req.body.password, salt);
+
+                req.body.password = newPasswordHash;
+
+                let user = await res.locals.sucursal.editarUsuario(req.params.id, req.body)
+                if (user) {
+                    res.status(200).json({status: 200, usuario: req.body});    
+                }else{
+                    res.sendStatus(403);
+                }
+            }
+        });
+
+    }else{
+
+        await res.locals.sucursal.editarUsuario(req.params.id, req.body)
+        req.flash('success_msg', "Usuario editado exitosamente");
+        res.redirect('/usuarios');
+    } 
+    
 }
 
 // Eliminar usuario
 usuariosControllers.eliminarUsuario = (req, res) => {
 
+    let query = require('url').parse(req.url, true).query;
+    let jsonResponse = query.jsonResponse;
     let id = req.params.id;
-    res.locals.sucursal.eliminarUsuario(id);
-    req.flash('success_msg', "Usuario eliminado exitosamente");
-    res.redirect('/usuarios');
+
+    if(jsonResponse == "true"){
+
+        jwt.verify(req.token, 'secretkey', (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+                res.locals.sucursal.eliminarUsuario(id);
+                res.status(200).json({status: 200, usuarioId: id});
+            }
+        });
+
+    }else{
+        res.locals.sucursal.eliminarUsuario(id);
+        req.flash('success_msg', "Usuario eliminado exitosamente");
+        res.redirect('/usuarios');
+    }
+    
 }
 
 
@@ -198,7 +260,7 @@ usuariosControllers.registrarUsuario = async (req, res) => {
             // Encriptar pass
             newUser.password = await newUser.encryptPassword(password);
     
-            await res.locals.sucursal.agregarUsuario(req, newUser);
+            await res.locals.sucursal.agregarUsuario(req, res, newUser);
             req.flash('success_msg', "Usuario registrado");
             res.redirect('/formLoginUsuario');
         }

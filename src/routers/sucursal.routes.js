@@ -7,6 +7,9 @@ const {
     renderizarOpciones,
     renderizadoRecepcionFormProducto,
     recepcionarProductos,
+    renderizadoEgresarFormProducto,
+    egresarProductos,
+    //eliminarProveedor
 } = require('../controllers/sucursal.controller');
 
 // Sucursal
@@ -20,7 +23,9 @@ router.get('/opciones', renderizarOpciones);
 router.get('/formRecepcion', renderizadoRecepcionFormProducto);
 router.post('/recepcionar', recepcionarProductos);
 
-
+//Egresar producto
+router.get('/formEgresar', renderizadoEgresarFormProducto);
+router.post('/egresar', egresarProductos,);
 /*// Eliminar proveedor
 router.delete('/eliminarProveedor/:id', eliminarProveedor); */
 

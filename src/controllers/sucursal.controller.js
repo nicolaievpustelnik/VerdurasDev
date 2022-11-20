@@ -52,4 +52,28 @@ sucursalesControllers.renderizadoRecepcionFormProducto = async(req,res) => {
     } 
 }
 
+//mostrar formulario de egreso
+sucursalesControllers.renderizadoEgresarFormProducto = async(req,res) => {
+    res.render('sucursal/formEgresar');
+}
+
+sucursalesControllers.egresarProductos = async (req, res) => {
+    console.log("Entre a controller egresar")
+    try {
+        const { cuilProveedor, codigoBarra, cantidad } = req.body;
+        let cuil = cuilProveedor;
+        let scanner = codigoBarra;
+        let cant = cantidad;
+
+        await res.locals.sucursal.egresarProductoSucursal(res, cuil,scanner,cant);
+        req.flash('success_msg', "Se egreso exitosamente");
+        
+
+    } catch (err) {
+        await res.locals.sucursal.dispararAlerta(res, err);
+        req.flash('error_msg', "Se genero una notificacion");
+        //res.redirect('/formSucursal');
+    } 
+}
+
 module.exports = sucursalesControllers;
