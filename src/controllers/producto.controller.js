@@ -1,6 +1,8 @@
 const ProductoSucursal = require('../models/ProductoSucursal');
 const ProductoProveedor = require('../models/ProductoProveedor');
 
+const jwt = require('jsonwebtoken');
+
 const productosControllers = {};
 
 // Nuevo Prodcuto
@@ -13,33 +15,99 @@ productosControllers.crearProducto = async (req, res) => {
     try {
 
         const { codigoBarra, nombreCategoria, marca, descripcion, tipoProducto, idSucursal, idProveedor, precioVenta, precioCompra } = req.body;
+
+        console.log(req.body)
         
         let stock = 0;
-        let idProducto = 0;
         let nuevoProducto = null;
+        let query = require('url').parse(req.url, true).query;
+        let jsonResponse = query.jsonResponse;
 
-        switch (tipoProducto) {
-            case 'Producto':
-                nuevoProducto = new ProductoSucursal({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idSucursal, precioVenta});
-                await res.locals.sucursal.agregarProductoSucursal(res, nuevoProducto);
-                break;
+        if(jsonResponse == "true"){
 
-            case 'Proveedor':
-                nuevoProducto = new ProductoProveedor({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idProveedor, precioCompra});
-                await res.locals.sucursal.agregarProductoProveedor(res, nuevoProducto);
-                break;
+            jwt.verify(req.token, 'secretkey', async (error, authData) => {
+                if (error) {
+                    res.sendStatus(403);
+                } else {
+                    switch (tipoProducto) {
+                        case 'Producto':
+                            let idProductoSucursal = generateProductoIdSucursal(res);
+                            nuevoProducto = new ProductoSucursal({ idProductoSucursal, codigoBarra, nombreCategoria, marca, descripcion, stock, idSucursal, precioVenta});
+                            await res.locals.sucursal.agregarProductoSucursal(res, nuevoProducto);
+                            res.status(200).json({status: 200, producto: nuevoProducto});
+                            break;
+            
+                        case 'Proveedor':
+                            let idProductoProveedor = generateProductoIdProveedor(res);
+                            nuevoProducto = new ProductoProveedor({ idProductoProveedor, codigoBarra, nombreCategoria, marca, descripcion, stock, idProveedor, precioCompra});
+                            await res.locals.sucursal.agregarProductoProveedor(res, nuevoProducto);
+                            res.status(200).json({status: 200, producto: nuevoProducto});
+                            break;
+            
+                        default:
+                            break;
+                    }
+                }
+            });
+    
+        }else{
 
-            default:
-                break;
-        }
+            let productoAgregado = null;
+
+            switch (tipoProducto) {
+                case 'Producto':
+                    let idProductoSucursal = generateProductoIdSucursal(res);
+                    nuevoProducto = new ProductoSucursal({ idProductoSucursal, codigoBarra, nombreCategoria, marca, descripcion, stock, idSucursal, precioVenta});
+                    productoAgregado = await res.locals.sucursal.agregarProductoSucursal(res, nuevoProducto);
+                    break;
+    
+                case 'Proveedor':
+                    let idProductoProveedor = generateProductoIdProveedor(res);
+                    nuevoProducto = new ProductoProveedor({ idProductoProveedor, codigoBarra, nombreCategoria, marca, descripcion, stock, idProveedor, precioCompra});
+                    productoAgregado = await res.locals.sucursal.agregarProductoProveedor(res, nuevoProducto);
+                    break;
+    
+                default:
+                    break;
+            }
+            
+            if (productoAgregado) {
+                req.flash('success_msg', "Producto agregado exitosamente");
+                res.redirect('/productos');
+            } else{
+                res.redirect('/productos');  
+            }
+        }  
         
-        req.flash('success_msg', "Producto agregado exitosamente");
-        res.redirect('/productos');
 
     } catch (err) {
 
         console.log(err.name +" --> "+err.message)
     }
+}
+
+async function generateProductoIdSucursal(res) {
+    let min = 0000;
+    let max = 9999;
+
+    do {
+        var num = Math.floor(Math.random() * (max - min)) + min;
+        var user = await res.locals.sucursal.buscarProductoIdSucursal(num);    
+    } while (user.lenght > 0);
+    
+    return num.toString();
+}
+
+async function generateProductoIdProveedor(res) {
+    let min = 0000;
+    let max = 9999;
+
+    do {
+        var num = Math.floor(Math.random() * (max - min)) + min;
+        var user = await res.locals.sucursal.buscarProductoIdProveedor(num);    
+    } while (user.lenght > 0);
+    
+    return num.toString();
 }
 
 // Ver todos los productos

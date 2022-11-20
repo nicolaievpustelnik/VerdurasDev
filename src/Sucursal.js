@@ -247,7 +247,8 @@ class Sucursal {
     );
 
     if (product[0]) {
-      throw new Error("El Producto Sucursal ya se encuentra registrado!");
+      return false;
+      //throw new Error("El Producto Sucursal ya se encuentra registrado!");
     } else {
       await prod.save();
       return true;
@@ -321,6 +322,15 @@ class Sucursal {
   async buscarNotificacionPorId(id) {
     return await Notificacion.findById(id).lean();
   }
+
+  async buscarProductoIdSucursal(id) {
+    return await ProductoSucursal.find({ productoId: productoId });
+  }
+
+  async buscarProductoIdProveedor(id) {
+    return await ProductoProveedor.find({ productoId: productoId });
+  }
+
   async buscarProductoPorIdSucursal(id) {
     return await ProductoSucursal.findById(id).lean();
   }

@@ -26,14 +26,14 @@ router.post('/auth', auth);
 router.get('/usuario', verifyToken, getUserByEmail);
 
 // Nuevo usuario
-router.get('/formUsuario', renderizarFormUsuario);
-router.post('/nuevoUsuario', verifyToken, isAuthenticated, crearUsuario);
+router.get('/formUsuario', isAuthenticated, renderizarFormUsuario);
+router.post('/nuevoUsuario', verifyToken, crearUsuario);
 
 // Ver todos los usuarios
 router.get('/usuarios', verifyToken, isAuthenticated, renderizarUsuarios);
 
 // Editar usuario
-router.get('/editarUsuario', renderizadoActualizarFormUsuario);
+router.get('/editarUsuario', isAuthenticated, renderizadoActualizarFormUsuario);
 router.put('/actualizarUsuario/:id', verifyToken, actualizarUsuario);
 
 // Eliminar usuario
