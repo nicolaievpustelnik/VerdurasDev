@@ -9,11 +9,13 @@ sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
     try {
         const { nombreSucursal } = req.body;
         let nombreSucursalRecibido = nombreSucursal;
+
         await res.locals.sucursal.validarSiEsDeSucursal(res, nombreSucursalRecibido);
         req.flash('success_msg', "Eres miembro de esta sucursal");
         res.redirect('/opciones');
 
     } catch (err) {
+        console.log("Enyta al catch")
         await res.locals.sucursal.dispararAlerta(res, err);
         req.flash('error_msg', "Usuario no pertenece a Sucursal");
         res.redirect('/formSucursal');
@@ -22,9 +24,9 @@ sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
 
 // Ver toda las opciones 
 sucursalesControllers.renderizarOpciones = async (req, res) => {
-    let usuario = await res.locals.sucursal.obtenerUsuarioLogueado();
-    let emailUsuario = usuario[0].email;
-    let nombreSuc = usuario[0].sucursal;
+    let usuario = res.locals.user; 
+    let emailUsuario = usuario.email;
+    let nombreSuc = usuario.sucursal;
     res.render('sucursal/opciones', { emailUsuario,nombreSuc});
 }
 
@@ -39,16 +41,13 @@ sucursalesControllers.renderizadoRecepcionFormProducto = async(req,res) => {
         let cuil = cuilProveedor;
         let scanner = codigoBarra;
         let cant = cantidad;
-
         await res.locals.sucursal.recepcionarProductoSucursal(res, cuil,scanner,cant);
         req.flash('success_msg', "Se recepciono exitosamente");
         res.redirect('/formRecepcion');
-        
-
     } catch (err) {
         await res.locals.sucursal.dispararAlerta(res, err);
-        req.flash('error_msg', "Se genero una notificacion");
-        //res.redirect('/formSucursal');
+        req.flash('error_msg', err.message);
+        res.redirect('/formRecepcion');
     } 
 }
 
@@ -60,19 +59,19 @@ sucursalesControllers.renderizadoEgresarFormProducto = async(req,res) => {
 sucursalesControllers.egresarProductos = async (req, res) => {
     console.log("Entre a controller egresar")
     try {
-        const { cuilProveedor, codigoBarra, cantidad } = req.body;
-        let cuil = cuilProveedor;
+        const { dniCliente, codigoBarra, cantidad } = req.body;
+        let dni = dniCliente;
         let scanner = codigoBarra;
         let cant = cantidad;
-
-        await res.locals.sucursal.egresarProductoSucursal(res, cuil,scanner,cant);
+        await res.locals.sucursal.egresarProducto(res, dni,scanner,cant);
         req.flash('success_msg', "Se egreso exitosamente");
-        
+        res.redirect('/formEgresar');
 
     } catch (err) {
+        console.log("Error que llega "+err)
         await res.locals.sucursal.dispararAlerta(res, err);
-        req.flash('error_msg', "Se genero una notificacion");
-        //res.redirect('/formSucursal');
+        req.flash('error_msg', err.message);
+        res.redirect('/formEgresar');
     } 
 }
 

@@ -248,7 +248,7 @@ usuariosControllers.registrarUsuario = async (req, res) => {
     
         }else{
     
-            let legajo = generateLegajo(res);
+            let legajo = await generateLegajo(res);
     
             //Datos por defecto
             let sucursal = 0;
@@ -273,10 +273,11 @@ async function generateLegajo(res) {
 
     do {
         var legajo = Math.floor(Math.random() * (max - min)) + min;
-        var user = await res.locals.sucursal.buscarUsuarioPorLegajo(legajo);    
+        var castLegajo = legajo.toString();
+        var user = await res.locals.sucursal.buscarUsuarioPorLegajo(castLegajo);    
     } while (user.lenght > 0);
-    
-    return legajo.toString();
+
+    return castLegajo;
 }
 
 usuariosControllers.renderLoginUsuarioForm = (req, res) => {
