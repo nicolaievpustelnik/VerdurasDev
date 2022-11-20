@@ -53,12 +53,12 @@ class Sucursal {
               await this.ActualizarStockProducto(unProductoSucursal[0], cant)
               seRecepciono = true;
               await this.generarMovimiento(cant, unProductoSucursal[0], unProveedor[0]);
+              //await this.generarComprobante(unMovimiento,)
             }
           }
         }
       }
     }
-
     return seRecepciono;
   }
 
@@ -90,30 +90,23 @@ class Sucursal {
   }
 
   //revisar hay stock
-  async egresarProducto(dni, scanner, cant) {
+  async egresarProducto(res, dni, scanner, cant) {
     let seEgreso = false;
-    try {
-      var unEmpleado = this.obtenerUsuarioLogueado();
-      if (unEmpleado[0]) {
-        if (this.verificarRol(unEmpleado[0], rolEnum.CAJERO)) {
-          let unCliente = new Cliente({
-            dniCliente: dni,
-            nombreCliente: "Matias",
-          });
-          let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(
-            scanner
-          );
+    var unEmpleado = await this.obtenerUsuarioLogueado();
+    if (unEmpleado.length > 0) {
+      if (this.verificarRol(unEmpleado, rolEnum.CAJERO)) {
+        let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias", });
+        let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(scanner);
+        if (unProductoSucursal.length > 0) {
           if (this.hayStock(unProductoSucursal[0], cant)) {
             if (this.validarEgreso(cant)) {
-              unProductoSucursal.actualizarStock(-cant);
+              await this.ActualizarStockProducto(unProductoSucursal[0], -cant)
               seEgreso = true;
-              this.generarMovimiento(cant, unProductoSucursal, unCliente);
+              await this.generarMovimiento(cant, unProductoSucursal[0], unCliente);
             }
           }
         }
       }
-    } catch (err) {
-      this.dispararAlerta(unEmpleado, err);
     }
     return seEgreso;
   }
@@ -121,25 +114,25 @@ class Sucursal {
   async generarMovimiento(cant, unProducto, ente) {
     let monto = await this.calcularMonto(cant, ente, unProducto);
     let movimiento = null;
+    console.log(ente)
     if (ente instanceof Cliente) {
-      console.log("Soy cliente")
       movimiento = await this.generarVenta(cant, unProducto, ente, monto);
     } else {
-      console.log("Soy proveedor")
       movimiento = await this.generarCompra(cant, unProducto, ente, monto);
     }
     return movimiento;
   }
 
-  async generarVenta(cant, unProducto, proveedor, monto) {
+  async generarVenta(cant, unProducto, ente, monto) {
     let venta = new Movimiento({
       cant: cant,
       descripcionProducto: unProducto.descripcion,
-      nombreEnte: proveedor.nombreCliente,
+      nombreEnte: ente.nombreCliente,
       monto: monto,
       fecha: new Date().toLocaleDateString(),
       tipo: "Venta",
     });
+    console.log(venta)
     await venta.save();
     return venta;
   }
@@ -160,7 +153,7 @@ class Sucursal {
   async calcularMonto(cant, ente, unProducto) {
     var unMonto = 0;
     if (ente instanceof Cliente) {
-      unMonto = cant * unProducto[0].precioVenta;
+      unMonto = cant * unProducto.precioVenta;
     } else {
       let productoBuscado = await this.buscarProductoPorCodigoBarraProveedor(unProducto.codigoBarra)
       unMonto = parseFloat(cant) * parseFloat(productoBuscado[0].precioCompra);
@@ -178,40 +171,18 @@ class Sucursal {
     return proveedorEncontrado;
   }
 
-  obtenerStockProducto(idProducto) {
-    return this.ProductoSucursal.find(
-      (p) => p.idProducto == idProducto
-    ).getStock();
-  }
-
   async buscarEmpleado(legajo) {
     return await Empleado.find({ legajo: legajo });
-  }
-
-  async agregarProductoTest(unProducto) {
-    let sePudo = false;
-    let product = await this.buscarProductoPorCodigoBarraSucursal(
-      unProducto.codigoBarra
-    );
-
-    if (product[0]) {
-      throw new Error("El Producto ya se encuentra agregado!");
-    } else {
-      this.productosDeSucursal.push(unProducto);
-      sePudo = true;
-    }
-
-    return sePudo;
   }
 
   async agregarProveedor(res, prov) {
     console.log(prov);
     await prov.save();
   }
+
   async agregarNotificacion(res, nuevaNotificacion) {
     await nuevaNotificacion.save();
     return true;
-
   }
 
   async agregarUsuario(req, res, user, jsonResponse) {
@@ -236,10 +207,7 @@ class Sucursal {
   }
 
   async agregarProductoSucursal(res, prod) {
-    let product = await this.buscarProductoPorCodigoBarraSucursal(
-      prod.getCodigoBarra()
-    );
-
+    let product = await this.buscarProductoPorCodigoBarraSucursal(prod.getCodigoBarra());
     if (product[0]) {
       throw new Error("El Producto Sucursal ya se encuentra registrado!");
     } else {
@@ -249,10 +217,7 @@ class Sucursal {
   }
 
   async agregarProductoProveedor(res, prod) {
-    let product = await this.buscarProductoPorCodigoBarraProveedor(
-      prod.getCodigoBarra()
-    );
-
+    let product = await this.buscarProductoPorCodigoBarraProveedor(prod.getCodigoBarra());
     if (product[0]) {
       throw new Error("El Producto Proveedor ya se encuentra registrado!");
     } else {
@@ -326,7 +291,7 @@ class Sucursal {
   async buscarProductoPorCodigoBarraSucursal(cod) {
     let unProducto = await ProductoSucursal.find({ codigoBarra: cod });
     if (unProducto.length < 1) {
-      throw new ErrorDeIncidencia("Intenta ingresar producto que no esta en el surtido!");
+      throw new ErrorDeIncidencia("Intenta gestionar un producto que no esta en el surtido!");
     }
     return unProducto
   }
@@ -366,18 +331,12 @@ class Sucursal {
     return await ProductoProveedor.findByIdAndUpdate(id, params);
   }
 
-  getAll() {
-    return `Sucursal[idSucursal:${this.idSucursal}, nombreSucursal:${this.nombreSucursal}, ubicacion:${this.ubicacion}, usuarios:${this.usuarios}, productos:${this.productos}]`;
-  }
-
   validarIngreso(cant) {
     const CANT_MIN = 1;
     const CANT_MAX = 1000;
     let pudo = true;
     if (cant < CANT_MIN || cant > CANT_MAX) {
-      throw new ErrorDeIncidencia(
-        "Intenta ingresar mercaderia fuera de parametros"
-      );
+      throw new ErrorDeIncidencia("Intenta ingresar mercaderia fuera de parametros");
     }
     return pudo;
   }
@@ -387,25 +346,19 @@ class Sucursal {
     const CANT_MAX = 50;
     let pudo = true;
     if (cant < CANT_MIN || cant > CANT_MAX) {
-      throw new ErrorDeIncidencia(
-        "Intenta egresar mercaderia fuera de parametros"
-      );
+      throw new ErrorDeIncidencia("Intenta egresar mercaderia fuera de parametros");
     }
     return pudo;
   }
 
-  async hayStock(unProductoDeSucursal, cant) {
+  hayStock(unProductoDeSucursal, cant) {
     let pudo = false;
     if (unProductoDeSucursal.stock < cant) {
       throw new ErrorDeIncidencia("Esta generando un negativo en el stock!");
     }
     return pudo;
   }
-
-
 }
-
-
 
 sucursalSchema.loadClass(Sucursal);
 module.exports = model("Sucursal", sucursalSchema);
