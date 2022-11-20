@@ -39,16 +39,17 @@ sucursalesControllers.renderizadoRecepcionFormProducto = async(req,res) => {
         let cuil = cuilProveedor;
         let scanner = codigoBarra;
         let cant = cantidad;
-
         await res.locals.sucursal.recepcionarProductoSucursal(res, cuil,scanner,cant);
+        console.log("se esta pasando")
         req.flash('success_msg', "Se recepciono exitosamente");
         res.redirect('/formRecepcion');
         
 
     } catch (err) {
+        console.log("llega al erro")
         await res.locals.sucursal.dispararAlerta(res, err);
         req.flash('error_msg', "Se genero una notificacion");
-        //res.redirect('/formSucursal');
+        res.redirect('/formRecepcion');
     } 
 }
 
