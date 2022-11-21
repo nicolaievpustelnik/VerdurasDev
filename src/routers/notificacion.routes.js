@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const router = Router();
 
+const {isAuthenticated, verifyToken} = require('../helps/auth');
+
 const {
   renderizarFormNotificacion,
   crearNotificacion,
@@ -11,7 +13,7 @@ const {
 } = require("../controllers/notificacion.controller");
 
 // Nuevo Notificacion
-router.get("/formNotificacion", renderizarFormNotificacion);
+router.get("/formNotificacion", isAuthenticated, renderizarFormNotificacion);
 router.post("/nuevaNotificacion", crearNotificacion);
 
 // Ver todos las notificaciones
