@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const router = Router();
 
+const {isAuthenticated, verifyToken} = require('../helps/auth');
+
 const {
   renderizarFormNotificacion,
   crearNotificacion,

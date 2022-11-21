@@ -30,6 +30,10 @@ class ProductoSucursal extends Producto {
     getCodigoBarra(){
         return this.codigoBarra
     }
+
+    getIdProducto(){
+        return this.idProducto
+    }
 }
 
 productoSchema.loadClass(ProductoSucursal);
