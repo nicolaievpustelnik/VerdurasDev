@@ -1,5 +1,7 @@
 const Proveedor = require('../models/Proveedor');
 
+const jwt = require('jsonwebtoken');
+
 const proveedoresControllers = {};
 
 // Nuevo Proveedor
@@ -10,15 +12,33 @@ proveedoresControllers.renderizarFormProveedor = (req, res) => {
 proveedoresControllers.crearProveedor = async (req, res) => {
     try {
         const { cuilProveedor, nombreProveedor } = req.body;
+
         let nuevoProveedor = null;
-        nuevoProveedor = new Proveedor({ cuilProveedor, nombreProveedor });
-        await res.locals.sucursal.agregarProveedor(res, nuevoProveedor);
-        req.flash('success_msg', "Proveedor agregado exitosamente");
-        res.redirect('/proveedores');
+        let query = require('url').parse(req.url, true).query;
+        jsonResponse = query.jsonResponse;
+
+        if (jsonResponse == "true") {
+            jwt.verify(req.token, 'secretkey', async (error, authData) => {
+                if (error) {
+                    res.sendStatus(403);
+                } else {
+                    nuevoProveedor = new Proveedor({ cuilProveedor, nombreProveedor });
+                    await res.locals.sucursal.agregarProveedor(res, nuevoProveedor);
+                    res.status(200).json({ status: 200, proveedor: nuevoProveedor });
+                    req.flash('success_msg', "Proveedor agregado exitosamente");
+                }
+            });
+
+        } else {
+            nuevoProveedor = new Proveedor({ cuilProveedor, nombreProveedor });
+            await res.locals.sucursal.agregarProveedor(res, nuevoProveedor);
+            req.flash('success_msg', "Proveedor agregado exitosamente");
+            res.redirect('/proveedores');
+        }
     } catch (e) {
-        console.log("Lllega al error")
+        console.log("Lllega al error--------------------------->" + e.message)
         req.flash('error_msg', e.message);
-        res.redirect('/formProveedor');
+        res.redirect('/formProveedor')
     }
 }
 
