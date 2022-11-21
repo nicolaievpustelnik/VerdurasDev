@@ -30,9 +30,21 @@ sucursalesControllers.renderizarOpciones = async (req, res) => {
     res.render('sucursal/opciones', { emailUsuario,nombreSuc});
 }
 
+//mostrar formulario de ingreso de cuil 
+sucursalesControllers.renderizarIngresarCuil = async (req, res) => {
+    let usuario = res.locals.user; 
+    let emailUsuario = usuario.email
+    res.render('sucursal/formIngresarCuil', { emailUsuario});
+}
+
 //mostrar formulario de recepcion
 sucursalesControllers.renderizadoRecepcionFormProducto = async(req,res) => {
     res.render('sucursal/formRecepcion');
+}
+
+//mostrar formulario de recepcion
+sucursalesControllers.renderizadoRecepcionFormIngresarCuil = async(req,res) => {
+    res.render('sucursal/formIngresarCuil');
 }
 
  sucursalesControllers.recepcionarProductos = async (req, res) => {

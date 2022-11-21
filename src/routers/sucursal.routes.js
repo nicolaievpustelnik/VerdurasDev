@@ -7,6 +7,8 @@ const {
     renderizarFormIngresoASucursal,
     validarUsuarioSucursal,
     renderizarOpciones,
+    renderizarIngresarCuil,
+    renderizarValidarCuil,
     renderizadoRecepcionFormProducto,
     recepcionarProductos,
     renderizadoEgresarFormProducto,
@@ -22,13 +24,11 @@ router.post('/nuevaSucursal',isAuthenticated, validarUsuarioSucursal);
 router.get('/opciones', isAuthenticated, renderizarOpciones);
 
 //Recepcionar producto
-router.get('/formRecepcion',isAuthenticated, renderizadoRecepcionFormProducto);
+router.get('/formRecepcion/',isAuthenticated, renderizadoRecepcionFormProducto);
 router.post('/recepcionar',isAuthenticated, recepcionarProductos);
 
 //Egresar producto
 router.get('/formEgresar',isAuthenticated, renderizadoEgresarFormProducto);
 router.post('/egresar',isAuthenticated, egresarProductos,);
-/*// Eliminar proveedor
-router.delete('/eliminarProveedor/:id', eliminarProveedor); */
 
 module.exports = router;
