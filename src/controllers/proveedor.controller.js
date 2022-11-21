@@ -63,7 +63,8 @@ proveedoresControllers.crearProveedor = async (req, res) => {
     }
 }
 
-// Ver todos los Proveedores
+
+// Ver todos los proveedores
 proveedoresControllers.renderizarProveedores = async (req, res) => {
 
     let proveedores = await res.locals.sucursal.listaDeProveedores();
@@ -82,7 +83,6 @@ proveedoresControllers.renderizarProveedores = async (req, res) => {
     }
 
 }
-
 // Actualizar Proveedor
 proveedoresControllers.renderizadoActualizarFormProveedor = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
@@ -125,7 +125,7 @@ proveedoresControllers.actualizarProveedor = async (req, res) => {
 
 }
 
-// Eliminar Proveedor
+// // Eliminar proveedor
 proveedoresControllers.eliminarProveedor = (req, res) => {
 
     let query = require('url').parse(req.url, true).query;
@@ -148,5 +148,7 @@ proveedoresControllers.eliminarProveedor = (req, res) => {
     }
    
 }
+
+
 
 module.exports = proveedoresControllers;

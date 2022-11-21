@@ -91,7 +91,7 @@ class Sucursal {
   }
 
   async egresarProducto(res, dni, scanner, cant) {
-    console.log("Estoy dentro del metodo egreos")
+    console.log("Estoy dentro del metodo egreso")
     let seEgreso = false;
     var unEmpleado = this.obtenerUsuarioLogueado(res);
     if (unEmpleado) {
@@ -247,8 +247,11 @@ class Sucursal {
       await prod.save();
       return true;
     }
+    
   }
-
+  async listaDeMovimientos() {
+    return await Movimiento.find().lean();
+  }
   async listaDeNotificaciones() {
     return await Notificacion.find().lean();
   }
@@ -287,7 +290,9 @@ class Sucursal {
   async eliminarNotificacion(id) {
     await Notificacion.findByIdAndDelete(id);
   }
-
+  async eliminarMovimiento(id) {
+    await Movimiento.findByIdAndDelete(id);
+  }
   async buscarUsuarioPorId(id) {
     return await Empleado.findById(id).lean();
   }
@@ -307,8 +312,12 @@ class Sucursal {
     return await Notificacion.findById(id).lean();
   }
 
-  async buscarProductoIdSucursal(idProducto) {
-    return await ProductoSucursal.find({ idProducto: idProducto });
+  async buscarMovimientoPorId(id) {
+    return await Notificacion.findById(id).lean();
+  }
+
+  async buscarProductoIdSucursal(id) {
+    return await ProductoSucursal.find({ productoId: productoId });
   }
 
   async buscarProductoIdProveedor(idProducto) {
@@ -381,6 +390,14 @@ class Sucursal {
 
   async editarProductoProveedor(id, params) {
     return await ProductoProveedor.findByIdAndUpdate(id, params);
+  }
+
+  async editarNotificacion(id, params) {
+    return await Notificacion.findByIdAndUpdate(id, params);
+  }
+
+  async editarMovimiento(id, params) {
+    return await Movimiento.findByIdAndUpdate(id, params);
   }
 
   getAll() {
