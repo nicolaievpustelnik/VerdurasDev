@@ -17,13 +17,13 @@ router.get("/formNotificacion", isAuthenticated,  renderizarFormNotificacion);
 router.post("/nuevaNotificacion", verifyToken, crearNotificacion);
 
 // Ver todos las notificaciones
-router.get("/notificaciones", verifyToken, isAuthenticated, renderizarNotificaciones);
+//router.get("/notificaciones", verifyToken, isAuthenticated, renderizarNotificaciones);
 
 // Editar notificacion
-router.get("/editarNotificacion",isAuthenticated, renderizadoActualizarFormNotificacion);
+//router.get("/editarNotificacion",isAuthenticated, renderizadoActualizarFormNotificacion);
 router.put("/actualizarNotificacion/:id", verifyToken, actualizarNotificacion);
 
 // Eliminar notificacion
-router.delete("/eliminarNotificacion/:id", verifyToken, eliminarNotificacion);
+//router.delete("/eliminarNotificacion/:id", verifyToken, eliminarNotificacion);
 
 module.exports = router;

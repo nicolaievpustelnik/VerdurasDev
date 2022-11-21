@@ -45,7 +45,7 @@ proveedoresControllers.renderizarProveedores = async (req, res) => {
     }   
 }
 // Actualizar Proveedor
-proveedoresControllers.renderizadoActualizarFormProveedores = async (req, res) => {
+proveedoresControllers.renderizadoActualizarFormProveedor = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
     let id = query.id;
     console.log(id)
@@ -53,60 +53,60 @@ proveedoresControllers.renderizadoActualizarFormProveedores = async (req, res) =
     res.render('proveedor/editarProveedor', { proveedor });
 }
 
-proveedoresControllers.actualizarProveedores= async (req, res) => {
+proveedoresControllers.actualizarProveedor = async (req, res) => {
 
-    let movimientos = await res.locals.sucursal.listaDeProveedores();
-    let query = require('url').parse(req.url, true).query;
-    let jsonResponse = query.jsonResponse;
+    // let movimientos = await res.locals.sucursal.listaDeProveedores();
+    // let query = require('url').parse(req.url, true).query;
+    // let jsonResponse = query.jsonResponse;
 
-    if(jsonResponse == "true"){
+    // if(jsonResponse == "true"){
 
-        jwt.verify(req.token, 'secretkey', async (error, authData) => {
-            if (error) {
-                res.sendStatus(403);
-            } else {
+    //     jwt.verify(req.token, 'secretkey', async (error, authData) => {
+    //         if (error) {
+    //             res.sendStatus(403);
+    //         } else {
 
-                let user = await res.locals.sucursal.editarMovimiento(req.params.id, req.body)
-                if (user) {
-                    res.status(200).json({status: 200, usuario: req.body});    
-                }else{
-                    res.sendStatus(403);
-                }
-            }
-        });
+    //             let user = await res.locals.sucursal.editarMovimiento(req.params.id, req.body)
+    //             if (user) {
+    //                 res.status(200).json({status: 200, usuario: req.body});    
+    //             }else{
+    //                 res.sendStatus(403);
+    //             }
+    //         }
+    //     });
 
-    }else{
+    // }else{
 
-        await res.locals.sucursal.editarProveedor(req.params.id, req.body)
-        req.flash('success_msg', "Proveedor editado exitosamente");
-        res.redirect('/proveedor');
-    } 
+    //     await res.locals.sucursal.editarProveedor(req.params.id, req.body)
+    //     req.flash('success_msg', "Proveedor editado exitosamente");
+    //     res.redirect('/proveedor');
+    // } 
     
 }
 
-// Eliminar proveedor
-movimientosControllers.eliminarProveedor = (req, res) => {
+// // Eliminar proveedor
+proveedoresControllers.eliminarProveedor = (req, res) => {
 
-    let query = require('url').parse(req.url, true).query;
-    let jsonResponse = query.jsonResponse;
-    let id = req.params.id;
+    // let query = require('url').parse(req.url, true).query;
+    // let jsonResponse = query.jsonResponse;
+    // let id = req.params.id;
 
-    if(jsonResponse == "true"){
+    // if(jsonResponse == "true"){
 
-        jwt.verify(req.token, 'secretkey', (error, authData) => {
-            if (error) {
-                res.sendStatus(403);
-            } else {
-                res.locals.sucursal.eliminarMoviemiento(id);
-                res.status(200).json({status: 200, usuarioId: id});
-            }
-        });
+    //     jwt.verify(req.token, 'secretkey', (error, authData) => {
+    //         if (error) {
+    //             res.sendStatus(403);
+    //         } else {
+    //             res.locals.sucursal.eliminarProveedor(id);
+    //             res.status(200).json({status: 200, usuarioId: id});
+    //         }
+    //     });
 
-    }else{
-        res.locals.sucursal.eliminarMovimiento(id);
-        req.flash('success_msg', "Movimiento eliminado exitosamente");
-        res.redirect('/movimientos');
-    }
+    // }else{
+    //     res.locals.sucursal.eliminarMovimiento(id);
+    //     req.flash('success_msg', "Movimiento eliminado exitosamente");
+    //     res.redirect('/movimientos');
+    // }
     
 }
 

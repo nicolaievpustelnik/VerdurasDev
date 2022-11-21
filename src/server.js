@@ -7,8 +7,6 @@ const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require('passport');
 
-//const { swaggerDocs } = require('./v1/swagger');
-
 const Sucursal = require("./Sucursal");
 
 const { SUC_ID, SUC_NOMBRE, SUC_DIRECCION } = process.env;

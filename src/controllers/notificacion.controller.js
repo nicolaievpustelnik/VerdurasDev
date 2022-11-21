@@ -25,33 +25,33 @@ notificacionesControllers.crearNotificacion = async (req, res) => {
 };
 
 // Ver todos los movimientos
-movimientosControllers.renderizarMovimientos = async (req, res) => {
+notificacionesControllers.renderizarMovimientos = async (req, res) => {
 
-  let usuarios = await res.locals.sucursal.listaDeMovimientos();
-  let query = require('url').parse(req.url, true).query;
-  let jsonResponse = query.jsonResponse;
+  // let usuarios = await res.locals.sucursal.listaDeNotificaciones();
+  // let query = require('url').parse(req.url, true).query;
+  // let jsonResponse = query.jsonResponse;
 
-  if(jsonResponse == "true"){
+  // if(jsonResponse == "true"){
 
-      jwt.verify(req.token, 'secretkey', (error, authData) => {
-          if (error) {
-              res.sendStatus(403);
-          } else {
-              res.status(200).json({status: 200, movimientos: movimientos});
-          }
-      });
+  //     jwt.verify(req.token, 'secretkey', (error, authData) => {
+  //         if (error) {
+  //             res.sendStatus(403);
+  //         } else {
+  //             res.status(200).json({status: 200, movimientos: movimientos});
+  //         }
+  //     });
 
-  }else{
-      res.render('movimiento/movimientos', { movimientos });
-  }   
+  // }else{
+  //     res.render('movimiento/movimientos', { movimientos });
+  // }   
 }
 // Actualizar Movimiento
-movimientosControllers.renderizadoActualizarFormMovimientos = async (req, res) => {
-  let query = require('url').parse(req.url, true).query;
-  let id = query.id;
-  console.log(id)
-  let movimiento = await res.locals.sucursal.buscarMovimientoPorId(id);
-  res.render('proveedor/editarMovimiento', { movimiento });
+notificacionesControllers.renderizadoActualizarFormMovimientos = async (req, res) => {
+  // let query = require('url').parse(req.url, true).query;
+  // let id = query.id;
+  // console.log(id)
+  // let movimiento = await res.locals.sucursal.buscarMovimientoPorId(id);
+  // res.render('proveedor/editarMovimiento', { movimiento });
 }
 
 notificacionesControllers.actualizarNotificacion = async (req, res) => {
