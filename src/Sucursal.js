@@ -76,13 +76,14 @@ class Sucursal {
 
   async dispararAlerta(res, err) {
     if (err instanceof ErrorDeIncidencia) {
-      console.log("estioy en disporar aletrta")
+      console.log("estoy en disparar alerta")
       let usuarioLogueado = this.obtenerUsuarioLogueado(res);
       let unaNotificacion = new Notificacion({
-        nombreCompletoEmpleado: usuarioLogueado.sucursal,
+        nombreCompletoEmpleado: usuarioLogueado.nombre,
         mensaje: err.message,
         fecha: new Date().toLocaleString(),
       });
+      console.log("hay notificacio1n"+unaNotificacion)
       await unaNotificacion.save();
     } else {
       console.log("Otro tipo de error: " + err.name + " --> " + err.message);
@@ -116,6 +117,7 @@ class Sucursal {
   async generarMovimiento(cant, unProducto, unProveedor) {
     let monto = await this.calcularMonto(cant, unProveedor, unProducto);
     let movimiento = null;
+    console.log("EStoy en movimiento")
     if (unProveedor instanceof Cliente) {
       console.log("Soy cliente")
       movimiento = await this.generarVenta(cant, unProducto, unProveedor, monto);
