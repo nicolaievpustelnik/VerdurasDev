@@ -83,7 +83,7 @@ class Sucursal {
         mensaje: err.message,
         fecha: new Date().toLocaleString(),
       });
-      console.log("hay notificacio1n"+unaNotificacion)
+      console.log("hay notificacio1n" + unaNotificacion)
       await unaNotificacion.save();
     } else {
       console.log("Otro tipo de error: " + err.name + " --> " + err.message);
@@ -92,8 +92,8 @@ class Sucursal {
 
   async egresarProducto(res, dni, scanner, cant) {
     console.log("Estoy dentro del metodo egreos")
-    let seEgreso = false; 
-    var unEmpleado =  this.obtenerUsuarioLogueado(res);
+    let seEgreso = false;
+    var unEmpleado = this.obtenerUsuarioLogueado(res);
     if (unEmpleado) {
       if (this.verificarRol(unEmpleado, rolEnum.CAJERO)) {
         console.log("Hay rol true")
@@ -167,7 +167,7 @@ class Sucursal {
 
   async obtenerProveedor(cuil) {
     let proveedorEncontrado = await Proveedor.findOne({ cuilProveedor: cuil });
-    if (!proveedorEncontrado){
+    if (!proveedorEncontrado) {
       throw new ErrorDeIncidencia("Intenta ingresar mercaderia a proveedor no autorizado");
     }
     return proveedorEncontrado;
@@ -178,7 +178,9 @@ class Sucursal {
   }
 
   async agregarProveedor(res, prov) {
-    console.log(prov);
+    if (this.buscarProveedorPorCuil(prov.cuil)) {
+      throw new Error("Ya existe un proveedor con ese Cuil")
+    }
     await prov.save();
   }
 
@@ -278,7 +280,9 @@ class Sucursal {
   async buscarUsuarioPorId(id) {
     return await Empleado.findById(id).lean();
   }
-
+  async buscarProveedorPorCuil(cuil) {
+    return await Proveedor.findOne({ cuilProveedor: cuil })
+  }
   async buscarUsuarioPorLegajo(legajo) {
     return await Empleado.find({ legajo: legajo });
   }
@@ -295,6 +299,10 @@ class Sucursal {
     return await ProductoSucursal.find({ productoId: productoId });
   }
 
+  async buscarProveedorPorId(id) {
+    return await Proveedor.findById(id).lean();
+  }
+
   async buscarProductoIdProveedor(id) {
     return await ProductoProveedor.find({ productoId: productoId });
   }
@@ -309,7 +317,7 @@ class Sucursal {
 
   async buscarProductoPorCodigoBarraSucursal(cod) {
     let unProducto = await ProductoSucursal.findOne({ codigoBarra: cod });
-    console.log(cod+" "+unProducto)
+    console.log(cod + " " + unProducto)
     if (!unProducto) {
       throw new ErrorDeIncidencia("Intenta gestionar producto fuera de surtido, registre el producto");
     }
@@ -321,6 +329,11 @@ class Sucursal {
   }
 
   async editarProveedor(id, params) {
+    let unProveedor = await this.buscarProveedorPorCuil(params.cuilProveedor);
+    console.log(unProveedor)
+    if (unProveedor) {
+      throw new Error("El numero de cuil ya se encuentra asignado a otro Proveedor!");
+    }
     return await Proveedor.findByIdAndUpdate(id, params);
   }
 
