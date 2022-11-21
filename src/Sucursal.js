@@ -309,8 +309,13 @@ class Sucursal {
     return await Notificacion.findById(id).lean();
   }
 
+  async buscarMovimientoPorId(id) {
+    return await Notificacion.findById(id).lean();
+  }
+
   async buscarProductoIdSucursal(id) {
     return await ProductoSucursal.find({ productoId: productoId });
+>
   }
 
   async buscarProveedorPorId(id) {
