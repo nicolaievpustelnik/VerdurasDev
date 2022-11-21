@@ -15,8 +15,6 @@ productosControllers.crearProducto = async (req, res) => {
     try {
 
         const { codigoBarra, nombreCategoria, marca, descripcion, tipoProducto, idSucursal, idProveedor, precioVenta, precioCompra } = req.body;
-
-        console.log(req.body)
         
         let stock = 0;
         let nuevoProducto = null;
@@ -31,16 +29,16 @@ productosControllers.crearProducto = async (req, res) => {
                 } else {
                     switch (tipoProducto) {
                         case 'Producto':
-                            let idProductoSucursal = generateProductoIdSucursal(res);
-                            nuevoProducto = new ProductoSucursal({ idProductoSucursal, codigoBarra, nombreCategoria, marca, descripcion, stock, idSucursal, precioVenta});
-                            await res.locals.sucursal.agregarProductoSucursal(res, nuevoProducto);
+                            var idProducto = await generateProductoIdSucursal(res);
+                            nuevoProducto = new ProductoSucursal({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idSucursal, precioVenta});
+                            await res.locals.sucursal.agregarProductoSucursal(req, res, nuevoProducto, true);
                             res.status(200).json({status: 200, producto: nuevoProducto});
                             break;
             
                         case 'Proveedor':
-                            let idProductoProveedor = generateProductoIdProveedor(res);
-                            nuevoProducto = new ProductoProveedor({ idProductoProveedor, codigoBarra, nombreCategoria, marca, descripcion, stock, idProveedor, precioCompra});
-                            await res.locals.sucursal.agregarProductoProveedor(res, nuevoProducto);
+                            var idProducto = await generateProductoIdProveedor(res);
+                            nuevoProducto = new ProductoProveedor({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idProveedor, precioCompra});
+                            await res.locals.sucursal.agregarProductoProveedor(req, res, nuevoProducto, true);
                             res.status(200).json({status: 200, producto: nuevoProducto});
                             break;
             
@@ -56,15 +54,15 @@ productosControllers.crearProducto = async (req, res) => {
 
             switch (tipoProducto) {
                 case 'Producto':
-                    let idProductoSucursal = generateProductoIdSucursal(res);
-                    nuevoProducto = new ProductoSucursal({ idProductoSucursal, codigoBarra, nombreCategoria, marca, descripcion, stock, idSucursal, precioVenta});
-                    productoAgregado = await res.locals.sucursal.agregarProductoSucursal(res, nuevoProducto);
+                    var idProducto = await generateProductoIdSucursal(res);
+                    nuevoProducto = new ProductoSucursal({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idSucursal, precioVenta});
+                    productoAgregado = await res.locals.sucursal.agregarProductoSucursal(req, res, nuevoProducto, false);
                     break;
     
                 case 'Proveedor':
-                    let idProductoProveedor = generateProductoIdProveedor(res);
-                    nuevoProducto = new ProductoProveedor({ idProductoProveedor, codigoBarra, nombreCategoria, marca, descripcion, stock, idProveedor, precioCompra});
-                    productoAgregado = await res.locals.sucursal.agregarProductoProveedor(res, nuevoProducto);
+                    var idProducto = await generateProductoIdProveedor(res);
+                    nuevoProducto = new ProductoProveedor({ idProducto, codigoBarra, nombreCategoria, marca, descripcion, stock, idProveedor, precioCompra});
+                    productoAgregado = await res.locals.sucursal.agregarProductoProveedor(req, res, nuevoProducto, false);
                     break;
     
                 default:

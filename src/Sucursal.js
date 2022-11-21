@@ -211,27 +211,36 @@ class Sucursal {
     }
   }
 
-  async agregarProductoSucursal(res, prod) {
-    let product = await this.buscarProductoPorCodigoBarraSucursal(
+  async agregarProductoSucursal(req, res, prod, jsonResponse) {
+    let product = await this.buscarProductoCodigoBarrasSucursal(
       prod.getCodigoBarra()
     );
 
-    if (product[0]) {
+    if (product) {
+      if (jsonResponse == true) {
+        res.sendStatus(403);
+      } else {
+        req.flash('error_msg', "Producto existente");
+      }
       return false;
-      //throw new Error("El Producto Sucursal ya se encuentra registrado!");
     } else {
       await prod.save();
       return true;
     }
   }
 
-  async agregarProductoProveedor(res, prod) {
-    let product = await this.buscarProductoPorCodigoBarraProveedor(
+  async agregarProductoProveedor(req, res, prod, jsonResponse) {
+    let product = await this.buscarProductoCodigoBarrasProveedor(
       prod.getCodigoBarra()
     );
 
-    if (product[0]) {
-      throw new Error("El Producto Proveedor ya se encuentra registrado!");
+    if (product) {
+      if (jsonResponse == true) {
+        res.sendStatus(403);
+      } else {
+        req.flash('error_msg', "Producto existente");
+      }
+      return false;
     } else {
       await prod.save();
       return true;
@@ -306,14 +315,13 @@ class Sucursal {
 
   async buscarProductoIdSucursal(id) {
     return await ProductoSucursal.find({ productoId: productoId });
+
+  async buscarProductoIdProveedor(idProducto) {
+    return await ProductoProveedor.find({ idProducto: idProducto });
   }
 
   async buscarProveedorPorId(id) {
     return await Proveedor.findById(id).lean();
-  }
-
-  async buscarProductoIdProveedor(id) {
-    return await ProductoProveedor.find({ productoId: productoId });
   }
 
   async buscarProductoPorIdSucursal(id) {
@@ -335,6 +343,14 @@ class Sucursal {
 
   async buscarProductoPorCodigoBarraProveedor(cod) {
     return await ProductoProveedor.findOne({ codigoBarra: cod });
+  }
+
+  async buscarProductoCodigoBarrasProveedor(codigoBarra) {
+    return await ProductoProveedor.findOne({ codigoBarra: codigoBarra });
+  }
+
+  async buscarProductoCodigoBarrasSucursal(codigoBarra) {
+    return await ProductoSucursal.findOne({ codigoBarra: codigoBarra });
   }
 
   async editarProveedor(id, params) {
