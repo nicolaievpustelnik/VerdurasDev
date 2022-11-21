@@ -20,6 +20,15 @@ const {
 } = require('../controllers/usuario.controller');
 
 // Auth Token
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     description: Welcome to swagger-jsdoc!
+ *     responses:
+ *       200:
+ *         description: Returns a mysterious string.
+ */
 router.post('/auth', auth);
 
 // Ver usuarios por mail

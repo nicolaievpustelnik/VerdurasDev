@@ -315,6 +315,7 @@ class Sucursal {
 
   async buscarProductoIdSucursal(id) {
     return await ProductoSucursal.find({ productoId: productoId });
+  }
 
   async buscarProductoIdProveedor(idProducto) {
     return await ProductoProveedor.find({ idProducto: idProducto });
