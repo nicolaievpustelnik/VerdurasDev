@@ -7,13 +7,11 @@ const {
     renderizarFormIngresoASucursal,
     validarUsuarioSucursal,
     renderizarOpciones,
-    renderizarIngresarCuil,
-    renderizarValidarCuil,
-    renderizadoRecepcionFormProducto,
+     renderizadoRecepcionFormProducto,
     recepcionarProductos,
     renderizadoEgresarFormProducto,
     egresarProductos,
-    //eliminarProveedor
+
 } = require('../controllers/sucursal.controller');
 
 // Sucursal
@@ -30,5 +28,8 @@ router.post('/recepcionar',isAuthenticated, recepcionarProductos);
 //Egresar producto
 router.get('/formEgresar',isAuthenticated, renderizadoEgresarFormProducto);
 router.post('/egresar',isAuthenticated, egresarProductos,);
+
+
+
 
 module.exports = router;

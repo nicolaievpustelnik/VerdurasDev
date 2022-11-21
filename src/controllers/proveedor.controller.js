@@ -22,16 +22,30 @@ proveedoresControllers.crearProveedor = async (req, res) => {
     }
 }
 
-// Ver todos los Proveedores
+
+// Ver todos los proveedores
 proveedoresControllers.renderizarProveedores = async (req, res) => {
 
     let proveedores = await res.locals.sucursal.listaDeProveedores();
+    let query = require('url').parse(req.url, true).query;
+    let jsonResponse = query.jsonResponse;
 
-    res.render('proveedor/proveedores', { proveedores });
+    if(jsonResponse == "true"){
+
+        jwt.verify(req.token, 'secretkey', (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+                res.status(200).json({status: 200, proveedores: proveedores});
+            }
+        });
+
+    }else{
+        res.render('proveedor/proveedores', { proveedor });
+    }   
 }
-
 // Actualizar Proveedor
-proveedoresControllers.renderizadoActualizarFormProveedor = async (req, res) => {
+proveedoresControllers.renderizadoActualizarFormProveedores = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
     let id = query.id;
     console.log(id)
@@ -39,23 +53,63 @@ proveedoresControllers.renderizadoActualizarFormProveedor = async (req, res) => 
     res.render('proveedor/editarProveedor', { proveedor });
 }
 
-proveedoresControllers.actualizarProveedor = async (req, res) => {
-    try {
+proveedoresControllers.actualizarProveedores= async (req, res) => {
+
+    let movimientos = await res.locals.sucursal.listaDeProveedores();
+    let query = require('url').parse(req.url, true).query;
+    let jsonResponse = query.jsonResponse;
+
+    if(jsonResponse == "true"){
+
+        jwt.verify(req.token, 'secretkey', async (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+
+                let user = await res.locals.sucursal.editarMovimiento(req.params.id, req.body)
+                if (user) {
+                    res.status(200).json({status: 200, usuario: req.body});    
+                }else{
+                    res.sendStatus(403);
+                }
+            }
+        });
+
+    }else{
+
         await res.locals.sucursal.editarProveedor(req.params.id, req.body)
         req.flash('success_msg', "Proveedor editado exitosamente");
-        res.redirect('/proveedores');
-    } catch (e) {
-        req.flash('error_msg', e.message);
-        res.redirect('/proveedores');
-    }
+        res.redirect('/proveedor');
+    } 
+    
 }
 
-// Eliminar Proveedor
-proveedoresControllers.eliminarProveedor = (req, res) => {
+// Eliminar proveedor
+movimientosControllers.eliminarProveedor = (req, res) => {
+
+    let query = require('url').parse(req.url, true).query;
+    let jsonResponse = query.jsonResponse;
     let id = req.params.id;
-    res.locals.sucursal.eliminarProveedor(id);
-    req.flash('success_msg', "Proveedor eliminado exitosamente");
-    res.redirect('/proveedores');
+
+    if(jsonResponse == "true"){
+
+        jwt.verify(req.token, 'secretkey', (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+                res.locals.sucursal.eliminarMoviemiento(id);
+                res.status(200).json({status: 200, usuarioId: id});
+            }
+        });
+
+    }else{
+        res.locals.sucursal.eliminarMovimiento(id);
+        req.flash('success_msg', "Movimiento eliminado exitosamente");
+        res.redirect('/movimientos');
+    }
+    
 }
+
+
 
 module.exports = proveedoresControllers;
