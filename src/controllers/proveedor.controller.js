@@ -4,6 +4,27 @@ const jwt = require('jsonwebtoken');
 
 const proveedoresControllers = {};
 
+// Get usuario por email
+proveedoresControllers.getProviderByCuil = async (req, res) => {
+
+    let query = require('url').parse(req.url, true).query;
+    let cuil = query.cuil;
+
+    if (cuil) {
+        let proveedor = await res.locals.sucursal.buscarProveedorPorCuil(cuil)
+
+        jwt.verify(req.token, 'secretkey', (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+                res.status(200).json({ status: 200, proveedores: proveedor });
+            }
+        });
+    } else {
+        res.sendStatus(403);
+    }
+}
+
 // Nuevo Proveedor
 proveedoresControllers.renderizarFormProveedor = (req, res) => {
     res.render('proveedor/nuevoProveedor');
@@ -46,8 +67,20 @@ proveedoresControllers.crearProveedor = async (req, res) => {
 proveedoresControllers.renderizarProveedores = async (req, res) => {
 
     let proveedores = await res.locals.sucursal.listaDeProveedores();
+    let query = require('url').parse(req.url, true).query;
+    let jsonResponse = query.jsonResponse;
+    if (jsonResponse == "true") {
+        jwt.verify(req.token, 'secretkey', (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+                res.status(200).json({ status: 200, proveedores: proveedores });
+            }
+        });
+    } else {
+        res.render('proveedor/proveedores', { proveedores });
+    }
 
-    res.render('proveedor/proveedores', { proveedores });
 }
 
 // Actualizar Proveedor
@@ -60,22 +93,60 @@ proveedoresControllers.renderizadoActualizarFormProveedor = async (req, res) => 
 }
 
 proveedoresControllers.actualizarProveedor = async (req, res) => {
-    try {
-        await res.locals.sucursal.editarProveedor(req.params.id, req.body)
-        req.flash('success_msg', "Proveedor editado exitosamente");
-        res.redirect('/proveedores');
-    } catch (e) {
-        req.flash('error_msg', e.message);
-        res.redirect('/proveedores');
+
+    let query = require('url').parse(req.url, true).query;
+    let jsonResponse = query.jsonResponse;
+
+    if (jsonResponse == "true") {
+        jwt.verify(req.token, 'secretkey', async (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+
+                let unProveedor = await res.locals.sucursal.editarProveedor(req.params.id, req.body)
+                if (unProveedor) {
+                    res.status(200).json({ status: 200, usuario: req.body });
+                } else {
+                    res.sendStatus(403);
+                }
+            }
+        });
+    } else {
+        try {
+            await res.locals.sucursal.editarProveedor(req.params.id, req.body)
+            req.flash('success_msg', "Proveedor editado exitosamente");
+            res.redirect('/proveedores');
+        } catch (e) {
+            req.flash('error_msg', e.message);
+            res.redirect('/proveedores');
+        }
     }
+
+
 }
 
 // Eliminar Proveedor
 proveedoresControllers.eliminarProveedor = (req, res) => {
+
+    let query = require('url').parse(req.url, true).query;
+    let jsonResponse = query.jsonResponse;
     let id = req.params.id;
-    res.locals.sucursal.eliminarProveedor(id);
-    req.flash('success_msg', "Proveedor eliminado exitosamente");
-    res.redirect('/proveedores');
+
+    if(jsonResponse == "true"){
+        jwt.verify(req.token, 'secretkey', (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+                res.locals.sucursal.eliminarProveedor(id);
+                res.status(200).json({status: 200, proveedorId: id});
+            }
+        });
+    }else{
+        res.locals.sucursal.eliminarProveedor(id);
+        req.flash('success_msg', "Proveedor eliminado exitosamente");
+        res.redirect('/proveedores');
+    }
+   
 }
 
 module.exports = proveedoresControllers;
