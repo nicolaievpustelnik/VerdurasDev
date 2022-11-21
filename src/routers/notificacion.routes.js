@@ -11,17 +11,17 @@ const {
 } = require("../controllers/notificacion.controller");
 
 // Nuevo Notificacion
-router.get("/formNotificacion", renderizarFormNotificacion);
-router.post("/nuevaNotificacion", crearNotificacion);
+router.get("/formNotificacion", isAuthenticated,  renderizarFormNotificacion);
+router.post("/nuevaNotificacion", verifyToken, crearNotificacion);
 
 // Ver todos las notificaciones
-router.get("/notificaciones", renderizarNotificaciones);
+router.get("/notificaciones", verifyToken, isAuthenticated, renderizarNotificaciones);
 
 // Editar notificacion
-router.get("/editarNotificacion", renderizadoActualizarFormNotificacion);
-router.put("/actualizarNotificacion/:id", actualizarNotificacion);
+router.get("/editarNotificacion",isAuthenticated, renderizadoActualizarFormNotificacion);
+router.put("/actualizarNotificacion/:id", verifyToken, actualizarNotificacion);
 
 // Eliminar notificacion
-router.delete("/eliminarNotificacion/:id", eliminarNotificacion);
+router.delete("/eliminarNotificacion/:id", verifyToken, eliminarNotificacion);
 
 module.exports = router;
