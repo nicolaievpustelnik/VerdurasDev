@@ -5,7 +5,6 @@ const sucursalesControllers = {};
 
 // Get sucursaln
 sucursalesControllers.getSucursal = async (req, res) => {
-
     let unaSucursal = await res.locals.sucursal
     jwt.verify(req.token, 'secretkey', (error, authData) => {
         if (error) {
@@ -24,7 +23,6 @@ sucursalesControllers.renderizarFormIngresoASucursal = (req, res) => {
 
 sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
     const { nombreSucursal } = req.body;
-    
     var nombreRecibido = nombreSucursal;
     let query = require('url').parse(req.url, true).query;
     jsonResponse = query.jsonResponse;
@@ -58,8 +56,6 @@ sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
     }
 }
 
-
-
 // Ver toda las opciones 
 sucursalesControllers.renderizarOpciones = async (req, res) => {
     let usuario = res.locals.user;
@@ -68,21 +64,9 @@ sucursalesControllers.renderizarOpciones = async (req, res) => {
     res.render('sucursal/opciones', { emailUsuario, nombreSuc });
 }
 
-//mostrar formulario de ingreso de cuil 
-sucursalesControllers.renderizarIngresarCuil = async (req, res) => {
-    let usuario = res.locals.user;
-    let emailUsuario = usuario.email
-    res.render('sucursal/formIngresarCuil', { emailUsuario });
-}
-
 //mostrar formulario de recepcion
 sucursalesControllers.renderizadoRecepcionFormProducto = async (req, res) => {
     res.render('sucursal/formRecepcion');
-}
-
-//mostrar formulario de recepcion
-sucursalesControllers.renderizadoRecepcionFormIngresarCuil = async (req, res) => {
-    res.render('sucursal/formIngresarCuil');
 }
 
 sucursalesControllers.recepcionarProductos = async (req, res) => {
