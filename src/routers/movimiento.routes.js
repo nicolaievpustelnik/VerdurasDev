@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const { } = require('../controllers/movimiento.controller');
+const {isAuthenticated, verifyToken} = require('../helps/auth');
 
 // Nuevo Movimiento
 router.get('/crearMovimiento', crearMovimiento);

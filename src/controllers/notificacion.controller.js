@@ -47,11 +47,11 @@ notificacionesControllers.renderizarNotificaciones = async (req, res) => {
 }
 // Actualizar Movimiento
 notificacionesControllers.renderizadoActualizarFormMovimientos = async (req, res) => {
-  // let query = require('url').parse(req.url, true).query;
-  // let id = query.id;
-  // console.log(id)
-  // let movimiento = await res.locals.sucursal.buscarMovimientoPorId(id);
-  // res.render('proveedor/editarMovimiento', { movimiento });
+   let query = require('url').parse(req.url, true).query;
+   let id = query.id;
+   console.log(id)
+   let notificacion = await res.locals.sucursal.buscarNotificacionPorId(id);
+   res.render('notificacion/editarNotificacion', { notificacion });
 }
 
 notificacionesControllers.actualizarNotificacion = async (req, res) => {
