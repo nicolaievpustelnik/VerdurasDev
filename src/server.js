@@ -99,6 +99,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// Swagger
+const swaggerDocs  = require('./docs/swagger');
+swaggerDocs(app, app.get('port'))
+
 // Rutas
 app.use(require("./routers/index.routes"));
 app.use(require("./routers/usuario.routes"));
@@ -106,6 +110,7 @@ app.use(require("./routers/producto.routes"));
 app.use(require("./routers/proveedor.routes"));
 app.use(require("./routers/notificacion.routes"));
 app.use(require("./routers/sucursal.routes"));
+
 
 // Archivos static
 app.use(express.static(path.join(__dirname, "public")));
