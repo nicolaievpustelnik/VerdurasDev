@@ -1,4 +1,5 @@
 const Sucursal = require('../Sucursal')
+const Empleado = require("../models/Empleado");
 const jwt = require('jsonwebtoken');
 
 const sucursalesControllers = {};
@@ -22,28 +23,51 @@ sucursalesControllers.renderizarFormIngresoASucursal = (req, res) => {
 }
 
 sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
-    const { nombreSucursal } = req.body;
-    var nombreRecibido = nombreSucursal;
+    
     let query = require('url').parse(req.url, true).query;
     jsonResponse = query.jsonResponse;
+    
     if (jsonResponse == "true") {
-        try {
-            jwt.verify(req.token, 'secretkey', async (error, authData) => {
-                if (error) {
-                    res.sendStatus(403);
-                } else {
-                    console.log("Estoy llegando hasta el centro")
-                    let esValido = await res.locals.sucursal.validarSiEsDeSucursal(res, nombreRecibido);
-                    res.status(200).json({ status: 200, sucursal: esValido });
+
+        const { nombreSucursal, email, password } = req.body;
+
+        const user = await Empleado.findOne({email});
+
+        if(!user){
+            res.sendStatus(403);
+        }else{
+
+            const match = await user.matchPassword(password);
+
+            if (match) {
+
+                res.locals.user = user;
+
+                try {
+                    jwt.verify(req.token, 'secretkey', async (error, authData) => {
+                        if (error) {
+                            res.sendStatus(403);
+                        } else {
+                            let esValido = await res.locals.sucursal.validarSiEsDeSucursal(res, nombreSucursal);
+                            res.status(200).json({ status: 200, sucursal: esValido });
+                        }
+                    });
+                } catch (e) {
+                    res.status(400).json({ status: 400 });
                 }
-            });
-        } catch (e) {
-            res.status(400).json({ status: 400 });
+
+            } else {
+                res.sendStatus(403);
+            }
         }
+        
 
     } else {
+
+        const { nombreSucursal } = req.body;
+
         try {
-            await res.locals.sucursal.validarSiEsDeSucursal(res, nombreRecibido);
+            await res.locals.sucursal.validarSiEsDeSucursal(res, nombreSucursal);
             req.flash('success_msg', "Eres miembro de esta sucursal");
             res.redirect('/opciones');
 

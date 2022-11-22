@@ -26,6 +26,7 @@ class Sucursal {
 
   obtenerUsuarioLogueado(res) {
     let unEmpleado = res.locals.user;
+
     if (!unEmpleado) {
       throw new Error("No inicio Sesion!");
     }
@@ -35,8 +36,13 @@ class Sucursal {
   validarSiEsDeSucursal(res, nombreSucursalRecibido) {
     let esValido = false;
     let usuarioLogueado = this.obtenerUsuarioLogueado(res);
+<<<<<<< HEAD
     console.log(usuarioLogueado.sucursal + "Scursal del logueado")
     console.log("sucursal revubido" + nombreSucursalRecibido)
+=======
+    console.log(usuarioLogueado.sucursal + " Sucursal del logueado")
+    console.log("Sucursal recibido " + nombreSucursalRecibido)
+>>>>>>> b5a32976a59628da565e6da87697f42e2bffe708
     if (!(nombreSucursalRecibido == usuarioLogueado.sucursal)) {
       throw new ErrorDeIncidencia("Entrando a sucursal que no corresponde")
     }
