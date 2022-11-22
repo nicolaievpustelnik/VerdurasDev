@@ -10,12 +10,9 @@ const {
     renderizadoActualizarFormProveedor,
     actualizarProveedor,
     eliminarProveedor,
-    //auth,
     getProviderByCuil
 } = require('../controllers/proveedor.controller');
 
-// Auth Token
-//router.post('/auth', auth);
 
 // Ver proveedor por mail
 router.get('/proveedor', verifyToken, getProviderByCuil);

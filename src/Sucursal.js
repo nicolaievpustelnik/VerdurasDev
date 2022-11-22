@@ -33,10 +33,15 @@ class Sucursal {
   }
 
   validarSiEsDeSucursal(res, nombreSucursalRecibido) {
+   let esValido= false;
     let usuarioLogueado = this.obtenerUsuarioLogueado(res);
+    console.log(usuarioLogueado.sucursal+"Scursal del logueado")
+    console.log("sucursal revubido"+ nombreSucursalRecibido)
     if (!(nombreSucursalRecibido == usuarioLogueado.sucursal)) {
       throw new ErrorDeIncidencia("Entrando a sucursal que no corresponde")
     }
+    esValido= true;
+    return esValido;
   }
 
   async recepcionarProductoSucursal(res, cuil, scanner, cant) {
