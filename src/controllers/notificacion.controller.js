@@ -24,26 +24,26 @@ notificacionesControllers.crearNotificacion = async (req, res) => {
   }
 };
 
-// Ver todos los movimientos
-notificacionesControllers.renderizarMovimientos = async (req, res) => {
+// Ver todas las notificaciones
+notificacionesControllers.renderizarNotificaciones = async (req, res) => {
 
-  // let usuarios = await res.locals.sucursal.listaDeNotificaciones();
-  // let query = require('url').parse(req.url, true).query;
-  // let jsonResponse = query.jsonResponse;
+  let notificaciones = await res.locals.sucursal.listaDeNotificaciones();
+  let query = require('url').parse(req.url, true).query;
+   let jsonResponse = query.jsonResponse;
 
-  // if(jsonResponse == "true"){
+   if(jsonResponse == "true"){
 
-  //     jwt.verify(req.token, 'secretkey', (error, authData) => {
-  //         if (error) {
-  //             res.sendStatus(403);
-  //         } else {
-  //             res.status(200).json({status: 200, movimientos: movimientos});
-  //         }
-  //     });
+       jwt.verify(req.token, 'secretkey', (error, authData) => {
+         if (error) {
+               res.sendStatus(403);
+           } else {
+               res.status(200).json({status: 200, notificaciones: notificaciones});
+           }
+       });
 
-  // }else{
-  //     res.render('movimiento/movimientos', { movimientos });
-  // }   
+   }else{
+       res.render('notificacion/notificaciones', { notificaciones });
+  }   
 }
 // Actualizar Movimiento
 notificacionesControllers.renderizadoActualizarFormMovimientos = async (req, res) => {
