@@ -3,8 +3,17 @@ const router = Router();
 
 const {isAuthenticated, verifyToken} = require('../helps/auth');
 
+const {
+    renderizarFormMovimiento,
+    renderizarMovimientos,
+    renderizadoActualizarFormMovimiento,
+    actualizarMovimiento,
+    eliminarMovimiento,
+
+} = require('../controllers/sucursal.controller');
+
 // Nuevo Movimiento
-router.get('/nuevoMovimiento', renderizarFormMovimiento);
+router.get('/nuevoMovimiento',isAuthenticated, renderizarFormMovimiento);
 
 // Ver todos las movimiento
 router.get("/movimientos",  verifyToken, isAuthenticated, renderizarMovimientos);
@@ -14,7 +23,7 @@ router.get("/editarMovimiento",isAuthenticated, renderizadoActualizarFormMovimie
 router.put("/actualizarMovimiento", verifyToken, actualizarMovimiento);
 
 // Eliminar Movimiento
-router.delete("/eliminarMovimiento/:id", verifyToken, eliminarMoviemiento);
+router.delete("/eliminarMovimiento/:id", verifyToken, eliminarMovimiento);
 
 module.exports = router;
 

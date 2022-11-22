@@ -6,6 +6,23 @@ movimientosControllers.renderizarFormMovimiento = (req, res) => {
     res.render("movimiento/nuevoMovimiento");
   };
 
+  moviemientosControllers.crearMovimiento = async (req, res) => {
+    try {
+      const { nombreCompletoEmpleado, mensaje, fecha } = req.body;
+      let nuevoMovimiento = null;
+      nuevoMovimiento = new Movimiento({
+          nombreCompletoEmpleado,
+        mensaje,
+        fecha,
+      });
+  
+      await res.locals.sucursal.agregarMovimiento(res, nuevoMovimiento);
+      res.redirect("/movimientos");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  
 // Ver todos los movimientos
 movimientosControllers.renderizarMovimientos = async (req, res) => {
 
