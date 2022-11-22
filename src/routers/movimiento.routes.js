@@ -4,7 +4,7 @@ const router = Router();
 const {isAuthenticated, verifyToken} = require('../helps/auth');
 
 // Nuevo Movimiento
-router.get('/crearMovimiento', crearMovimiento);
+router.get('/nuevoMovimiento', renderizarFormMovimiento);
 
 // Ver todos las movimiento
 router.get("/movimientos",  verifyToken, isAuthenticated, renderizarMovimientos);

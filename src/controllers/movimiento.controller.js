@@ -2,27 +2,14 @@ const Movimiento = require('../models/Movimiento');
 
 const movimientoControllers = {}
 
-movimientoControllers.crearMovimiento = async (req, res) => {
-    try {
-
-        const { cant,descripcionProducto,nombreEnte,monto } = req.body;
-
-        let nuevoMovimiento = new Movimiento({ cant,descripcionProducto,nombreEnte,monto,tipo });
-
-        await nuevoMovimiento.save();
-
-        res.send('Movimiento agregado');
-
-    } catch (e) {
-
-        console.log(e)
-    }
-}
+movimientosControllers.renderizarFormMovimiento = (req, res) => {
+    res.render("movimiento/nuevoMovimiento");
+  };
 
 // Ver todos los movimientos
 movimientosControllers.renderizarMovimientos = async (req, res) => {
 
-    let moviemientos = await res.locals.sucursal.listaDeMovimientos();
+    let movimientos = await res.locals.sucursal.listaDeMovimientos();
     let query = require('url').parse(req.url, true).query;
     let jsonResponse = query.jsonResponse;
 
@@ -41,7 +28,7 @@ movimientosControllers.renderizarMovimientos = async (req, res) => {
     }   
 }
 // Actualizar Movimiento
-movimientosControllers.renderizadoActualizarFormMovimientos = async (req, res) => {
+movimientosControllers.renderizadoActualizarFormMovimiento = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
     let id = query.id;
     console.log(id)
@@ -49,7 +36,7 @@ movimientosControllers.renderizadoActualizarFormMovimientos = async (req, res) =
     res.render('proveedor/editarMovimiento', { movimiento });
 }
 
-movimientosControllers.actualizarMoviemiento= async (req, res) => {
+movimientosControllers.actualizarMovimiento= async (req, res) => {
 
     let movimientos = await res.locals.sucursal.listaDeMovimientos();
     let query = require('url').parse(req.url, true).query;

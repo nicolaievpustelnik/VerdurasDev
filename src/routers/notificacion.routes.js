@@ -7,7 +7,7 @@ const {
   renderizarFormNotificacion,
   crearNotificacion,
   renderizarNotificaciones,
-  renderizadoActualizarFormNotificacion,
+  renderizadoActualizarFormNotificaciones,
   actualizarNotificacion,
   eliminarNotificacion,
 } = require("../controllers/notificacion.controller");
@@ -20,7 +20,7 @@ router.post("/nuevaNotificacion", verifyToken, crearNotificacion);
 router.get("/notificaciones", verifyToken, isAuthenticated, renderizarNotificaciones);
 
 // Editar notificacion
-router.get("/editarNotificacion",isAuthenticated, renderizadoActualizarFormNotificacion);
+router.get("/editarNotificacion",isAuthenticated, renderizadoActualizarFormNotificaciones);
 router.put("/actualizarNotificacion/:id", verifyToken, actualizarNotificacion);
 
 // Eliminar notificacion

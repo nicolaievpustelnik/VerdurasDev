@@ -12,7 +12,7 @@ notificacionesControllers.crearNotificacion = async (req, res) => {
     const { nombreCompletoEmpleado, mensaje, fecha } = req.body;
     let nuevaNotificacion = null;
     nuevaNotificacion = new Notificacion({
-      nombreCompletoEmpleado,
+        nombreCompletoEmpleado,
       mensaje,
       fecha,
     });
@@ -46,7 +46,7 @@ notificacionesControllers.renderizarNotificaciones = async (req, res) => {
   }   
 }
 // Actualizar Movimiento
-notificacionesControllers.renderizadoActualizarFormMovimientos = async (req, res) => {
+notificacionesControllers.renderizadoActualizarFormNotificaciones = async (req, res) => {
    let query = require('url').parse(req.url, true).query;
    let id = query.id;
    console.log(id)
@@ -88,7 +88,7 @@ notificacionesControllers.actualizarNotificacion = async (req, res) => {
 }
 
 // Eliminar notificaciones
-notificacionesControllers.elimarNotificacion = (req, res) => {
+notificacionesControllers.eliminarNotificacion = (req, res) => {
 
   let query = require('url').parse(req.url, true).query;
   let jsonResponse = query.jsonResponse;
