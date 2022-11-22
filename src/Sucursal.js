@@ -34,14 +34,19 @@ class Sucursal {
   }
 
   validarSiEsDeSucursal(res, nombreSucursalRecibido) {
-   let esValido= false;
+    let esValido = false;
     let usuarioLogueado = this.obtenerUsuarioLogueado(res);
+<<<<<<< HEAD
+    console.log(usuarioLogueado.sucursal + "Scursal del logueado")
+    console.log("sucursal revubido" + nombreSucursalRecibido)
+=======
     console.log(usuarioLogueado.sucursal + " Sucursal del logueado")
     console.log("Sucursal recibido " + nombreSucursalRecibido)
+>>>>>>> b5a32976a59628da565e6da87697f42e2bffe708
     if (!(nombreSucursalRecibido == usuarioLogueado.sucursal)) {
       throw new ErrorDeIncidencia("Entrando a sucursal que no corresponde")
     }
-    esValido= true;
+    esValido = true;
     return esValido;
   }
 
@@ -184,12 +189,15 @@ class Sucursal {
   }
 
   async agregarProveedor(res, prov) {
-    let proveedorBuscado = await this.buscarProveedorPorCuil(prov.cuilProveedor);
+    let proveedorBuscado = await this.hayProveedor(prov.cuilProveedor);
     if (proveedorBuscado) {
       throw new Error("Ya existe un proveedor con ese Cuil");
     }
-    console.log("error Importante");
     await prov.save();
+  }
+
+  async hayProveedor(cuil) {
+    return await Proveedor.findOne({ cuilProveedor: cuil });
   }
 
   async agregarNotificacion(res, nuevaNotificacion) {
@@ -253,7 +261,7 @@ class Sucursal {
       await prod.save();
       return true;
     }
-    
+
   }
   async listaDeMovimientos() {
     return await Movimiento.find().lean();
@@ -282,6 +290,10 @@ class Sucursal {
   }
 
   async eliminarProveedor(id) {
+    let unProveedor = await this.buscarProveedorPorId(id);
+    if (!unProveedor) {
+      throw new Error("El Id recibido no existe!")
+    }
     await Proveedor.findByIdAndDelete(id);
   }
 
@@ -303,9 +315,13 @@ class Sucursal {
     return await Empleado.findById(id).lean();
   }
   async buscarProveedorPorCuil(cuil) {
-    console.log("recibiendo cuil en metodo buscar "+cuil)
-    return await Proveedor.findOne({ cuilProveedor: cuil })
+    let unProveedor = await Proveedor.findOne({ cuilProveedor: cuil });
+    if (!unProveedor) {
+      throw new Error("Proveedor no existe")
+    }
+    return unProveedor
   }
+
   async buscarUsuarioPorLegajo(legajo) {
     return await Empleado.find({ legajo: legajo });
   }
@@ -365,7 +381,7 @@ class Sucursal {
 
   async editarProveedor(id, params) {
     let unProveedor = await this.buscarProveedorPorCuil(params.cuilProveedor);
-    if (unProveedor && id != unProveedor._id ) {
+    if (unProveedor && id != unProveedor._id) {
       throw new Error("El numero de cuil ya se encuentra asignado a otro Proveedor!");
     }
     return await Proveedor.findByIdAndUpdate(id, params);
