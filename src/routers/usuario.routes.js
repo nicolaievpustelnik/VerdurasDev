@@ -19,33 +19,243 @@ const {
     getUserByEmail
 } = require('../controllers/usuario.controller');
 
-// Auth Token
+/**
+* @swagger
+*    components:
+*      schemas:
+*        Usuario:
+*          type: object
+*          required:
+*            - nombre
+*            - apellido
+*            - email
+*            - password
+*            - sucursal
+*            - tipoUsuario
+*            - rol
+*          properties:
+*            nombre:
+*              type: string
+*              description: Nombre de usuario.
+*            apellido:
+*              type: string
+*              description: Apellido de usuario.
+*            email:
+*              type: string
+*              description: Email de usuario.
+*            password:
+*              type: string
+*              description: Password de usuario.
+*            sucursal:
+*              type: string
+*              description: Sucursal de usuario.
+*            tipoUsuario:
+*              type: string
+*              description: Tipo de Usuario.
+*            rol:
+*              type: array
+*              items: {}
+*              description: Roles del Usuario.
+*          example:
+*             nombre: Nicolaiev
+*             apellido: Brito
+*             email: nicolaievbrito@gmail.com
+*             password: 123123123
+*             sucursal: VerdurasDev
+*             tipoUsuario: Empleado
+*             rol: ["Cajero", "Organizador"]
+*/
+
+
 /**
  * @openapi
- * /:
- *   get:
- *     description: Welcome to swagger-jsdoc!
+ * /auth:
+ *   post:
+ *     tags: 
+ *       - Token
+ *     description: Auth Token
+ *     requestBody:
+ *        required: true
+ *        content: 
+ *          application/json: 
+ *            schema:
+ *              type: object
+ *              properties:
+ *                 email:
+ *                   type: 
+ *                   example: nicolaievbrito@gmail.com
+ *                 password:
+ *                   type: string
+ *                   example: 123123123
  *     responses:
  *       200:
- *         description: Returns a mysterious string.
+ *         description: Return Token
  */
 router.post('/auth', auth);
 
-// Ver usuarios por mail
+/**
+ * @openapi
+ * /usuario:
+ *   get:
+ *     tags: 
+ *       - Usuario
+ *     parameters:
+ *       - in: query 
+ *         name: jsonResponse
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Respose json
+ *         example: true
+ *       - in: query 
+ *         name: email
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Email de usuario
+ *         example: nicolaievbrito@gmail.com
+ *     description: Ver usuario por mail
+ *     responses:
+ *       200:
+ *         description: Usuario
+ *         content: 
+ *           application/json: 
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/Usuario'
+ */
 router.get('/usuario', verifyToken, getUserByEmail);
 
-// Nuevo usuario
+/**
+ * @openapi
+ * /usuarios:
+ *   get:
+ *     tags: 
+ *       - Usuario
+ *     parameters:
+ *       - in: query 
+ *         name: jsonResponse
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Respose json
+ *         example: true
+ *     description: Ver todos los usuarios
+ *     responses:
+ *       200:
+ *         description: Usuarios
+ *         content: 
+ *           application/json: 
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/Usuario'
+ */
+ router.get('/usuarios', verifyToken, isAuthenticated, renderizarUsuarios);
+
 router.get('/formUsuario', isAuthenticated, renderizarFormUsuario);
+
+/**
+ * @openapi
+ * /nuevoUsuario:
+ *   post:
+ *     tags: 
+ *       - Usuario
+ *     parameters:
+ *       - in: query 
+ *         name: jsonResponse
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Respose json
+ *         example: true
+ *     description: Nuevo usuario
+ *     requestBody:
+ *        required: true
+ *        content: 
+ *          application/json: 
+ *            schema:
+ *              type: object
+ *              $ref: '#/components/schemas/Usuario'
+ *     responses:
+ *       200:
+ *         description: Nuevo Usuario
+ *         content: 
+ *           application/json: 
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/Usuario'
+ */
 router.post('/nuevoUsuario', verifyToken, crearUsuario);
 
-// Ver todos los usuarios
-router.get('/usuarios', verifyToken, isAuthenticated, renderizarUsuarios);
-
-// Editar usuario
 router.get('/editarUsuario', isAuthenticated, renderizadoActualizarFormUsuario);
+
+/**
+ * @openapi
+ * /actualizarUsuario/{id}:
+ *   put:
+ *     tags: 
+ *       - Usuario
+ *     parameters:
+ *       - in: query 
+ *         name: jsonResponse
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Respose json
+ *         example: true
+ *       - in: path 
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Id de usuario
+ *         example: 63790ab0a9372511b7eb6146
+ *     description: Editar usuario
+ *     responses:
+ *       200:
+ *         description: Usuario
+ *         content: 
+ *           application/json: 
+ *             schema:
+ *               type: object
+ *               $ref: '#/components/schemas/Usuario'
+ */
 router.put('/actualizarUsuario/:id', verifyToken, actualizarUsuario);
 
-// Eliminar usuario
+/**
+ * @openapi
+ * /eliminarUsuario/{id}:
+ *   delete:
+ *     tags: 
+ *       - Usuario
+ *     parameters:
+ *       - in: query 
+ *         name: jsonResponse
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Respose json
+ *         example: true
+ *       - in: path 
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Id de usuario
+ *         example: 63790ab0a9372511b7eb6146
+ *     description: Eliminar usuario
+ *     responses:
+ *       200:
+ *         description: Usuario
+ *         content: 
+ *           application/json: 
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                   example: 63790ab0a9372511b7eb6146
+ */
 router.delete('/eliminarUsuario/:id', verifyToken, eliminarUsuario);
 
 // Registrar usuario

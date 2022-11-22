@@ -3,6 +3,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 
 // Metadata APIS
 const options = {
+    failOnErrors: true,
     definition: {
       openapi: '3.0.0',
       info: {
@@ -10,7 +11,8 @@ const options = {
         version: '1.0.0',
       },
     },
-    apis: ['../routes*.js'],
+    //apis: ['../routes*.js', 'src/routers/usuario.routes.js'],
+    apis: ['src/routers/*.routes.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
@@ -25,4 +27,4 @@ const swaggerDocs = (app, port) => {
     console.log('Docs');
 }
 
-module.exports = { swaggerDocs };
+module.exports = swaggerDocs;
