@@ -1,6 +1,7 @@
 const Proveedor = require('../models/Proveedor');
 
 const jwt = require('jsonwebtoken');
+const e = require('connect-flash');
 
 const proveedoresControllers = {};
 
@@ -11,15 +12,19 @@ proveedoresControllers.getProviderByCuil = async (req, res) => {
     let cuil = query.cuil;
 
     if (cuil) {
-        let proveedor = await res.locals.sucursal.buscarProveedorPorCuil(cuil)
+        try {
+            let proveedor = await res.locals.sucursal.buscarProveedorPorCuil(cuil)
 
-        jwt.verify(req.token, 'secretkey', (error, authData) => {
-            if (error) {
-                res.sendStatus(403);
-            } else {
-                res.status(200).json({ status: 200, proveedores: proveedor });
-            }
-        });
+            jwt.verify(req.token, 'secretkey', (error, authData) => {
+                if (error) {
+                    res.sendStatus(403);
+                } else {
+                    res.status(200).json({ status: 200, proveedores: proveedor });
+                }
+            });
+        } catch (e) {
+            res.status(500).json({ message: e.message })
+        }
     } else {
         res.sendStatus(403);
     }
@@ -31,36 +36,42 @@ proveedoresControllers.renderizarFormProveedor = (req, res) => {
 }
 
 proveedoresControllers.crearProveedor = async (req, res) => {
-    try {
-        const { cuilProveedor, nombreProveedor } = req.body;
 
-        let nuevoProveedor = null;
-        let query = require('url').parse(req.url, true).query;
-        jsonResponse = query.jsonResponse;
+    const { cuilProveedor, nombreProveedor } = req.body;
 
-        if (jsonResponse == "true") {
-            jwt.verify(req.token, 'secretkey', async (error, authData) => {
-                if (error) {
-                    res.sendStatus(403);
-                } else {
+    let nuevoProveedor = null;
+    let query = require('url').parse(req.url, true).query;
+    jsonResponse = query.jsonResponse;
+
+    if (jsonResponse == "true") {
+        jwt.verify(req.token, 'secretkey', async (error, authData) => {
+            if (error) {
+                res.sendStatus(403);
+            } else {
+                try {
                     nuevoProveedor = new Proveedor({ cuilProveedor, nombreProveedor });
                     await res.locals.sucursal.agregarProveedor(res, nuevoProveedor);
                     res.status(200).json({ status: 200, proveedor: nuevoProveedor });
                     req.flash('success_msg', "Proveedor agregado exitosamente");
+                } catch (e) {
+                    res.status(500).json({ message: e.message })
                 }
-            });
+            }
+        });
 
-        } else {
+    } else {
+        try {
             nuevoProveedor = new Proveedor({ cuilProveedor, nombreProveedor });
             await res.locals.sucursal.agregarProveedor(res, nuevoProveedor);
             req.flash('success_msg', "Proveedor agregado exitosamente");
             res.redirect('/proveedores');
+        } catch (e) {
+            console.log("Lllega al error--------------------------->" + e.message)
+            req.flash('error_msg', e.message);
+            res.redirect('/formProveedor')
         }
-    } catch (e) {
-        console.log("Lllega al error--------------------------->" + e.message)
-        req.flash('error_msg', e.message);
-        res.redirect('/formProveedor')
     }
+
 }
 
 
@@ -102,12 +113,11 @@ proveedoresControllers.actualizarProveedor = async (req, res) => {
             if (error) {
                 res.sendStatus(403);
             } else {
-
                 let unProveedor = await res.locals.sucursal.editarProveedor(req.params.id, req.body)
                 if (unProveedor) {
                     res.status(200).json({ status: 200, usuario: req.body });
                 } else {
-                    res.sendStatus(403);
+                    res.status(401).send();
                 }
             }
         });
@@ -121,32 +131,34 @@ proveedoresControllers.actualizarProveedor = async (req, res) => {
             res.redirect('/proveedores');
         }
     }
-
-
 }
 
 // // Eliminar proveedor
-proveedoresControllers.eliminarProveedor = (req, res) => {
+proveedoresControllers.eliminarProveedor =async (req, res) => {
 
     let query = require('url').parse(req.url, true).query;
     let jsonResponse = query.jsonResponse;
     let id = req.params.id;
 
-    if(jsonResponse == "true"){
-        jwt.verify(req.token, 'secretkey', (error, authData) => {
+    if (jsonResponse == "true") {
+        jwt.verify(req.token, 'secretkey', async (error, authData) => {
+
             if (error) {
                 res.sendStatus(403);
             } else {
-                res.locals.sucursal.eliminarProveedor(id);
-                res.status(200).json({status: 200, proveedorId: id});
+                try {
+                   await res.locals.sucursal.eliminarProveedor(id);
+                    res.status(200).json({ status: 200, proveedorId: id });
+                } catch (e) {
+                    res.status(500).json({ message: e.message })
+                }
             }
         });
-    }else{
+    } else {
         res.locals.sucursal.eliminarProveedor(id);
         req.flash('success_msg', "Proveedor eliminado exitosamente");
         res.redirect('/proveedores');
     }
-   
 }
 
 
