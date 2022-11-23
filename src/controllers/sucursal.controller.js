@@ -99,6 +99,7 @@ sucursalesControllers.renderizadoRecepcionFormProducto = async (req, res) => {
 sucursalesControllers.recepcionarProductos = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
     jsonResponse = query.jsonResponse;
+    
     if (jsonResponse == "true") {
         const { email, password, cuilProveedor, codigoBarra, cantidad } = req.body;
         let cuil = cuilProveedor;
