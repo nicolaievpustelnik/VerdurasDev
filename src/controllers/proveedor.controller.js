@@ -113,11 +113,11 @@ proveedoresControllers.actualizarProveedor = async (req, res) => {
             if (error) {
                 res.sendStatus(403);
             } else {
-                let unProveedor = await res.locals.sucursal.editarProveedor(req.params.id, req.body)
-                if (unProveedor) {
+                try {
+                    await res.locals.sucursal.editarProveedor(req.params.id, req.body)
                     res.status(200).json({ status: 200, usuario: req.body });
-                } else {
-                    res.status(401).send();
+                } catch (e) {
+                    res.status(500).json({ message: e.message })
                 }
             }
         });
@@ -134,7 +134,7 @@ proveedoresControllers.actualizarProveedor = async (req, res) => {
 }
 
 // // Eliminar proveedor
-proveedoresControllers.eliminarProveedor =async (req, res) => {
+proveedoresControllers.eliminarProveedor = async (req, res) => {
 
     let query = require('url').parse(req.url, true).query;
     let jsonResponse = query.jsonResponse;
@@ -147,7 +147,7 @@ proveedoresControllers.eliminarProveedor =async (req, res) => {
                 res.sendStatus(403);
             } else {
                 try {
-                   await res.locals.sucursal.eliminarProveedor(id);
+                    await res.locals.sucursal.eliminarProveedor(id);
                     res.status(200).json({ status: 200, proveedorId: id });
                 } catch (e) {
                     res.status(500).json({ message: e.message })
