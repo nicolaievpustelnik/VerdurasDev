@@ -23,19 +23,19 @@ sucursalesControllers.renderizarFormIngresoASucursal = (req, res) => {
 }
 
 sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
-    
+
     let query = require('url').parse(req.url, true).query;
     jsonResponse = query.jsonResponse;
-    
+
     if (jsonResponse == "true") {
 
         const { nombreSucursal, email, password } = req.body;
 
-        const user = await Empleado.findOne({email});
+        const user = await Empleado.findOne({ email });
 
-        if(!user){
+        if (!user) {
             res.sendStatus(403);
-        }else{
+        } else {
 
             const match = await user.matchPassword(password);
 
@@ -48,8 +48,12 @@ sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
                         if (error) {
                             res.sendStatus(403);
                         } else {
-                            let esValido = await res.locals.sucursal.validarSiEsDeSucursal(res, nombreSucursal);
-                            res.status(200).json({ status: 200, sucursal: esValido });
+                            try {
+                                let esValido = await res.locals.sucursal.validarSiEsDeSucursal(res, nombreSucursal);
+                                res.status(200).json({ status: 200, sucursal: esValido });
+                            } catch (e) {
+                                res.status(500).json({ message: e.message })
+                            }
                         }
                     });
                 } catch (e) {
@@ -60,7 +64,7 @@ sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
                 res.sendStatus(403);
             }
         }
-        
+
 
     } else {
 
@@ -72,7 +76,6 @@ sucursalesControllers.validarUsuarioSucursal = async (req, res) => {
             res.redirect('/opciones');
 
         } catch (err) {
-            console.log("Enyta al catch")
             await res.locals.sucursal.dispararAlerta(res, err);
             req.flash('error_msg', "Usuario no pertenece a Sucursal");
             res.redirect('/formSucursal');
@@ -94,18 +97,60 @@ sucursalesControllers.renderizadoRecepcionFormProducto = async (req, res) => {
 }
 
 sucursalesControllers.recepcionarProductos = async (req, res) => {
-    try {
-        const { cuilProveedor, codigoBarra, cantidad } = req.body;
+    let query = require('url').parse(req.url, true).query;
+    jsonResponse = query.jsonResponse;
+    
+    if (jsonResponse == "true") {
+        const { email, password, cuilProveedor, codigoBarra, cantidad } = req.body;
         let cuil = cuilProveedor;
         let scanner = codigoBarra;
         let cant = cantidad;
-        await res.locals.sucursal.recepcionarProductoSucursal(res, cuil, scanner, cant);
-        req.flash('success_msg', "Se recepciono exitosamente");
-        res.redirect('/formRecepcion');
-    } catch (err) {
-        await res.locals.sucursal.dispararAlerta(res, err);
-        req.flash('error_msg', err.message);
-        res.redirect('/formRecepcion');
+
+        const user = await Empleado.findOne({ email });
+
+        if (!user) {
+            res.sendStatus(403);
+        } else {
+
+            const match = await user.matchPassword(password);
+
+            if (match) {
+
+                res.locals.user = user;
+
+                try {
+                    jwt.verify(req.token, 'secretkey', async (error, authData) => {
+                        if (error) {
+                            res.sendStatus(403);
+                        } else {
+                            try {
+                                let esValido = await res.locals.sucursal.recepcionarProductoSucursal(res, cuil, scanner, cant);
+                                res.status(200).json({ status: 200, productoIngresado: esValido });
+                            } catch (e) {
+                                res.status(500).json({ message: e.message })
+                            }
+                        }
+                    });
+                } catch (e) {
+                    res.status(400).json({ status: 400 });
+                }
+            }
+        }
+    } else {
+
+        try {
+            const { cuilProveedor, codigoBarra, cantidad } = req.body;
+            let cuil = cuilProveedor;
+            let scanner = codigoBarra;
+            let cant = cantidad;
+            await res.locals.sucursal.recepcionarProductoSucursal(res, cuil, scanner, cant);
+            req.flash('success_msg', "Se recepciono exitosamente");
+            res.redirect('/formRecepcion');
+        } catch (err) {
+            await res.locals.sucursal.dispararAlerta(res, err);
+            req.flash('error_msg', err.message);
+            res.redirect('/formRecepcion');
+        }
     }
 }
 
@@ -115,22 +160,58 @@ sucursalesControllers.renderizadoEgresarFormProducto = async (req, res) => {
 }
 
 sucursalesControllers.egresarProductos = async (req, res) => {
-    console.log("Entre a controller egresar")
-    try {
-        const { dniCliente, codigoBarra, cantidad } = req.body;
+    let query = require('url').parse(req.url, true).query;
+    jsonResponse = query.jsonResponse;
+    if (jsonResponse == "true") {
+        const { email, password, dniCliente, codigoBarra, cantidad } = req.body;
         let dni = dniCliente;
         let scanner = codigoBarra;
         let cant = cantidad;
-        await res.locals.sucursal.egresarProducto(res, dni, scanner, cant);
-        req.flash('success_msg', "Se egreso exitosamente");
-        res.redirect('/formEgresar');
 
-    } catch (err) {
-        console.log("Error que llega " + err)
-        await res.locals.sucursal.dispararAlerta(res, err);
-        req.flash('error_msg', err.message);
-        res.redirect('/formEgresar');
+        const user = await Empleado.findOne({ email });
+        if (!user) {
+            res.sendStatus(403);
+        } else {
+
+            const match = await user.matchPassword(password);
+
+            if (match) {
+
+                res.locals.user = user;
+
+                try {
+                    jwt.verify(req.token, 'secretkey', async (error, authData) => {
+                        if (error) {
+                            res.sendStatus(403);
+                        } else {
+                            try {
+                                let esValido = await res.locals.sucursal.egresarProducto(res, dni, scanner, cant);
+                                res.status(200).json({ status: 200, productoEgresado: esValido });
+                            } catch (e) {
+                                res.status(200).json({ message: e.message, notificacion: " Se Genero una Notificacion" })
+                            }
+                        }
+                    });
+                } catch (e) {
+                    res.status(400).json({ status: 400 });
+                }
+            }
+        }
+    } else {
+        try {
+            const { dniCliente, codigoBarra, cantidad } = req.body;
+            let dni = dniCliente;
+            let scanner = codigoBarra;
+            let cant = cantidad;
+            await res.locals.sucursal.egresarProducto(res, dni, scanner, cant);
+            req.flash('success_msg', "Se egreso exitosamente");
+            res.redirect('/formEgresar');
+
+        } catch (err) {
+            await res.locals.sucursal.dispararAlerta(res, err);
+            req.flash('error_msg', err.message);
+            res.redirect('/formEgresar');
+        }
     }
 }
-
 module.exports = sucursalesControllers;

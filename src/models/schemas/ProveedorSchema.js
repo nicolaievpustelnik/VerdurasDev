@@ -13,7 +13,7 @@ const proveedorSchema = new Schema({
     productosProveedor: {
         type: [],
         require: true
-    }
+    },
  
 }, {
     timestamps: true

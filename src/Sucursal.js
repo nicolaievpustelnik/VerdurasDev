@@ -26,7 +26,6 @@ class Sucursal {
 
   obtenerUsuarioLogueado(res) {
     let unEmpleado = res.locals.user;
-
     if (!unEmpleado) {
       throw new Error("No inicio Sesion!");
     }
@@ -36,8 +35,11 @@ class Sucursal {
   validarSiEsDeSucursal(res, nombreSucursalRecibido) {
     let esValido = false;
     let usuarioLogueado = this.obtenerUsuarioLogueado(res);
+<<<<<<< HEAD
+=======
     console.log(usuarioLogueado.sucursal + " Sucursal del logueado")
     console.log("Sucursal recibido " + nombreSucursalRecibido)
+>>>>>>> d6bf2c86b694eaa2608a942d23ae686a8c84d46d
     if (!(nombreSucursalRecibido == usuarioLogueado.sucursal)) {
       throw new ErrorDeIncidencia("Entrando a sucursal que no corresponde")
     }
@@ -54,7 +56,6 @@ class Sucursal {
         let unProveedor = await this.obtenerProveedor(cuil);
         if (unProveedor) {
           let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(scanner);
-          console.log(unProductoSucursal)
           if (unProductoSucursal) {
             if (this.validarIngreso(cant)) {
               await this.ActualizarStockProducto(unProductoSucursal, cant)
@@ -71,8 +72,6 @@ class Sucursal {
 
   async verificarRol(unEmpleado, unRol) {
     let verificado = false;
-    console.log(unEmpleado.rol[0])
-    console.log(unRol.name)
     if (!(unEmpleado.rol[0] === unRol.name || unEmpleado.rol[0] === rolEnum.ORGANIZADOR.name)) {
       throw new ErrorDeIncidencia("Intenta ejecutar una tarea no autorizada");
     }
@@ -97,18 +96,16 @@ class Sucursal {
   }
 
   async egresarProducto(res, dni, scanner, cant) {
-    console.log("Estoy dentro del metodo egreso")
     let seEgreso = false;
     var unEmpleado = this.obtenerUsuarioLogueado(res);
     if (unEmpleado) {
       if (this.verificarRol(unEmpleado, rolEnum.CAJERO)) {
-        console.log("Hay rol true")
         let unCliente = new Cliente({ dniCliente: dni, nombreCliente: "Matias", });
         let unProductoSucursal = await this.buscarProductoPorCodigoBarraSucursal(scanner);
         if (unProductoSucursal) {
-          console.log("hay Producto")
           if (this.hayStock(unProductoSucursal, cant)) {
             if (this.validarEgreso(cant)) {
+              await this.agregarCliente(unCliente);
               await this.ActualizarStockProducto(unProductoSucursal, -cant)
               seEgreso = true;
               await this.generarMovimiento(cant, unProductoSucursal, unCliente);
@@ -123,15 +120,16 @@ class Sucursal {
   async generarMovimiento(cant, unProducto, unProveedor) {
     let monto = await this.calcularMonto(cant, unProveedor, unProducto);
     let movimiento = null;
-    console.log("EStoy en movimiento")
     if (unProveedor instanceof Cliente) {
-      console.log("Soy cliente")
       movimiento = await this.generarVenta(cant, unProducto, unProveedor, monto);
     } else {
-      console.log("Soy proveedor")
       movimiento = await this.generarCompra(cant, unProducto, unProveedor, monto);
     }
     return movimiento;
+  }
+
+  async agregarCliente(cliente) {
+    await cliente.save();
   }
 
   async generarVenta(cant, unProducto, proveedor, monto) {
@@ -355,7 +353,6 @@ class Sucursal {
 
   async buscarProductoPorCodigoBarraSucursal(cod) {
     let unProducto = await ProductoSucursal.findOne({ codigoBarra: cod });
-    console.log(cod + " " + unProducto)
     if (!unProducto) {
       throw new ErrorDeIncidencia("Intenta gestionar producto fuera de surtido, registre el producto");
     }
