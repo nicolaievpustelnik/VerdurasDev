@@ -1,2 +1,2 @@
-#No subir configuraciones env
-*.env
+.env
+node_modules
