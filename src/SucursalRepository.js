@@ -24,11 +24,9 @@ class Sucursal {
         this.empleadosDeSucursal = [];
         this.incidentesSospechosos = [];
     }
-
-    obtenerUsuarioLogueado(){
-        return this.empleadosDeSucursal.find(p => p.legajo == 123456);
-    }
-
+obtenerUsuarioLogueado(){
+    return this.empleadosDeSucursal.find(p => p.legajo == 123456);
+}
     recepcionarProducto(idProveedor, scanner, cant) {
         let seRecepciono = false;
         try {
@@ -194,7 +192,7 @@ class Sucursal {
     }
 
     buscarProductoPorCodigoBarraSucursal(cod) {
-        let unProducto = this.productosDeSucursal.find(p => p.codigoBarra === cod);
+        let unProducto = this.productosDeSucursal.find(p => p.codigoBarra == cod);
         return unProducto;
     }
 
