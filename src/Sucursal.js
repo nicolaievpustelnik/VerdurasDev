@@ -35,11 +35,8 @@ class Sucursal {
   validarSiEsDeSucursal(res, nombreSucursalRecibido) {
     let esValido = false;
     let usuarioLogueado = this.obtenerUsuarioLogueado(res);
-<<<<<<< HEAD
-=======
     console.log(usuarioLogueado.sucursal + " Sucursal del logueado")
     console.log("Sucursal recibido " + nombreSucursalRecibido)
->>>>>>> d6bf2c86b694eaa2608a942d23ae686a8c84d46d
     if (!(nombreSucursalRecibido == usuarioLogueado.sucursal)) {
       throw new ErrorDeIncidencia("Entrando a sucursal que no corresponde")
     }
