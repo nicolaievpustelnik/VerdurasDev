@@ -12,12 +12,12 @@ describe("Admin", function () {
 
     describe("Metodo nombre completo", function () {
 
-        let newAdmin = new Admin({legajo: "128956", nombre: "Nicolaiev", apellido: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "1" });
+        let newAdmin = new Admin({legajo: "128956", nombre: "Mariano", apellido: "Lopez", email: "mlopez@gmail.com", password: "12345", sucursal: "1" });
 
         let nombreCompleto = newAdmin.getNombreCompleto();
 
         it("Nombre completo", (function () {
-            assert.equal(nombreCompleto, "Nicolaiev Brito");
+            assert.equal(nombreCompleto, "Mariano Lopez");
         }));
 
         it("El resultado nombreCompleto es String", (function () {
@@ -27,7 +27,7 @@ describe("Admin", function () {
 
     describe("Metodo borrar usuario", function () {
 
-        let newAdmin = new Admin({ nombre: "Nicolaiev1", apellido: "Brito1", email: "nicolaievbrito1@gmail.com", password: "12345", sucursal: "1" });
+        let newAdmin = new Admin({ nombre: "Guillermo", apellido: "Martinez", email: "gmartinez@gmail.com", password: "12345", sucursal: "1" });
         let Suc = new Sucursal({ idSucursal: 1, nombreSucursal: "suc1", ubicacion: "Belgrano" });
 
         let userDeleted = newAdmin.borrarUsuario(Suc, 1);
@@ -60,8 +60,8 @@ describe("Admin", function () {
     describe("Metodo crear usuario", function () {
 
         let Suc = new Sucursal({ idSucursal: 1, nombreSucursal: "suc1", ubicacion: "Belgrano" });
-        let newAdmin = new Admin({ nombre: "Nicolaiev2", apellido: "Brito2", email: "nicolaievbrito2@gmail.com", password: "54321", sucursal: "2" });
-        let newEmpleado = new Empleado({ nombre: "Nicolaiev2", apellido: "Brito2", email: "nicolaievbrito2@gmail.com", password: "54321", sucursal: "2", rol: Rol.ORGANIZADOR.name });
+        let newAdmin = new Admin({ nombre: "Juan", apellido: "Rodriguez", email: "jrodriguez@gmail.com", password: "54321", sucursal: "2" });
+        let newEmpleado = new Empleado({ nombre: "Juan", apellido: "Rodriguez", email: "jrodriguez@gmail.com", password: "54321", sucursal: "2", rol: Rol.ORGANIZADOR.name });
 
         let createAdmin = newAdmin.crearUsuario(Suc, newAdmin);
         let createEmpleado = newAdmin.crearUsuario(Suc, newEmpleado);
