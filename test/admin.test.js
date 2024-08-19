@@ -12,7 +12,7 @@ describe("Admin", function () {
 
     describe("Metodo nombre completo", function () {
 
-        let newAdmin = new Admin({legajo: "128956", nombre: "Nicolaiev", apellido: "Brito", email: "nicolaievbrito@gmail.com", password: "12345", sucursal: "1" });
+        let newAdmin = new Admin({ legajo: "567890", nombre: "Nicolaiev", apellido: "Brito", email: "nico.brito@gmail.com", password: "12345", sucursal: "1" });
 
         let nombreCompleto = newAdmin.getNombreCompleto();
 
@@ -27,10 +27,10 @@ describe("Admin", function () {
 
     describe("Metodo borrar usuario", function () {
 
-        let newAdmin = new Admin({ nombre: "Nicolaiev1", apellido: "Brito1", email: "nicolaievbrito1@gmail.com", password: "12345", sucursal: "1" });
-        let Suc = new Sucursal({ idSucursal: 1, nombreSucursal: "suc1", ubicacion: "Belgrano" });
+        let newAdmin = new Admin({ nombre: "Delmer", apellido: "Rodriguez", email: "delmer.rodriguez@gmail.com", password: "12345", sucursal: "1" });
+        let Suc = new Sucursal({ idSucursal: 1, nombreSucursal: "Sucursal Central", ubicacion: "Centro" });
 
-        let userDeleted = newAdmin.borrarUsuario(Suc, 1);
+        let userDeleted = newAdmin.borrarUsuario(Suc, 2);
 
         it("Borrar usuario", (function () {
             assert.equal(userDeleted, true);
@@ -41,11 +41,11 @@ describe("Admin", function () {
         }));
 
         it("Excepcion Sucursal vacia", (function () {
-            assert.throws(() => newAdmin.borrarUsuario({}, 1), Error, "Local invalido");
+            assert.throws(() => newAdmin.borrarUsuario({}, 2), Error, "Local invalido");
         }));
 
         it("Excepcion Sucursal nula", (function () {
-            assert.throws(() => newAdmin.borrarUsuario(null, 1), Error, "Local invalido");
+            assert.throws(() => newAdmin.borrarUsuario(null, 2), Error, "Local invalido");
         }));
 
         it("Excepcion idUsuario cero", (function () {
@@ -59,9 +59,9 @@ describe("Admin", function () {
 
     describe("Metodo crear usuario", function () {
 
-        let Suc = new Sucursal({ idSucursal: 1, nombreSucursal: "suc1", ubicacion: "Belgrano" });
-        let newAdmin = new Admin({ nombre: "Nicolaiev2", apellido: "Brito2", email: "nicolaievbrito2@gmail.com", password: "54321", sucursal: "2" });
-        let newEmpleado = new Empleado({ nombre: "Nicolaiev2", apellido: "Brito2", email: "nicolaievbrito2@gmail.com", password: "54321", sucursal: "2", rol: Rol.ORGANIZADOR.name });
+        let Suc = new Sucursal({ idSucursal: 1, nombreSucursal: "Sucursal Central", ubicacion: "Centro" });
+        let newAdmin = new Admin({ nombre: "Debora", apellido: "Landa", email: "debora.landa@gmail.com", password: "54321", sucursal: "2" });
+        let newEmpleado = new Empleado({ nombre: "Santiago", apellido: "Villagra", email: "santiago.villanueva@gmail.com", password: "54321", sucursal: "2", rol: Rol.ORGANIZADOR.name });
 
         let createAdmin = newAdmin.crearUsuario(Suc, newAdmin);
         let createEmpleado = newAdmin.crearUsuario(Suc, newEmpleado);
@@ -107,4 +107,3 @@ describe("Admin", function () {
     });
 
 });
-

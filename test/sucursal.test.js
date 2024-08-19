@@ -24,9 +24,9 @@ describe("Sucursal", () => {
         it('#agregarUsuario():boolean', () => {
             let unEmpleado = new Empleado({
                 legajo: "123456",
-                nombre: "Nicolaiev",
-                apellido: "Brito",
-                email: "nicolaievbrito@gmail.com",
+                nombre: "Juan",
+                apellido: "Lopez",
+                email: "juan.lopez@gmail.com",
                 password: "12345",
                 sucursal: "2",
                 tipoUsuario: "Empleado",
@@ -131,7 +131,7 @@ describe("Sucursal", () => {
                 legajo: "654321",
                 nombre: "Carmen",
                 apellido: "Sanchez",
-                email: "sanchez@gmail.com",
+                email: "carmen.sanchez@gmail.com",
                 password: "12545",
                 sucursal: "2",
                 tipoUsuario: "Empleado",
