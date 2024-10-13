@@ -16,7 +16,7 @@ const app = express();
 require('./config/passport');
 
 // Configuraciones
-app.set("port", process.env.PORT || 4001);
+app.set("port", process.env.PORT || 3002);
 
 app.set("views", path.join(__dirname, "views"));
 app.set("usuario", path.join(__dirname, "usuario"));
