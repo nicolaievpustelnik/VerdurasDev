@@ -38,7 +38,10 @@ proveedoresControllers.renderizarFormProveedor = (req, res) => {
 proveedoresControllers.crearProveedor = async (req, res) => {
 
     const { cuilProveedor, nombreProveedor } = req.body;
-
+    if (!cuilProveedor || !nombreProveedor) {
+        req.flash('error_msg', "El CUIL y el Nombre del Proveedor son obligatorios.");
+        return res.redirect('/formProveedor'); // Redirecciona al formulario si hay un error
+    }
     let nuevoProveedor = null;
     let query = require('url').parse(req.url, true).query;
     jsonResponse = query.jsonResponse;
@@ -66,7 +69,7 @@ proveedoresControllers.crearProveedor = async (req, res) => {
             req.flash('success_msg', "Proveedor agregado exitosamente");
             res.redirect('/proveedores');
         } catch (e) {
-            console.log("Lllega al error--------------------------->" + e.message)
+            console.log("Llega al error--------------------------->" + e.message)
             req.flash('error_msg', e.message);
             res.redirect('/formProveedor')
         }

@@ -140,7 +140,7 @@ productosControllers.actualizarProductoProveedor = async (req, res) => {
     res.redirect('/productos');
 }
 
-// Eliminar usuario
+// Eliminar ProductoSucursal
 productosControllers.eliminarProductoSucursal = (req, res) => {
     let id = req.params.id;
     res.locals.sucursal.eliminarProductoSucursal(id);

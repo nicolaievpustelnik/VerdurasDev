@@ -6,9 +6,9 @@
     "configurations": [
         {
             "type": "chrome",
-            "name": "http://localhost:4000/formUsuario",
+            "name": "http://localhost:3002/formUsuario",
             "request": "launch",
-            "url": "http://localhost:4000/formUsuario"
+            "url": "http://localhost:3002/formUsuario"
         }
     ]
 }
