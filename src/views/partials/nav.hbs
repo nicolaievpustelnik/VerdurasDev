@@ -1,46 +1,78 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-           
- <h6><img src="/img/vd1.png" alt="Logo VerdurasDev" style="width: 50px; height: 50px;"> VerdurasDev</h6>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
-            aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor01">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/">Inicio
-                        <span class="visually-hidden">(current)</span>
-                    </a>
-                </li>
-                {{#if user}}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                            aria-haspopup="true" aria-expanded="false">Producto</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/productos">Ver Productos</a>
-                            <a class="dropdown-item" href="/formProducto">Crear Productos</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                            aria-haspopup="true" aria-expanded="false">Usuario</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/usuarios">Ver Usuarios</a>
-                            <a class="dropdown-item" href="/formUsuario">Crear Usuario</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                            aria-haspopup="true" aria-expanded="false">Sucursal-Proveedor</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/formSucursal">Ingresar a sucursal</a>
-                            <a class="dropdown-item" href="/formProveedor">Nuevo Proveedor</a>
-                        </div>
-                    </li>
-                {{/if}}
-                
-                {{!-- <li class="nav-item">
+  <div class="container-fluid">
+
+    <a href="/" style="text-decoration: none;">
+      <img
+        src="/img/vd1.png"
+        alt="Logo VerdurasDev"
+        style="width: 50px; height: 50px;"
+      />
+      VendurasDev
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarColor01"
+      aria-controls="navbarColor01"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+
+        </li>
+        {{#if user}}
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              data-bs-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >Producto</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/productos">Ver productos</a>
+              <a class="dropdown-item" href="/formProducto">Crear producto/s</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              data-bs-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >Usuario</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/usuarios">Ver usuarios</a>
+              <a class="dropdown-item" href="/formUsuario">Crear usuario</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              data-bs-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >Sucursal-Proveedor</a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/formSucursal">Ingresar a sucursal</a>
+              <a class="dropdown-item" href="/formProveedor">Nuevo proveedor</a>
+              <a class="dropdown-item" href="/proveedores">Ver proveedores</a>
+
+            </div>
+          </li>
+        {{/if}}
+
+        {{! <li class="nav-item">
                     <a class="nav-link" href="#">Perdidas</a>
                 </li>
                 <li class="nav-item">
@@ -55,34 +87,37 @@
                         <a class="dropdown-item" href="#">Cambiar Contraseña</a>
                         <div class="dropdown-divider"></div>
                     </div>
-                </li> --}}
-            </ul>
+                </li> }}
+      </ul>
+      
+      {{!-- <form class="d-flex mr-3">
+        <input class="form-control me-sm-2" type="text" placeholder="Buscar" />
+        <button
+          class="btn btn-secondary my-2 my-sm-0"
+          type="submit"
+        >Buscar</button>
+      </form> --}}
 
-            <form class="d-flex mr-3">
-                <input class="form-control me-sm-2" type="text" placeholder="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
-            </form>
-
-            <div class="d-flex">
-                <ul class="navbar-nav me-auto">
-                    {{#if user}}
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/cerrarSesion">Cerrar Sesión
-                                <span class="visually-hidden">(current)</span>
-                            </a>
-                        </li>
-                    {{else}}
-                        <li class="nav-item">
-                            <a class="nav-link" href="/formLoginUsuario">Iniciar Sesión</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/formRegistroUsuario">Registrase
-                                <span class="visually-hidden">(current)</span>
-                            </a>
-                        </li>
-                    {{/if}}
-                </ul>
-            </div>
-        </div>
+      <div class="d-flex">
+        <ul class="navbar-nav me-auto">
+          {{#if user}}
+            <li class="nav-item">
+              <a class="nav-link active" href="/cerrarSesion">Cerrar Sesión
+                <span class="visually-hidden">(current)</span>
+              </a>
+            </li>
+          {{else}}
+            <li class="nav-item">
+              <a class="nav-link" href="/formLoginUsuario">Iniciar Sesión</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/formRegistroUsuario">Registrase
+                <span class="visually-hidden">(current)</span>
+              </a>
+            </li>
+          {{/if}}
+        </ul>
+      </div>
     </div>
+  </div>
 </nav>
