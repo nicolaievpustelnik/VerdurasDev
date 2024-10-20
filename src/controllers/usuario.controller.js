@@ -65,7 +65,11 @@ usuariosControllers.crearUsuario = async (req, res) => {
     try {
 
         const { nombre, apellido, email, password, sucursal, tipoUsuario, rol } = req.body;
-
+        if (!nombre || !apellido || !email || !password) {
+            req.flash('error_msg', 'Todos los campos son obligatorios.');
+            return res.redirect('/formUsuario'); // Redirigir si faltan datos
+        }
+       
         let legajo = await generateLegajo(res);
 
         let query = require('url').parse(req.url, true).query;
@@ -184,30 +188,44 @@ usuariosControllers.actualizarUsuario = async (req, res) => {
 }
 
 // Eliminar usuario
-usuariosControllers.eliminarUsuario = (req, res) => {
-
+usuariosControllers.eliminarUsuario = async (req, res) => {
     let query = require('url').parse(req.url, true).query;
     let jsonResponse = query.jsonResponse;
     let id = req.params.id;
 
-    if(jsonResponse == "true"){
+    // Verificar que el usuario autenticado sea admin
+    if (req.user.tipoUsuario !== 'Admin') {
+        req.flash('error_msg', "No tienes permiso para eliminar usuarios.");
+        return res.redirect('/usuarios');
+    }
 
-        jwt.verify(req.token, 'secretkey', (error, authData) => {
+    if (jsonResponse == "true") {
+        jwt.verify(req.token, 'secretkey', async (error, authData) => {
             if (error) {
-                res.sendStatus(403);
+                return res.sendStatus(403);
             } else {
-                res.locals.sucursal.eliminarUsuario(id);
-                res.status(200).json({status: 200, usuarioId: id});
+                try {
+                    await res.locals.sucursal.eliminarUsuario(id);
+                    res.status(200).json({ status: 200, usuarioId: id });
+                } catch (e) {
+                    console.error(e);
+                    res.status(500).json({ status: 500, message: e.message });
+                }
             }
         });
-
-    }else{
-        res.locals.sucursal.eliminarUsuario(id);
-        req.flash('success_msg', "Usuario eliminado exitosamente");
-        res.redirect('/usuarios');
+    } else {
+        try {
+            await res.locals.sucursal.eliminarUsuario(id);
+            req.flash('success_msg', "Usuario eliminado exitosamente");
+            res.redirect('/usuarios');
+        } catch (e) {
+            console.error(e);
+            req.flash('error_msg', "Error al eliminar el usuario.");
+            res.redirect('/usuarios');
+        }
     }
-    
 }
+
 
 
 usuariosControllers.renderRegistrarUsuarioForm = (req, res) => {
