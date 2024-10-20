@@ -200,10 +200,10 @@ usuariosControllers.eliminarUsuario = async (req, res) => {
   let id = req.params.id;
 
   // Verificar que el usuario autenticado sea admin
-  if (req.user.tipoUsuario !== "Admin") {
-    req.flash("error_msg", "No tienes permiso para eliminar usuarios.");
+  if (req.user.tipoUsuario !== "Admin" || req.user._id.toString() === id) {
+    req.flash("error_msg", "No tienes permiso para eliminar usuarios o no puedes eliminar tu propia cuenta.");
     return res.redirect("/usuarios");
-  }
+}
 
   if (jsonResponse == "true") {
     jwt.verify(req.token, "secretkey", async (error, authData) => {
@@ -242,7 +242,16 @@ usuariosControllers.registrarUsuario = async (req, res) => {
 
   let userEmail = await res.locals.sucursal.buscarUsuarioPorEmail(email);
 
-  if (userEmail.length > 0) {
+  if (!nombre || nombre.length < 3 || /\d/.test(nombre)) {
+      req.flash("error_msg", "El nombre es incorrecto. Debe tener al menos 3 letras, no puede estar vacío y no debe contener números.");
+      return res.redirect("/formRegistroUsuario");
+  }
+  
+  if (!apellido || apellido.length < 3 || /\d/.test(apellido)) {
+      req.flash("error_msg", "El apellido es incorrecto. Debe tener al menos 3 letras, no puede estar vacío y no debe contener números.");
+      return res.redirect("/formRegistroUsuario");
+  }
+  if (userEmail.length > 6) {
     req.flash("error_msg", "Email existente");
     res.redirect("/formRegistroUsuario");
   } else {
@@ -250,8 +259,8 @@ usuariosControllers.registrarUsuario = async (req, res) => {
       errores.push({ texto: "La password no coincide" });
     }
 
-    if (password.length < 8) {
-      errores.push({ texto: "Password sin caracteres suficientes (Min 8)" });
+    if (password.length < 6) {
+      errores.push({ texto: "Password sin caracteres suficientes (Min 6)" });
     }
 
     if (errores.length > 0) {
