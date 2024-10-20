@@ -85,7 +85,7 @@ productosControllers.crearProducto = async (req, res) => {
 }
 
 async function generateProductoIdSucursal(res) {
-    let min = 0000;
+    let min = 0;
     let max = 9999;
 
     do {
@@ -97,7 +97,7 @@ async function generateProductoIdSucursal(res) {
 }
 
 async function generateProductoIdProveedor(res) {
-    let min = 0000;
+    let min = 0;
     let max = 9999;
 
     do {

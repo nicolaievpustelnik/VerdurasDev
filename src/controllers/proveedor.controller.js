@@ -146,33 +146,44 @@ proveedoresControllers.actualizarProveedor = async (req, res) => {
 }
 
 // // Eliminar proveedor
+// Eliminar proveedor
 proveedoresControllers.eliminarProveedor = async (req, res) => {
-
     let query = require('url').parse(req.url, true).query;
     let jsonResponse = query.jsonResponse;
     let id = req.params.id;
 
-    if (jsonResponse == "true") {
-        jwt.verify(req.token, 'secretkey', async (error, authData) => {
+    // Verificar si el usuario autenticado es Admin
+    if (req.user.tipoUsuario !== "Admin") {
+        req.flash("error_msg", "No tienes permiso para eliminar proveedores.");
+        return res.redirect("/proveedores");
+    }
 
+    if (jsonResponse === "true") {
+        jwt.verify(req.token, 'secretkey', async (error) => {
             if (error) {
-                res.sendStatus(403);
+                return res.sendStatus(403);
             } else {
                 try {
                     await res.locals.sucursal.eliminarProveedor(id);
                     res.status(200).json({ status: 200, proveedorId: id });
                 } catch (e) {
-                    res.status(500).json({ message: e.message })
+                    console.error(e);
+                    res.status(500).json({ message: e.message });
                 }
             }
         });
     } else {
-        res.locals.sucursal.eliminarProveedor(id);
-        req.flash('success_msg', "Proveedor eliminado exitosamente");
-        res.redirect('/proveedores');
+        try {
+            await res.locals.sucursal.eliminarProveedor(id);
+            req.flash('success_msg', "Proveedor eliminado exitosamente");
+            res.redirect('/proveedores');
+        } catch (e) {
+            console.error(e);
+            req.flash('error_msg', "Error al eliminar el proveedor.");
+            res.redirect('/proveedores');
+        }
     }
-}
-
+};
 
 
 module.exports = proveedoresControllers;
