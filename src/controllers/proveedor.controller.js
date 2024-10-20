@@ -38,10 +38,19 @@ proveedoresControllers.renderizarFormProveedor = (req, res) => {
 proveedoresControllers.crearProveedor = async (req, res) => {
 
     const { cuilProveedor, nombreProveedor } = req.body;
-    if (!cuilProveedor || !nombreProveedor) {
-        req.flash('error_msg', "El CUIL y el Nombre del Proveedor son obligatorios.");
-        return res.redirect('/formProveedor'); // Redirecciona al formulario si hay un error
-    }
+   // Validaciones de CUIL y Nombre
+   const cuilRegex = /^\d{11}$/;  // Regex para validar que el CUIL tenga exactamente 11 números
+   const nombreRegex = /^[a-zA-ZÀ-ÿ\s]{3,}$/;  // Regex para validar que el nombre tenga al menos 3 letras
+
+   if (!cuilProveedor || !cuilRegex.test(cuilProveedor)) {
+       req.flash('error_msg', "El CUIL es obligatorio y debe tener exactamente 11 números.");
+       return res.redirect('/formProveedor');  // Redirige si el CUIL no es válido
+   }
+
+   if (!nombreProveedor || !nombreRegex.test(nombreProveedor)) {
+       req.flash('error_msg', "El Nombre es obligatorio y debe tener al menos 3 letras.");
+       return res.redirect('/formProveedor');  // Redirige si el nombre no es válido
+   }
     let nuevoProveedor = null;
     let query = require('url').parse(req.url, true).query;
     jsonResponse = query.jsonResponse;
