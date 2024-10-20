@@ -43,7 +43,7 @@ Tambien puedes ver nuestra [Documentación](https://docs.google.com/document/d/1
 
 ## 📱 Mockups
 <img src="./src/public/img/fondologo.png">
-<img src="./src/public/img/fondo2.png">
+<img src="./src/public/img/fondologo-1.png">
 
 
 ## 💻 Cómo utilizar
