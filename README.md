@@ -42,8 +42,9 @@ Tambien puedes ver nuestra [Documentación](https://docs.google.com/document/d/1
 <img src="./src/public/img/DiagramaDeUso.png">
 
 ## 📱 Mockups
-<img src="./src/public/img/verduras-dev.png">
+<img src="./src/public/img/fondologo.png">
 <img src="./src/public/img/fondo2.png">
+
 
 ## 💻 Cómo utilizar
 
