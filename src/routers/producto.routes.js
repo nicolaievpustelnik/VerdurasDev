@@ -1,8 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const {isAuthenticated, verifyToken} = require('../helps/auth');
-
+const { isAuthenticated, verifyToken } = require('../helps/auth');
 const { 
     renderizarFormProducto,
     crearProducto,
@@ -19,16 +18,17 @@ const {
 router.get('/formProducto', isAuthenticated, renderizarFormProducto);
 router.post('/nuevoProducto', verifyToken, crearProducto);
 
-// Ver todos los Producto
+// Ver todos los Productos
 router.get('/productos', isAuthenticated, verifyToken, renderizarProductos);
 
-// Editar producto
-router.get('/editarProductoSucursal', isAuthenticated, renderizadoActualizarFormProductoSucursal);
+// Editar producto (Con `:id` para especificar el producto a editar)
+router.get('/editarProductoSucursal/:id', isAuthenticated, renderizadoActualizarFormProductoSucursal);
 router.put('/actualizarProductoSucursal/:id', verifyToken, actualizarProductoSucursal);
-router.get('/editarProductoProveedor', isAuthenticated, renderizadoActualizarFormProductoProveedor);
+
+router.get('/editarProductoProveedor/:id', isAuthenticated, renderizadoActualizarFormProductoProveedor);
 router.put('/actualizarProductoProveedor/:id', verifyToken, actualizarProductoProveedor);
 
-// Eliminar Producto
+// Eliminar Producto (usando `:id` para especificar el producto a eliminar)
 router.delete('/eliminarProductoSucursal/:id', verifyToken, eliminarProductoSucursal);
 router.delete('/eliminarProductoProveedor/:id', verifyToken, eliminarProductoProveedor);
 

@@ -1,155 +1,125 @@
 const ProductoSucursal = require('../models/ProductoSucursal');
 const ProductoProveedor = require('../models/ProductoProveedor');
-
 const jwt = require('jsonwebtoken');
-
 const productosControllers = {};
 
-// Nuevo Producto
+// Renderizar formulario para crear un nuevo producto
 productosControllers.renderizarFormProducto = (req, res) => {
     res.render('producto/nuevoProducto');
 }
 
+// Crear un nuevo producto
 productosControllers.crearProducto = async (req, res) => {
-    
     try {
-
         const { codigoBarra, nombreCategoria, descripcion, tipoProducto, idSucursal, idProveedor, precioVenta, precioCompra } = req.body;
         
         let stock = 0;
         let nuevoProducto = null;
-        let query = require('url').parse(req.url, true).query;
-        let jsonResponse = query.jsonResponse;
+        const query = require('url').parse(req.url, true).query;
+        const jsonResponse = query.jsonResponse === "true";
+        
+        // Generar ID único y crear producto
+        const generarNuevoProducto = async () => {
+            let idProducto = null;
+            if (tipoProducto === 'Producto') {
+                idProducto = await generateUniqueProductoId(ProductoSucursal);
+                nuevoProducto = new ProductoSucursal({ idProducto, codigoBarra, nombreCategoria, descripcion, stock, idSucursal, precioVenta });
+                return await res.locals.sucursal.agregarProductoSucursal(req, res, nuevoProducto, jsonResponse);
+            } else if (tipoProducto === 'Proveedor') {
+                idProducto = await generateUniqueProductoId(ProductoProveedor);
+                nuevoProducto = new ProductoProveedor({ idProducto, codigoBarra, nombreCategoria, descripcion, stock, idProveedor, precioCompra });
+                return await res.locals.sucursal.agregarProductoProveedor(req, res, nuevoProducto, jsonResponse);
+            } else {
+                throw new Error('Tipo de producto inválido');
+            }
+        };
 
-        if(jsonResponse == "true"){
-
+        if (jsonResponse) {
             jwt.verify(req.token, 'secretkey', async (error, authData) => {
                 if (error) {
                     res.sendStatus(403);
                 } else {
-                    switch (tipoProducto) {
-                        case 'Producto':
-                            var idProducto = await generateProductoIdSucursal(res);
-                            nuevoProducto = new ProductoSucursal({ idProducto, codigoBarra, nombreCategoria, descripcion, stock, idSucursal, precioVenta});
-                            await res.locals.sucursal.agregarProductoSucursal(req, res, nuevoProducto, true);
-                            res.status(200).json({status: 200, producto: nuevoProducto});
-                            break;
-            
-                        case 'Proveedor':
-                            var idProducto = await generateProductoIdProveedor(res);
-                            nuevoProducto = new ProductoProveedor({ idProducto, codigoBarra, nombreCategoria, descripcion, stock, idProveedor, precioCompra});
-                            await res.locals.sucursal.agregarProductoProveedor(req, res, nuevoProducto, true);
-                            res.status(200).json({status: 200, producto: nuevoProducto});
-                            break;
-            
-                        default:
-                            break;
-                    }
+                    await generarNuevoProducto();
+                    res.status(200).json({ status: 200, producto: nuevoProducto });
                 }
             });
-    
-        }else{
-
-            let productoAgregado = null;
-
-            switch (tipoProducto) {
-                case 'Producto':
-                    var idProducto = await generateProductoIdSucursal(res);
-                    nuevoProducto = new ProductoSucursal({ idProducto, codigoBarra, nombreCategoria, descripcion, stock, idSucursal, precioVenta});
-                    productoAgregado = await res.locals.sucursal.agregarProductoSucursal(req, res, nuevoProducto, false);
-                    break;
-    
-                case 'Proveedor':
-                    var idProducto = await generateProductoIdProveedor(res);
-                    nuevoProducto = new ProductoProveedor({ idProducto, codigoBarra, nombreCategoria, descripcion, stock, idProveedor, precioCompra});
-                    productoAgregado = await res.locals.sucursal.agregarProductoProveedor(req, res, nuevoProducto, false);
-                    break;
-    
-                default:
-                    break;
-            }
-            
+        } else {
+            const productoAgregado = await generarNuevoProducto();
             if (productoAgregado) {
                 req.flash('success_msg', "Producto agregado exitosamente");
-                res.redirect('/productos');
-            } else{
-                res.redirect('/productos');  
             }
-        }  
-        
-
+            res.redirect('/productos');
+        }
     } catch (err) {
-
-        console.log(err.name +" --> "+err.message)
+        console.log("Error -->", err.message);
     }
 }
 
-async function generateProductoIdSucursal(res) {
-    let min = 0;
-    let max = 9999;
+// Función para generar un ID único para productos de Sucursal o Proveedor
+async function generateUniqueProductoId(model) {
+    const min = 0;
+    const max = 9999;
 
-    do {
-        var num = Math.floor(Math.random() * (max - min)) + min;
-        var user = await res.locals.sucursal.buscarProductoIdSucursal(num);    
-    } while (user.lenght > 0);
-    
-    return num.toString();
-}
+    let idProducto;
+    let exists = true;
 
-async function generateProductoIdProveedor(res) {
-    let min = 0;
-    let max = 9999;
+    while (exists) {
+        idProducto = Math.floor(Math.random() * (max - min + 1)) + min;
+        const product = await model.findOne({ idProducto });
+        exists = !!product; // Si existe, vuelve a intentar
+    }
 
-    do {
-        var num = Math.floor(Math.random() * (max - min)) + min;
-        var user = await res.locals.sucursal.buscarProductoIdProveedor(num);    
-    } while (user.lenght > 0);
-    
-    return num.toString();
+    return idProducto.toString();
 }
 
 // Ver todos los productos
 productosControllers.renderizarProductos = async (req, res) => {
-    let producSuc = await res.locals.sucursal.listaDeProductosSucursal();
-    let producProv = await res.locals.sucursal.listaDeProductosProveedor();
+    const producSuc = await res.locals.sucursal.listaDeProductosSucursal();
+    const producProv = await res.locals.sucursal.listaDeProductosProveedor();
     res.render('producto/productos', { producSuc, producProv });
 }
 
-// Actualizar producto
+// Renderizar formulario de actualización de producto (Sucursal)
 productosControllers.renderizadoActualizarFormProductoSucursal = async (req, res) => {
-    let query = require('url').parse(req.url, true).query;
-    let id = query.id;
-    let producto = await res.locals.sucursal.buscarProductoPorIdSucursal(id)
+    const query = require('url').parse(req.url, true).query;
+    const id = query.id;
+    const producto = await res.locals.sucursal.buscarProductoPorIdSucursal(id);
     res.render('producto/editarProductoSucursal', { producto });
 }
+
+// Renderizar formulario de actualización de producto (Proveedor)
 productosControllers.renderizadoActualizarFormProductoProveedor = async (req, res) => {
-    let query = require('url').parse(req.url, true).query;
-    let id = query.id;
-    let producto = await res.locals.sucursal.buscarProductoPorIdProveedor(id)
+    const query = require('url').parse(req.url, true).query;
+    const id = query.id;
+    const producto = await res.locals.sucursal.buscarProductoPorIdProveedor(id);
     res.render('producto/editarProductoProveedor', { producto });
 }
 
+// Actualizar producto de Sucursal
 productosControllers.actualizarProductoSucursal = async (req, res) => {
-    await res.locals.sucursal.editarProductoSucursal(req.params.id, req.body)
-    req.flash('success_msg', "Producto editado exitosamente");
-    res.redirect('/productos');
-}
-productosControllers.actualizarProductoProveedor = async (req, res) => {
-    await res.locals.sucursal.editarProductoProveedor(req.params.id, req.body)
+    await res.locals.sucursal.editarProductoSucursal(req.params.id, req.body);
     req.flash('success_msg', "Producto editado exitosamente");
     res.redirect('/productos');
 }
 
-// Eliminar ProductoSucursal
+// Actualizar producto de Proveedor
+productosControllers.actualizarProductoProveedor = async (req, res) => {
+    await res.locals.sucursal.editarProductoProveedor(req.params.id, req.body);
+    req.flash('success_msg', "Producto editado exitosamente");
+    res.redirect('/productos');
+}
+
+// Eliminar producto de Sucursal
 productosControllers.eliminarProductoSucursal = (req, res) => {
-    let id = req.params.id;
+    const id = req.params.id;
     res.locals.sucursal.eliminarProductoSucursal(id);
     req.flash('success_msg', "Producto eliminado exitosamente");
     res.redirect('/productos');
 }
 
+// Eliminar producto de Proveedor
 productosControllers.eliminarProductoProveedor = (req, res) => {
-    let id = req.params.id;
+    const id = req.params.id;
     res.locals.sucursal.eliminarProductoProveedor(id);
     req.flash('success_msg', "Producto eliminado exitosamente");
     res.redirect('/productos');
