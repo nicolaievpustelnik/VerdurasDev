@@ -19,23 +19,13 @@ require('./config/passport');
 app.set("port", process.env.PORT || 3002);
 
 app.set("views", path.join(__dirname, "views"));
-app.set("usuario", path.join(__dirname, "usuario"));
-app.set("producto", path.join(__dirname, "producto"));
-app.set("proveedor", path.join(__dirname, "proveedor"));
-app.set("notificacion", path.join(__dirname, "notificacion"));
-app.set("sucursal", path.join(__dirname, "sucursal"));
 
 app.engine(
-  ".hbs",
-  handlebars.engine({
+  "hbs",
+  handlebars({
     defaultLayout: "main",
     layoutsDir: path.join(app.get("views"), "layouts"),
     partialsDir: path.join(app.get("views"), "partials"),
-    usuarioDir: path.join(app.get("views"), "usuario"),
-    productoDir: path.join(app.get("views"), "producto"),
-    proveedorDir: path.join(app.get("views"), "proveedor"),
-    notificacionDir: path.join(app.get("views"), "notificacion"),
-    sucursalDir: path.join(app.get("views"), "sucursal"),
     extname: ".hbs",
 
     helpers: {
@@ -43,7 +33,6 @@ app.engine(
         if (v1 == v2) {
           return options.fn(this);
         }
-
         return options.inverse(this);
       },
     },
@@ -100,7 +89,7 @@ app.use((req, res, next) => {
 });
 
 // Swagger
-const swaggerDocs  = require('./docs/swagger');
+const swaggerDocs = require('./docs/swagger');
 swaggerDocs(app, app.get('port'))
 
 // Rutas
@@ -111,8 +100,7 @@ app.use(require("./routers/proveedor.routes"));
 app.use(require("./routers/notificacion.routes"));
 app.use(require("./routers/sucursal.routes"));
 
-
-// Archivos static
+// Archivos estáticos
 app.use(express.static(path.join(__dirname, "public")));
 
 module.exports = app;

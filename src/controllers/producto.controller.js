@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const productosControllers = {};
 
-// Nuevo Prodcuto
+// Nuevo Producto
 productosControllers.renderizarFormProducto = (req, res) => {
     res.render('producto/nuevoProducto');
 }
